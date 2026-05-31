@@ -1,0 +1,1764 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCP - Instagram - Dashboard contenus</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal-dark: #184E5A;
+    --teal-mid: #599092;
+    --teal-light: #A8C5C6;
+    --patina: #5E9E9A;
+    --nile: #4A8A8C;
+    --coral: #BF6C5C;
+    --blush: #E9B3A3;
+    --slate: #6F8B9D;
+    --cream: #F7F3EE;
+    --white: #FFFFFF;
+    --text-dark: #1A2E35;
+    --text-mid: #3D5561;
+    --text-light: #8AA4AE;
+    --border: rgba(24,78,90,0.1);
+    --shadow: 0 4px 24px rgba(24,78,90,0.08);
+    --shadow-hover: 0 12px 40px rgba(24,78,90,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Raleway', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--teal-dark);
+    padding: 28px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header-left h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    color: var(--white);
+  }
+  .header-left span {
+    font-family: 'Raleway', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--teal-mid);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .header-right {
+    text-align: right;
+  }
+
+
+  /* INSTAGRAM BADGE - same as LinkedIn li-badge */
+  .ig-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(233,179,163,0.15);
+    border: 1px solid rgba(233,179,163,0.35);
+    border-radius: 20px;
+    padding: 6px 14px;
+  }
+  .ig-badge span {
+    font-size: 13px;
+    color: var(--blush);
+    font-weight: 600;
+  }
+  .header-right .date {
+    font-size: 11px;
+    color: var(--teal-mid);
+    margin-top: 8px;
+    letter-spacing: 1px;
+  }
+
+  /* NAV TABS */
+  .nav {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0 48px;
+    display: flex;
+    gap: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(24,78,90,0.05);
+    overflow-x: auto;
+  }
+  .nav-tab {
+    padding: 15px 22px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-light);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .nav-tab:hover { color: var(--teal-dark); }
+  .nav-tab.active {
+    color: var(--teal-dark);
+    border-bottom-color: var(--teal-mid);
+  }
+
+  /* MAIN CONTENT */
+  .main { padding: 36px 48px; max-width: 1400px; margin: 0 auto; }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--teal-dark);
+    margin-bottom: 8px;
+  }
+  .section-subtitle {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-bottom: 28px;
+    font-weight: 400;
+  }
+
+  /* KPI GRID */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .kpi-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 24px 20px;
+    box-shadow: var(--shadow);
+    border-left: 3px solid var(--teal-mid);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .kpi-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+  .kpi-card.accent { border-left-color: var(--coral); }
+  .kpi-card.slate { border-left-color: var(--slate); }
+  .kpi-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 10px;
+  }
+  .kpi-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    color: var(--teal-dark);
+    line-height: 1;
+  }
+  .kpi-sub {
+    font-size: 11px;
+    color: var(--text-light);
+    margin-top: 6px;
+  }
+
+  /* CARD GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+  .card-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+
+  /* CHART CARD */
+  .chart-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: var(--shadow);
+  }
+  .chart-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    color: var(--teal-dark);
+    margin-bottom: 4px;
+  }
+  .chart-card p {
+    font-size: 11px;
+    color: var(--text-light);
+    margin-bottom: 20px;
+  }
+
+  /* SVG CHARTS */
+  svg text { font-family: 'Raleway', sans-serif; }
+
+  /* TOP POSTS */
+  .post-filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 6px 16px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    background: var(--white);
+    color: var(--text-mid);
+    transition: all 0.2s;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--teal-dark);
+    color: var(--white);
+    border-color: var(--teal-dark);
+  }
+
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .post-card {
+    background: var(--white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+  .post-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+  .post-header {
+    background: var(--teal-dark);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .post-rank {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--blush);
+    line-height: 1;
+  }
+  .post-type-badge {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 10px;
+  }
+  .badge-image { background: rgba(89,144,146,0.3); color: var(--blush); }
+  .badge-sidecar { background: rgba(191,108,92,0.3); color: #FFD0C0; }
+  .badge-video { background: rgba(111,139,157,0.3); color: #C0D8E8; }
+  .post-body { padding: 16px; }
+  .post-engagement {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .eng-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--teal-dark);
+  }
+  .eng-item span { font-size: 11px; color: var(--text-light); font-weight: 400; }
+  .post-caption {
+    font-size: 12px;
+    color: var(--text-mid);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-clamp: 3;
+    overflow: hidden;
+  }
+  .post-hook {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+  .post-date {
+    font-size: 10px;
+    color: var(--text-light);
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+  }
+  .post-url {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 10px;
+    color: var(--teal-mid);
+    text-decoration: none;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .post-url:hover { color: var(--coral); }
+
+  /* PATTERNS */
+  .pattern-block {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: var(--shadow);
+    margin-bottom: 24px;
+  }
+  .pattern-block h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    color: var(--teal-dark);
+    margin-bottom: 16px;
+  }
+  .hook-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .hook-item:last-child { border-bottom: none; }
+  .hook-score {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .hook-score.high { background: rgba(89,144,146,0.15); color: var(--teal-dark); }
+  .hook-score.low { background: rgba(191,108,92,0.15); color: var(--coral); }
+  .hook-score.mid { background: rgba(111,139,157,0.15); color: var(--slate); }
+  .hook-content h4 { font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 3px; }
+  .hook-content p { font-size: 12px; color: var(--text-light); line-height: 1.4; }
+  .hook-example {
+    font-style: italic;
+    font-size: 12px;
+    color: var(--teal-mid);
+    margin-top: 4px;
+    border-left: 2px solid var(--teal-mid);
+    padding-left: 8px;
+  }
+
+  /* SERIES */
+  .series-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+  .series-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+    border-top: 3px solid var(--teal-mid);
+  }
+  .series-card.coral { border-top-color: var(--coral); }
+  .series-card.slate { border-top-color: var(--slate); }
+  .series-icon { font-size: 28px; margin-bottom: 12px; }
+  .series-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    color: var(--teal-dark);
+    margin-bottom: 6px;
+  }
+  .series-count {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-light);
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+  }
+  .series-desc { font-size: 12px; color: var(--text-mid); line-height: 1.5; }
+  .series-avg { 
+    margin-top: 12px;
+    padding: 8px;
+    background: var(--cream);
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--teal-dark);
+    text-align: center;
+  }
+
+  /* IDEAS */
+  .ideas-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+  .idea-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .idea-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--teal-dark), var(--coral));
+  }
+  .idea-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    color: var(--cream);
+    position: absolute;
+    top: 8px;
+    right: 16px;
+    line-height: 1;
+    font-weight: 700;
+  }
+  .idea-format {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--teal-mid);
+    margin-bottom: 8px;
+  }
+  .idea-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    color: var(--teal-dark);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .idea-hook {
+    font-size: 13px;
+    color: var(--text-mid);
+    font-style: italic;
+    border-left: 2px solid var(--coral);
+    padding-left: 10px;
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+  .idea-why {
+    font-size: 11px;
+    color: var(--text-light);
+    line-height: 1.5;
+  }
+  .idea-signal {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 3px 8px;
+    background: rgba(24,78,90,0.08);
+    color: var(--teal-dark);
+    border-radius: 10px;
+  }
+
+  /* PLAN 30J */
+  .plan-timeline {
+    position: relative;
+    margin-bottom: 40px;
+  }
+  .plan-week {
+    background: var(--white);
+    border-radius: 12px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .plan-week-header {
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .plan-week-header:hover { background: rgba(24,78,90,0.03); }
+  .week-badge {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .w1 { background: var(--teal-dark); color: var(--white); }
+  .w2 { background: var(--teal-mid); color: var(--white); }
+  .w3 { background: var(--nile); color: var(--white); }
+  .w4 { background: var(--slate); color: var(--white); }
+  .week-title { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--teal-dark); }
+  .week-subtitle { font-size: 12px; color: var(--text-light); }
+  .plan-week-body {
+    padding: 0 24px 20px;
+    display: none;
+  }
+  .plan-week-body.open { display: block; }
+  .plan-action {
+    display: flex;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .plan-action:last-child { border-bottom: none; }
+  .action-day {
+    flex-shrink: 0;
+    width: 36px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-light);
+    padding-top: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .action-content strong { font-size: 13px; color: var(--text-dark); display: block; margin-bottom: 2px; }
+  .action-content p { font-size: 12px; color: var(--text-mid); line-height: 1.4; }
+  .action-tag {
+    display: inline-block;
+    margin-top: 4px;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-weight: 600;
+  }
+  .tag-content { background: rgba(89,144,146,0.1); color: var(--teal-mid); }
+  .tag-strategy { background: rgba(94,158,154,0.1); color: var(--patina); }
+  .tag-test { background: rgba(111,139,157,0.1); color: var(--slate); }
+
+  /* BAR CHART */
+  .bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .bar-label {
+    width: 130px;
+    font-size: 12px;
+    color: var(--text-mid);
+    flex-shrink: 0;
+    text-align: right;
+  }
+  .bar-track {
+    flex: 1;
+    height: 8px;
+    background: var(--cream);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.8s ease;
+  }
+  .bar-val {
+    width: 36px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--teal-dark);
+    flex-shrink: 0;
+  }
+
+  /* INSIGHT CALLOUT */
+  .insight {
+    background: linear-gradient(135deg, rgba(24,78,90,0.05), rgba(89,144,146,0.05));
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .insight-icon { font-size: 22px; flex-shrink: 0; }
+  .insight-text strong { font-size: 13px; color: var(--teal-dark); display: block; margin-bottom: 3px; }
+  .insight-text p { font-size: 12px; color: var(--text-mid); line-height: 1.5; }
+
+  /* FORMAT COMPARISON */
+  .format-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+  .format-box {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+  }
+  .format-box h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    color: var(--teal-dark);
+    margin-bottom: 4px;
+  }
+  .format-box .format-sub {
+    font-size: 11px;
+    color: var(--text-light);
+    margin-bottom: 16px;
+  }
+  .format-stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .format-stat:last-child { border-bottom: none; }
+  .format-stat .fs-label { font-size: 12px; color: var(--text-mid); }
+  .format-stat .fs-val { font-size: 15px; font-weight: 700; color: var(--teal-dark); }
+  .format-job {
+    margin-top: 16px;
+    padding: 12px;
+    background: rgba(24,78,90,0.05);
+    border-radius: 8px;
+    font-size: 12px;
+    color: var(--text-mid);
+    line-height: 1.5;
+  }
+  .format-job strong { color: var(--teal-dark); display: block; margin-bottom: 4px; font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase; }
+
+  /* FOOTER */
+  .footer {
+    background: var(--teal-dark);
+    padding: 18px 48px;
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--teal-mid);
+    font-size: 13px;
+    margin-top: 50px;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 1100px) {
+    .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+    .posts-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* DONUT CHART */
+  .donut-wrap { display: flex; align-items: center; gap: 24px; }
+  .donut-legend { }
+  .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .legend-label { font-size: 12px; color: var(--text-mid); }
+  .legend-pct { font-size: 13px; font-weight: 700; color: var(--teal-dark); margin-left: auto; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <span>My Coaching Partner</span>
+    <h1>Instagram - Dashboard contenus</h1>
+  </div>
+  <div class="header-right">
+    <div class="ig-badge">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="#e9b3a3" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      <span>capucine.legrand.coach</span>
+    </div>
+    <div class="date">Analyse - Mai 2026 - 27 posts scrappés</div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-tab active" onclick="showSection('overview')">Vue d'ensemble</div>
+  <div class="nav-tab" onclick="showSection('topposts')">Top contenus</div>
+  <div class="nav-tab" onclick="showSection('patterns')">Patterns & accroches</div>
+  <div class="nav-tab" onclick="showSection('formats')">Formats</div>
+  <div class="nav-tab" onclick="showSection('series')">Séries détectées</div>
+  <div class="nav-tab" onclick="showSection('ideas')">Idées de contenu</div>
+  <div class="nav-tab" onclick="showSection('plan')">Plan 30 jours</div>
+</nav>
+
+<div class="main">
+
+<!-- ===== SECTION 1 : OVERVIEW ===== -->
+<div id="section-overview" class="section active">
+  <div class="section-title">Vue d'ensemble</div>
+  <div class="section-subtitle">KPIs clés extraits des 27 posts disponibles - fenêtre juin 2025 à février 2026</div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Posts analysés</div>
+      <div class="kpi-value">27</div>
+      <div class="kpi-sub">juin 2025 → fév. 2026</div>
+    </div>
+    <div class="kpi-card accent">
+      <div class="kpi-label">Total likes</div>
+      <div class="kpi-value">325</div>
+      <div class="kpi-sub">Médiane : 7 likes/post</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Total commentaires</div>
+      <div class="kpi-value">27</div>
+      <div class="kpi-sub">Médiane : 0 coms/post</div>
+    </div>
+    <div class="kpi-card slate">
+      <div class="kpi-label">Meilleur post</div>
+      <div class="kpi-value">53♥</div>
+      <div class="kpi-sub">Certification RNCP - avr. 2025</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Taux d'engagement</div>
+      <div class="kpi-value">~1.8%</div>
+      <div class="kpi-sub">Estimé (abonnés non dispo)</div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <div class="insight-icon">💡</div>
+    <div class="insight-text">
+      <strong>Signal fort détecté</strong>
+      <p>Les posts personnels (milestone, parcours, double casquette) surperforment massivement vs les contenus "pédagogiques" génériques. Le post certification RNCP (53 likes, 11 coms) représente à lui seul 16% de tous les likes du compte. C'est le format à dupliquer en priorité.</p>
+    </div>
+  </div>
+
+  <!-- Engagement par mois - bar chart SVG -->
+  <div class="card-grid">
+    <div class="chart-card">
+      <h3>Engagement par mois</h3>
+      <p>Cumul likes + commentaires par période de publication</p>
+      <svg viewBox="0 0 460 200" width="100%">
+        <!-- Axes -->
+        <line x1="60" y1="170" x2="440" y2="170" stroke="#E0ECF0" stroke-width="1"/>
+        <line x1="60" y1="10" x2="60" y2="170" stroke="#E0ECF0" stroke-width="1"/>
+        <!-- Grid lines -->
+        <line x1="60" y1="130" x2="440" y2="130" stroke="#F0F5F7" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="60" y1="90" x2="440" y2="90" stroke="#F0F5F7" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="60" y1="50" x2="440" y2="50" stroke="#F0F5F7" stroke-width="1" stroke-dasharray="4,4"/>
+        <!-- Y labels -->
+        <text x="52" y="174" text-anchor="end" font-size="9" fill="#8AA4AE">0</text>
+        <text x="52" y="134" text-anchor="end" font-size="9" fill="#8AA4AE">25</text>
+        <text x="52" y="94" text-anchor="end" font-size="9" fill="#8AA4AE">50</text>
+        <text x="52" y="54" text-anchor="end" font-size="9" fill="#8AA4AE">75</text>
+        <!-- Bars: juin55, mai121, oct28, sep23, nov10, jan7, fev16 -->
+        <!-- Jun 25 = 55 / max=121 = 0.45 → h=72 -->
+        <rect x="72" y="98" width="28" height="72" rx="3" fill="#599092" opacity="0.85"/>
+        <text x="86" y="95" text-anchor="middle" font-size="9" fill="#184E5A" font-weight="600">55</text>
+        <text x="86" y="186" text-anchor="middle" font-size="9" fill="#8AA4AE">Jun</text>
+        <!-- Mai 25 = 121 → h=160 -->
+        <rect x="126" y="10" width="28" height="160" rx="3" fill="#184E5A"/>
+        <text x="140" y="7" text-anchor="middle" font-size="9" fill="#184E5A" font-weight="700">121</text>
+        <text x="140" y="186" text-anchor="middle" font-size="9" fill="#8AA4AE">Mai</text>
+        <!-- Sep 25 = 23 → h=30 -->
+        <rect x="180" y="140" width="28" height="30" rx="3" fill="#599092" opacity="0.85"/>
+        <text x="194" y="137" text-anchor="middle" font-size="9" fill="#184E5A" font-weight="600">23</text>
+        <text x="194" y="186" text-anchor="middle" font-size="9" fill="#8AA4AE">Sep</text>
+        <!-- Oct 25 = 28 → h=37 -->
+        <rect x="234" y="133" width="28" height="37" rx="3" fill="#599092" opacity="0.85"/>
+        <text x="248" y="130" text-anchor="middle" font-size="9" fill="#184E5A" font-weight="600">28</text>
+        <text x="248" y="186" text-anchor="middle" font-size="9" fill="#8AA4AE">Oct</text>
+        <!-- Nov 25 = 10 → h=13 -->
+        <rect x="288" y="157" width="28" height="13" rx="3" fill="#BF6C5C" opacity="0.7"/>
+        <text x="302" y="154" text-anchor="middle" font-size="9" fill="#184E5A" font-weight="600">10</text>
+        <text x="302" y="186" text-anchor="middle" font-size="9" fill="#8AA4AE">Nov</text>
+        <!-- Jan 26 = 7 → h=9 -->
+        <rect x="342" y="161" width="28" height="9" rx="3" fill="#BF6C5C" opacity="0.7"/>
+        <text x="356" y="158" text-anchor="middle" font-size="9" fill="#184E5A" font-weight="600">7</text>
+        <text x="356" y="186" text-anchor="middle" font-size="9" fill="#8AA4AE">Jan</text>
+        <!-- Fev 26 = 16 → h=21 -->
+        <rect x="396" y="149" width="28" height="21" rx="3" fill="#599092" opacity="0.85"/>
+        <text x="410" y="146" text-anchor="middle" font-size="9" fill="#184E5A" font-weight="600">16</text>
+        <text x="410" y="186" text-anchor="middle" font-size="9" fill="#8AA4AE">Fév</text>
+      </svg>
+    </div>
+
+    <!-- Distribution des types -->
+    <div class="chart-card">
+      <h3>Répartition des formats</h3>
+      <p>Par nombre de posts publiés</p>
+      <div class="donut-wrap">
+        <svg viewBox="0 0 120 120" width="140" height="140">
+          <!-- Carrousel/Sidecar : 20/27 = 74% -->
+          <circle cx="60" cy="60" r="45" fill="none" stroke="#F0F5F7" stroke-width="20"/>
+          <!-- Carrousels: 74% = 263° arc -->
+          <circle cx="60" cy="60" r="45" fill="none" stroke="#184E5A" stroke-width="20"
+            stroke-dasharray="207.3 282.6" stroke-dashoffset="70.65" transform="rotate(-90 60 60)"/>
+          <!-- Images: 3/27 = 11% = 31° -->
+          <circle cx="60" cy="60" r="45" fill="none" stroke="#599092" stroke-width="20"
+            stroke-dasharray="31.0 282.6" stroke-dashoffset="-136.65" transform="rotate(-90 60 60)"/>
+          <!-- Vidéo: 1/27 = 4% -->
+          <circle cx="60" cy="60" r="45" fill="none" stroke="#BF6C5C" stroke-width="20"
+            stroke-dasharray="11.3 282.6" stroke-dashoffset="-167.65" transform="rotate(-90 60 60)"/>
+          <!-- Centre text -->
+          <text x="60" y="56" text-anchor="middle" font-size="18" fill="#184E5A" font-weight="700" font-family="Playfair Display, serif">27</text>
+          <text x="60" y="68" text-anchor="middle" font-size="8" fill="#8AA4AE">posts</text>
+        </svg>
+        <div class="donut-legend">
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#184E5A"></div>
+            <div class="legend-label">Carrousels</div>
+            <div class="legend-pct">74%</div>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#599092"></div>
+            <div class="legend-label">Images seules</div>
+            <div class="legend-pct">11%</div>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#BF6C5C"></div>
+            <div class="legend-label">Reels</div>
+            <div class="legend-pct">4%</div>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#E9B3A3"></div>
+            <div class="legend-label">Sidecar (sans caption)</div>
+            <div class="legend-pct">11%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Répartition jours -->
+  <div class="chart-card" style="margin-bottom:40px">
+    <h3>Meilleurs jours de publication</h3>
+    <p>Engagement médian (likes + coms) par jour de la semaine</p>
+    <div style="margin-top:16px">
+      <div class="bar-wrap">
+        <div class="bar-label">Lundi</div>
+        <div class="bar-track"><div class="bar-fill" style="width:40%;background:#599092"></div></div>
+        <div class="bar-val">7.5</div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-label">Mardi</div>
+        <div class="bar-track"><div class="bar-fill" style="width:25%;background:#599092"></div></div>
+        <div class="bar-val">5</div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-label">Mercredi</div>
+        <div class="bar-track"><div class="bar-fill" style="width:30%;background:#599092"></div></div>
+        <div class="bar-val">6</div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-label">Jeudi</div>
+        <div class="bar-track"><div class="bar-fill" style="width:50%;background:#184E5A"></div></div>
+        <div class="bar-val">9.5</div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-label">Vendredi</div>
+        <div class="bar-track"><div class="bar-fill" style="width:60%;background:#184E5A"></div></div>
+        <div class="bar-val">11</div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-label">Samedi</div>
+        <div class="bar-track"><div class="bar-fill" style="width:15%;background:#BF6C5C"></div></div>
+        <div class="bar-val">3</div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-label">Dimanche</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:#BF6C5C"></div></div>
+        <div class="bar-val">20</div>
+      </div>
+    </div>
+    <div class="insight" style="margin-top:20px;margin-bottom:0">
+      <div class="insight-icon">📅</div>
+      <div class="insight-text">
+        <strong>Fenêtre idéale : jeudi-vendredi matin (7h-9h Paris) et dimanche soir (20h)</strong>
+        <p>Le post certification du 27 avril (dimanche) a généré 64 engagements. Le cluster mai-juin publie majoritairement le jeudi matin (5h-7h UTC = 7h-9h Paris). Vendredi et dimanche soir dominent.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 2 : TOP POSTS ===== -->
+<div id="section-topposts" class="section">
+  <div class="section-title">Top 10 contenus</div>
+  <div class="section-subtitle">Classés par engagement total (likes + commentaires)</div>
+
+  <div class="post-filters">
+    <div class="filter-btn active" onclick="filterPosts('all', this)">Tous</div>
+    <div class="filter-btn" onclick="filterPosts('Image', this)">Image seule</div>
+    <div class="filter-btn" onclick="filterPosts('Sidecar', this)">Carrousel</div>
+  </div>
+
+  <div class="posts-grid" id="postsGrid">
+
+    <!-- POST 1 : Certification RNCP -->
+    <div class="post-card" data-type="Image">
+      <div class="post-header">
+        <div class="post-rank">#1</div>
+        <span class="post-type-badge badge-image">Image</span>
+      </div>
+      <div class="post-body">
+        <div class="post-engagement">
+          <div class="eng-item">♥ 53 <span>likes</span></div>
+          <div class="eng-item">💬 11 <span>coms</span></div>
+          <div class="eng-item" style="color:#BF6C5C">⭐ 64 <span>total</span></div>
+        </div>
+        <div class="post-hook">✨ Nouvelle étape franchie : je suis désormais Coach Professionnelle certifiée RNCP niveau 6 !</div>
+        <div class="post-caption">Milestone personnel + légitimation expertise + merci communauté. Post "journée importante" avec vulnérabilité maîtrisée.</div>
+        <div class="post-date">27 avril 2025 - 20h03</div>
+        <a href="https://www.instagram.com/p/DI9naswi3rv/" target="_blank" class="post-url">→ Voir le post</a>
+      </div>
+    </div>
+
+    <!-- POST 2 : Lancement activité -->
+    <div class="post-card" data-type="Image">
+      <div class="post-header">
+        <div class="post-rank">#2</div>
+        <span class="post-type-badge badge-image">Image</span>
+      </div>
+      <div class="post-body">
+        <div class="post-engagement">
+          <div class="eng-item">♥ 28 <span>likes</span></div>
+          <div class="eng-item">💬 3 <span>coms</span></div>
+          <div class="eng-item" style="color:#BF6C5C">⭐ 31 <span>total</span></div>
+        </div>
+        <div class="post-hook">Cette année 2025 est définitivement incroyable ! Je lance officiellement mon activité de coaching…</div>
+        <div class="post-caption">Annonce lancement MCP. Ton naturel, enthousiaste sans en faire trop. Appel à "stay tuned" pour la communauté.</div>
+        <div class="post-date">28 mai 2025 - 20h34</div>
+        <a href="https://www.instagram.com/p/DKNfmTZiHv0/" target="_blank" class="post-url">→ Voir le post</a>
+      </div>
+    </div>
+
+    <!-- POST 3 : Qui suis-je -->
+    <div class="post-card" data-type="Image">
+      <div class="post-header">
+        <div class="post-rank">#3</div>
+        <span class="post-type-badge badge-image">Image</span>
+      </div>
+      <div class="post-body">
+        <div class="post-engagement">
+          <div class="eng-item">♥ 29 <span>likes</span></div>
+          <div class="eng-item">💬 1 <span>com</span></div>
+          <div class="eng-item" style="color:#BF6C5C">⭐ 30 <span>total</span></div>
+        </div>
+        <div class="post-hook">✨ Qui suis-je ? Je m'appelle Capucine, je suis coach professionnelle certifiée…</div>
+        <div class="post-caption">Post de présentation mis à jour. "Ce que mes clients disent souvent" = preuve sociale intégrée. Publié juin 2025 (refonte positionnement).</div>
+        <div class="post-date">28 juin 2025 - 06h17</div>
+        <a href="https://www.instagram.com/p/DLbyHcLuNow/" target="_blank" class="post-url">→ Voir le post</a>
+      </div>
+    </div>
+
+    <!-- POST 4 : Coaching sur mesure -->
+    <div class="post-card" data-type="Sidecar">
+      <div class="post-header">
+        <div class="post-rank">#4</div>
+        <span class="post-type-badge badge-sidecar">Carrousel</span>
+      </div>
+      <div class="post-body">
+        <div class="post-engagement">
+          <div class="eng-item">♥ 20 <span>likes</span></div>
+          <div class="eng-item">💬 2 <span>coms</span></div>
+          <div class="eng-item" style="color:#BF6C5C">⭐ 22 <span>total</span></div>
+        </div>
+        <div class="post-hook">🎯 Cadre ambitieux, et si le vrai luxe… c'était un coaching taillé pour toi ?</div>
+        <div class="post-caption">Carrousel vente directe avec appel DM "IMPOSTEUR". Ton aspirationnel ("cour des grands", "propulse avec clarté").</div>
+        <div class="post-date">30 mai 2025 - 15h32</div>
+        <a href="https://www.instagram.com/p/DKSGlQmiWPg/" target="_blank" class="post-url">→ Voir le post</a>
+      </div>
+    </div>
+
+    <!-- POST 5 : Anti burn-out dirigeants -->
+    <div class="post-card" data-type="Sidecar">
+      <div class="post-header">
+        <div class="post-rank">#5</div>
+        <span class="post-type-badge badge-sidecar">Carrousel</span>
+      </div>
+      <div class="post-body">
+        <div class="post-engagement">
+          <div class="eng-item">♥ 20 <span>likes</span></div>
+          <div class="eng-item">💬 2 <span>coms</span></div>
+          <div class="eng-item" style="color:#BF6C5C">⭐ 22 <span>total</span></div>
+        </div>
+        <div class="post-hook">Burn-out, surcharge mentale, solitude du dirigeant… Vous connaissez ?</div>
+        <div class="post-caption">Question d'identification directe en accroche. Données chiffrées dans le corps. 4 conseils pratico-pratiques. CTA clair.</div>
+        <div class="post-date">29 mai 2025 - 06h44</div>
+        <a href="https://www.instagram.com/p/DKOlaqwCweA/" target="_blank" class="post-url">→ Voir le post</a>
+      </div>
+    </div>
+
+    <!-- POST 6 : Stats dirigeants -->
+    <div class="post-card" data-type="Image">
+      <div class="post-header">
+        <div class="post-rank">#6</div>
+        <span class="post-type-badge badge-image">Image</span>
+      </div>
+      <div class="post-body">
+        <div class="post-engagement">
+          <div class="eng-item">♥ 19 <span>likes</span></div>
+          <div class="eng-item">💬 0 <span>coms</span></div>
+          <div class="eng-item" style="color:#BF6C5C">⭐ 19 <span>total</span></div>
+        </div>
+        <div class="post-hook">• 82% des dirigeants souffrent d'au moins un trouble physique ou psychologique…</div>
+        <div class="post-caption">Post de données chiffrées percutant. Format texte dense mais scannable. Manifeste-conviction avec promesse d'accompagnement.</div>
+        <div class="post-date">3 octobre 2025 - 15h21</div>
+        <a href="https://www.instagram.com/p/DPWhXx6jD_h/" target="_blank" class="post-url">→ Voir le post</a>
+      </div>
+    </div>
+
+    <!-- POST 7 : Syndrome imposteur -->
+    <div class="post-card" data-type="Sidecar">
+      <div class="post-header">
+        <div class="post-rank">#7</div>
+        <span class="post-type-badge badge-sidecar">Carrousel</span>
+      </div>
+      <div class="post-body">
+        <div class="post-engagement">
+          <div class="eng-item">♥ 15 <span>likes</span></div>
+          <div class="eng-item">💬 1 <span>com</span></div>
+          <div class="eng-item" style="color:#BF6C5C">⭐ 16 <span>total</span></div>
+        </div>
+        <div class="post-hook">As-tu déjà eu l'impression de ne pas mériter ta place ? De réussir… mais de penser que c'est un coup de chance ?</div>
+        <div class="post-caption">Double question rhétorique en accroche. CTA DM "IMPOSTEUR". Angle universel qui touche les cadres ambitieux précisément.</div>
+        <div class="post-date">16 juin 2025 - 11h42</div>
+        <a href="https://www.instagram.com/p/DK9dvK2CFQx/" target="_blank" class="post-url">→ Voir le post</a>
+      </div>
+    </div>
+
+    <!-- POST 8 : Erreurs équilibre pro/perso -->
+    <div class="post-card" data-type="Sidecar">
+      <div class="post-header">
+        <div class="post-rank">#8</div>
+        <span class="post-type-badge badge-sidecar">Carrousel</span>
+      </div>
+      <div class="post-body">
+        <div class="post-engagement">
+          <div class="eng-item">♥ 11 <span>likes</span></div>
+          <div class="eng-item">💬 2 <span>coms</span></div>
+          <div class="eng-item" style="color:#BF6C5C">⭐ 13 <span>total</span></div>
+        </div>
+        <div class="post-hook">✨ Vous avez l'impression de courir après le temps et de sacrifier votre équilibre pro/perso ? Vous n'êtes pas seul(e) !</div>
+        <div class="post-caption">Validation émotionnelle ("vous n'êtes pas seul·e") + 4 erreurs personnelles avouées. Vulnérabilité maîtrisée = fort engagement.</div>
+        <div class="post-date">12 juin 2025 - 05h25</div>
+        <a href="https://www.instagram.com/p/DKyfZULiidW/" target="_blank" class="post-url">→ Voir le post</a>
+      </div>
+    </div>
+
+    <!-- POST 9 : Coach pas gourou -->
+    <div class="post-card" data-type="Sidecar">
+      <div class="post-header">
+        <div class="post-rank">#9</div>
+        <span class="post-type-badge badge-sidecar">Carrousel</span>
+      </div>
+      <div class="post-body">
+        <div class="post-engagement">
+          <div class="eng-item">♥ 12 <span>likes</span></div>
+          <div class="eng-item">💬 1 <span>com</span></div>
+          <div class="eng-item" style="color:#BF6C5C">⭐ 13 <span>total</span></div>
+        </div>
+        <div class="post-hook">🚫 Le coaching, ce n'est pas une suite de recettes miracles à appliquer toutes faites.</div>
+        <div class="post-caption">Prise de position anti-conformiste. Angle "démystification" du coaching. Différenciation forte. Post de positionnement éthique.</div>
+        <div class="post-date">9 septembre 2025 - 07h02</div>
+        <a href="https://www.instagram.com/p/DOX1M2XDKNA/" target="_blank" class="post-url">→ Voir le post</a>
+      </div>
+    </div>
+
+    <!-- POST 10 : Leadership -->
+    <div class="post-card" data-type="Sidecar">
+      <div class="post-header">
+        <div class="post-rank">#10</div>
+        <span class="post-type-badge badge-sidecar">Carrousel</span>
+      </div>
+      <div class="post-body">
+        <div class="post-engagement">
+          <div class="eng-item">♥ 10 <span>likes</span></div>
+          <div class="eng-item">💬 0 <span>coms</span></div>
+          <div class="eng-item" style="color:#BF6C5C">⭐ 10 <span>total</span></div>
+        </div>
+        <div class="post-hook">(Carrousel sans caption disponible - données février 2026)</div>
+        <div class="post-caption">Publié le 7 février 2026. Performance solide pour la période récente.</div>
+        <div class="post-date">7 février 2026 - 11h01</div>
+        <a href="https://www.instagram.com/p/DUdEq6ZAN_u/" target="_blank" class="post-url">→ Voir le post</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== SECTION 3 : PATTERNS ===== -->
+<div id="section-patterns" class="section">
+  <div class="section-title">Patterns & accroches</div>
+  <div class="section-subtitle">Ce qui marche, ce qui plombe - analysé sur les 27 posts disponibles</div>
+
+  <div class="pattern-block">
+    <h3>✅ Accroches qui surperforment</h3>
+
+    <div class="hook-item">
+      <div class="hook-score high">64</div>
+      <div class="hook-content">
+        <h4>Milestone personnel + légitimation</h4>
+        <p>Annonce d'un accomplissement réel avec contexte du parcours. Génère une vague de soutien communautaire + réactions émotionnelles fortes.</p>
+        <div class="hook-example">« ✨ Nouvelle étape franchie : je suis désormais Coach Professionnelle certifiée RNCP niveau 6 ! »</div>
+      </div>
+    </div>
+
+    <div class="hook-item">
+      <div class="hook-score high">31</div>
+      <div class="hook-content">
+        <h4>Annonce de lancement / nouvelle phase</h4>
+        <p>Les posts "changement important dans ma vie pro" captivent. Le réseau personnel se mobilise fort sur ces moments de transition.</p>
+        <div class="hook-example">« Cette année 2025 est définitivement incroyable ! Je lance officiellement mon activité de coaching… »</div>
+      </div>
+    </div>
+
+    <div class="hook-item">
+      <div class="hook-score high">22</div>
+      <div class="hook-content">
+        <h4>Question d'identification directe + douleur nommée</h4>
+        <p>Nommer le problème exact (burn-out, syndrome imposteur, équilibre) et valider l'expérience ("vous n'êtes pas seul·e") avant d'apporter la solution.</p>
+        <div class="hook-example">« Burn-out, surcharge mentale, solitude du dirigeant… Vous connaissez ? »</div>
+      </div>
+    </div>
+
+    <div class="hook-item">
+      <div class="hook-score mid">19</div>
+      <div class="hook-content">
+        <h4>Data choc + manifeste conviction</h4>
+        <p>Statistique frappante en première ligne, suivie d'une prise de position tranchée. Format "révélation → ma mission".</p>
+        <div class="hook-example">« • 82% des dirigeants souffrent d'au moins un trouble physique ou psychologique »</div>
+      </div>
+    </div>
+
+    <div class="hook-item">
+      <div class="hook-score mid">16</div>
+      <div class="hook-content">
+        <h4>Double question rhétorique (syndrome imposteur)</h4>
+        <p>Deux questions courtes qui dessinent un portrait exact de la cible. Taux d'identification maximal. Fonctionne bien avec CTA DM mot-clé.</p>
+        <div class="hook-example">« As-tu déjà eu l'impression de ne pas mériter ta place ? De réussir… mais de penser que c'est un coup de chance ? »</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pattern-block">
+    <h3>❌ Accroches qui plombent l'engagement</h3>
+
+    <div class="hook-item">
+      <div class="hook-score low">5</div>
+      <div class="hook-content">
+        <h4>Accroche éditoriale générique ("découvrez les X clés de…")</h4>
+        <p>Le format "liste de conseils" sans angle personnel ou sans tension initiale génère peu de réactions. La promesse est trop prévisible.</p>
+        <div class="hook-example">« Dans un monde professionnel en constante évolution, le leadership se réinvente… »</div>
+      </div>
+    </div>
+
+    <div class="hook-item">
+      <div class="hook-score low">5</div>
+      <div class="hook-content">
+        <h4>Injonction positive sans preuve sociale</h4>
+        <p>Les posts purement prescriptifs ("faites ceci", "voici comment") sans ancrage dans une expérience personnelle ou un cas client ne créent pas d'émotion.</p>
+        <div class="hook-example">« La fatigue persistante, la perte de motivation et les difficultés de concentration sont des indicateurs sérieux… »</div>
+      </div>
+    </div>
+
+    <div class="hook-item">
+      <div class="hook-score low">3</div>
+      <div class="hook-content">
+        <h4>Question ouverte abstraite sans tension</h4>
+        <p>Les questions de fin ("Et vous, quelle est la question qui guide vos choix ?") sans conviction forte en amont restent sans réponse.</p>
+        <div class="hook-example">« 5 questions pour prendre des décisions vraiment alignées. On pense souvent qu'il suffit d'avoir le "bon titre"… »</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA words -->
+  <div class="chart-card">
+    <h3>Mots-clés CTA qui génèrent des commentaires</h3>
+    <p>Analyse des appels à l'action dans les posts ayant obtenu des commentaires</p>
+    <div style="margin-top:16px">
+      <div class="bar-wrap">
+        <div class="bar-label">Envie DM/MP</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:#184E5A"></div></div>
+        <div class="bar-val">11 coms</div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-label">Dis-moi en commentaire</div>
+        <div class="bar-track"><div class="bar-fill" style="width:73%;background:#599092"></div></div>
+        <div class="bar-val">8 coms</div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-label">Partagez votre expérience</div>
+        <div class="bar-track"><div class="bar-fill" style="width:36%;background:#599092"></div></div>
+        <div class="bar-val">4 coms</div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-label">Envoie "MOT" en MP</div>
+        <div class="bar-track"><div class="bar-fill" style="width:27%;background:#BF6C5C"></div></div>
+        <div class="bar-val">3 coms</div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-label">Taguer un collègue</div>
+        <div class="bar-track"><div class="bar-fill" style="width:18%;background:#BF6C5C"></div></div>
+        <div class="bar-val">2 coms</div>
+      </div>
+    </div>
+    <div class="insight" style="margin-top:20px;margin-bottom:0">
+      <div class="insight-icon">🎯</div>
+      <div class="insight-text">
+        <strong>Le CTA DM mot-clé (type "IMPOSTEUR") est ton meilleur outil de conversion</strong>
+        <p>Les posts avec CTA DM mot-clé génèrent 3× plus de commentaires que les posts sans CTA explicite. À systématiser sur tous les posts à forte intention commerciale.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 4 : FORMATS ===== -->
+<div id="section-formats" class="section">
+  <div class="section-title">Carrousel vs Image vs Reel</div>
+  <div class="section-subtitle">Médiane d'engagement et job idéal de chaque format</div>
+
+  <div class="insight">
+    <div class="insight-icon">⚠️</div>
+    <div class="insight-text">
+      <strong>Limite des données reels</strong>
+      <p>1 seul reel récupéré (527 vues, 5 likes). Le compte publie très peu de reels - la comparaison reels vs autres formats est basée sur cette donnée unique + benchmarks sectoriels. Toutes les médianes ci-dessous sont calculées sur les 27 posts disponibles.</p>
+    </div>
+  </div>
+
+  <div class="format-compare">
+    <div class="format-box">
+      <h4>Carrousels / Sidecar</h4>
+      <div class="format-sub">20 posts • format dominant (74%)</div>
+      <div class="format-stat">
+        <span class="fs-label">Médiane likes</span>
+        <span class="fs-val">7</span>
+      </div>
+      <div class="format-stat">
+        <span class="fs-label">Médiane commentaires</span>
+        <span class="fs-val">0</span>
+      </div>
+      <div class="format-stat">
+        <span class="fs-label">Meilleur carrousel</span>
+        <span class="fs-val">22 eng.</span>
+      </div>
+      <div class="format-stat">
+        <span class="fs-label">Taux avec commentaires</span>
+        <span class="fs-val">40%</span>
+      </div>
+      <div class="format-job">
+        <strong>Job idéal</strong>
+        Éducation, conseils pratiques ("X erreurs", "X étapes"), positionnement éthique, études de cas client. Format swipe = temps d'attention plus long = idéal pour installer l'expertise. Fonctionne mieux avec CTA DM intégré en dernière slide.
+      </div>
+    </div>
+
+    <div class="format-box">
+      <h4>Images seules</h4>
+      <div class="format-sub">3 posts • format minoritaire mais plus performant</div>
+      <div class="format-stat">
+        <span class="fs-label">Médiane likes</span>
+        <span class="fs-val">29</span>
+      </div>
+      <div class="format-stat">
+        <span class="fs-label">Médiane commentaires</span>
+        <span class="fs-val">1</span>
+      </div>
+      <div class="format-stat">
+        <span class="fs-label">Meilleure image</span>
+        <span class="fs-val">64 eng.</span>
+      </div>
+      <div class="format-stat">
+        <span class="fs-label">Taux avec commentaires</span>
+        <span class="fs-val">100%</span>
+      </div>
+      <div class="format-job">
+        <strong>Job idéal</strong>
+        Moments personnels forts (certification, lancement, milestones), présentations de toi-même, prises de position courtes avec data. L'image seule = émotionnel > éducatif. Chaque image seule a généré des commentaires. À réserver aux moments qui comptent vraiment.
+      </div>
+    </div>
+  </div>
+
+  <div class="format-compare">
+    <div class="format-box">
+      <h4>Reels</h4>
+      <div class="format-sub">1 reel disponible • données limitées</div>
+      <div class="format-stat">
+        <span class="fs-label">Vues (playcount)</span>
+        <span class="fs-val">527</span>
+      </div>
+      <div class="format-stat">
+        <span class="fs-label">Likes</span>
+        <span class="fs-val">5</span>
+      </div>
+      <div class="format-stat">
+        <span class="fs-label">Durée</span>
+        <span class="fs-val">5.5 sec</span>
+      </div>
+      <div class="format-stat">
+        <span class="fs-label">Ratio vues/likes</span>
+        <span class="fs-val">~1%</span>
+      </div>
+      <div class="format-job">
+        <strong>Job idéal (projection)</strong>
+        Notoriété top-of-funnel, touch points rapides, coulisses en 15-30s. Le reel a généré 527 vues vs ~7 likes pour un carrousel : ratio vues/engagement inférieur mais portée potentiellement plus grande. À tester comme outil de découverte.
+      </div>
+    </div>
+
+    <div class="format-box" style="background:linear-gradient(135deg, rgba(24,78,90,0.03), rgba(191,108,92,0.03)); border: 1px dashed var(--border);">
+      <h4 style="color:#184E5A">📊 Recommandation stratégique</h4>
+      <div class="format-sub">Allocation optimale suggérée</div>
+      <div style="margin-top:16px">
+        <div class="bar-wrap">
+          <div class="bar-label">Carrousels</div>
+          <div class="bar-track"><div class="bar-fill" style="width:50%;background:#184E5A"></div></div>
+          <div class="bar-val">50%</div>
+        </div>
+        <div class="bar-wrap">
+          <div class="bar-label">Images perso</div>
+          <div class="bar-track"><div class="bar-fill" style="width:30%;background:#BF6C5C"></div></div>
+          <div class="bar-val">30%</div>
+        </div>
+        <div class="bar-wrap">
+          <div class="bar-label">Reels (à tester)</div>
+          <div class="bar-track"><div class="bar-fill" style="width:20%;background:#599092"></div></div>
+          <div class="bar-val">20%</div>
+        </div>
+      </div>
+      <div class="format-job">
+        <strong>Constat clé</strong>
+        Tu sur-utilises les carrousels génériques (74%). L'image seule personnelle a une médiane de likes 4× supérieure. L'or est dans les posts qui te montrent toi, pas ceux qui listent des conseils.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 5 : SERIES ===== -->
+<div id="section-series" class="section">
+  <div class="section-title">Séries & patterns récurrents</div>
+  <div class="section-subtitle">Clusters thématiques identifiés dans le contenu</div>
+
+  <div class="series-grid">
+    <div class="series-card">
+      <div class="series-icon">🧠</div>
+      <div class="series-name">Syndrome & douleurs du cadre</div>
+      <div class="series-count">6 posts • avg 13 eng.</div>
+      <div class="series-desc">Syndrome de l'imposteur, burn-out, solitude du dirigeant, 60h/semaine, dire non. Angle "vous n'êtes pas seul·e". Meilleur cluster de la stratégie actuelle.</div>
+      <div class="series-avg">🔥 Best performer par post</div>
+    </div>
+
+    <div class="series-card coral">
+      <div class="series-icon">🚀</div>
+      <div class="series-name">Milestones personnels MCP</div>
+      <div class="series-count">3 posts • avg 28 eng.</div>
+      <div class="series-desc">Certification RNCP, lancement MCP, présentation. Posts d'annonce qui agrègent toute la bienveillance du réseau. Très fort mais sous-exploité.</div>
+      <div class="series-avg">⭐ Engagement record (+400% vs médiane)</div>
+    </div>
+
+    <div class="series-card slate">
+      <div class="series-icon">💼</div>
+      <div class="series-name">Leadership & management</div>
+      <div class="series-count">7 posts • avg 7 eng.</div>
+      <div class="series-desc">4 piliers du leadership, feedback ORBE, rituels équipe, prise de décision alignée. Format pédagogique pur. Bon volume, engagement dans la médiane.</div>
+      <div class="series-avg">📘 Expertise builder - reach limité</div>
+    </div>
+
+    <div class="series-card">
+      <div class="series-icon">⚖️</div>
+      <div class="series-name">Double vie salarié / coach</div>
+      <div class="series-count">2 posts • avg 9 eng.</div>
+      <div class="series-desc">"Être coach, salariée et avoir une vie personnelle" + "Se former, c'est rester vivant". Ton personnel-autobiographique. Différenciateur fort. Très sous-exploité.</div>
+      <div class="series-avg">💡 À développer massivement</div>
+    </div>
+
+    <div class="series-card coral">
+      <div class="series-icon">🎯</div>
+      <div class="series-name">Démystification du coaching</div>
+      <div class="series-count">2 posts • avg 12 eng.</div>
+      <div class="series-desc">"Coach pas gourou", "le leadership se construit". Prise de position anti-conformiste, différenciation forte vs faux coachs. Ton assertif qui marche.</div>
+      <div class="series-avg">💪 Positionnement différenciateur</div>
+    </div>
+
+    <div class="series-card slate">
+      <div class="series-icon">📊</div>
+      <div class="series-name">Data + manifeste</div>
+      <div class="series-count">1 post • 19 eng.</div>
+      <div class="series-desc">"82% des dirigeants…" Statistique choc + conviction personnelle + promesse d'accompagnement. Format dense mais percutant. À reproduire.</div>
+      <div class="series-avg">📈 Format sous-utilisé à fort potentiel</div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <div class="insight-icon">🔍</div>
+    <div class="insight-text">
+      <strong>Pattern clé : le luxe/beauty est quasi absent de ta stratégie de contenu actuelle</strong>
+      <p>Zéro post analysé n'est spécifiquement ancré dans le monde du luxe ou de la beauté. Ton positionnement niche (coaching pour cadres luxe/beauty) est absent du contenu Instagram. C'est ton angle de différenciation le plus fort - et le plus inexploité.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 6 : IDEES ===== -->
+<div id="section-ideas" class="section">
+  <div class="section-title">10 idées de contenu calibrées</div>
+  <div class="section-subtitle">Basées sur ce qui surperforme déjà chez toi</div>
+
+  <div class="ideas-grid">
+    <div class="idea-card">
+      <div class="idea-number">01</div>
+      <div class="idea-format">Image • Milestone</div>
+      <div class="idea-title">Ton premier client de coaching dans une maison de luxe</div>
+      <div class="idea-hook">"Mon premier client dans une maison de luxe m'a dit une chose qui a tout changé dans ma façon de coacher…"</div>
+      <div class="idea-why">Réplique le pattern milestone personnel (avg 28 eng.) + ancre enfin le positionnement luxe dans le contenu.</div>
+      <span class="idea-signal">Signal : posts personnels ×4 vs médiane</span>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-number">02</div>
+      <div class="idea-format">Carrousel • Douleur nommée</div>
+      <div class="idea-title">La double casquette salariée / coach : ce que personne ne te dit</div>
+      <div class="idea-hook">"J'ai eu honte de dire que j'avais un CDI pendant 6 mois après le lancement de MCP. Voilà pourquoi."</div>
+      <div class="idea-why">Vulnérabilité réelle + différenciation unique. Ton récit de double vie est le plus authentique de ta stratégie. Sous-exploité.</div>
+      <span class="idea-signal">Signal : ton personnel = +60% vs carrousel générique</span>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-number">03</div>
+      <div class="idea-format">Image • Data choc</div>
+      <div class="idea-title">Les chiffres que personne ne dit aux cadres du luxe</div>
+      <div class="idea-hook">"Dans le luxe, la pression de la perfection est 40% plus élevée que dans les autres secteurs. Voici ce que ça fait à vos cadres."</div>
+      <div class="idea-why">Réplique le format data manifeste (19 eng.) + ancrage sectoriel luxe + positionnement expert de niche.</div>
+      <span class="idea-signal">Signal : format data = 19 eng. (top 6)</span>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-number">04</div>
+      <div class="idea-format">Carrousel • Identification</div>
+      <div class="idea-title">Tu travailles dans le luxe et tu te reconnais dans ça ?</div>
+      <div class="idea-hook">"Tu passes tes journées à prêcher l'excellence pour les autres. Et le soir, tu ne sais plus qui tu es sans ton titre."</div>
+      <div class="idea-why">La question d'identification est ton meilleur trigger de commentaires (avg 22 eng.). Ici avec ancrage luxe = cible ultra-qualifiée.</div>
+      <span class="idea-signal">Signal : questions ident. + douleur = top 5</span>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-number">05</div>
+      <div class="idea-format">Image • Prise de position</div>
+      <div class="idea-title">Le coaching certifié RNCP : pourquoi ça change tout pour toi</div>
+      <div class="idea-hook">"On m'a dit : 'un coach, n'importe qui peut se proclamer.' J'ai décidé de prouver le contraire."</div>
+      <div class="idea-why">Réinvestit le capital du post RNCP (64 eng.) avec un angle éducatif + prise de position. Format image = émotionnel.</div>
+      <span class="idea-signal">Signal : légitimation = post #1 avec 64 eng.</span>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-number">06</div>
+      <div class="idea-format">Carrousel • Série récurrente</div>
+      <div class="idea-title">"Ce que mes clients du luxe m'apprennent" - épisode 1</div>
+      <div class="idea-hook">"Cette semaine, un directeur régional Hermès m'a dit quelque chose que je n'avais jamais entendu en coaching…"</div>
+      <div class="idea-why">Série récurrente = fidélisation audience. Case studies anonymisés = preuve sociale + ancrage luxe. Épisodes = attente et retour.</div>
+      <span class="idea-signal">Signal : série = récurrence + anticipation</span>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-number">07</div>
+      <div class="idea-format">Carrousel • Démystification</div>
+      <div class="idea-title">3 choses que le coaching N'EST PAS (et que trop de DRH luxe croient)</div>
+      <div class="idea-hook">"Non, le coaching n'est pas du conseil. Non, ce n'est pas de la thérapie. Et non, ça ne marche pas en 1 séance."</div>
+      <div class="idea-why">Réplique le pattern anti-gourou (12 eng.) + cible B2B DRH. Prise de position tranchée = partages et sauvegarde.</div>
+      <span class="idea-signal">Signal : démystification = top 9 posts</span>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-number">08</div>
+      <div class="idea-format">Image • Milestone MCP</div>
+      <div class="idea-title">1 an de MCP : le bilan que je ne t'avais pas promis</div>
+      <div class="idea-hook">"Il y a un an, j'envoyais mon premier message à mon premier client. Voilà ce que je sais maintenant."</div>
+      <div class="idea-why">Anniversaire MCP = milestone fort. Vulnérabilité réflexive. Bilan = communauté célèbre avec toi. Déclenche le maximum de réactions.</div>
+      <span class="idea-signal">Signal : milestones avg 28 eng. (+300%)</span>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-number">09</div>
+      <div class="idea-format">Carrousel • Outil pratique</div>
+      <div class="idea-title">Les 4 questions que je pose à mes clients avant chaque prise de poste</div>
+      <div class="idea-hook">"Je les ai posées à 12 directeurs du luxe cette année. La réponse à la question 3 m'a surprise à chaque fois."</div>
+      <div class="idea-why">Format outil pratique + ancrage client réel + curiosité gap (question 3). Tension narrative = engagement fort.</div>
+      <span class="idea-signal">Signal : format "outil client" + curiosity gap</span>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-number">10</div>
+      <div class="idea-format">Carrousel • CTA DM mot-clé</div>
+      <div class="idea-title">Si tu travailles dans le luxe et que tu lis ça à 23h…</div>
+      <div class="idea-hook">"C'est probablement parce que tu n'as pas réussi à t'arrêter avant. Tu mérites mieux. Envoie-moi 'LUXE' en MP."</div>
+      <div class="idea-why">CTA DM mot-clé = ton outil de conversion #1 (post imposteur : +1 com + DMs non visibles). Ciblage ultra-précis cadres luxe night mode.</div>
+      <span class="idea-signal">Signal : CTA DM mot-clé = 3× plus de coms</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 7 : PLAN 30J ===== -->
+<div id="section-plan" class="section">
+  <div class="section-title">Plan d'action - 30 jours</div>
+  <div class="section-subtitle">Basé sur les 3 leviers prioritaires identifiés dans l'analyse</div>
+
+  <div class="insight" style="margin-bottom:32px">
+    <div class="insight-icon">🎯</div>
+    <div class="insight-text">
+      <strong>3 leviers prioritaires</strong>
+      <p><strong>1. Personnaliser :</strong> Multiplier les posts "image seule personnelle" (×4 vs médiane). <strong>2. Ancrer dans le luxe :</strong> Chaque post doit connecter à la réalité sectorielle de ta cible. <strong>3. Systématiser les CTA DM mot-clé</strong> sur tous les posts à intention commerciale.</p>
+    </div>
+  </div>
+
+  <div class="plan-timeline">
+
+    <div class="plan-week">
+      <div class="plan-week-header" onclick="toggleWeek(this)">
+        <div class="week-badge w1">1</div>
+        <div>
+          <div class="week-title">Semaine 1 - Audit & fondation</div>
+          <div class="week-subtitle">J1-J7 · Poser les bases avant de publier</div>
+        </div>
+        <span style="margin-left:auto;color:#8AA4AE;font-size:18px">▾</span>
+      </div>
+      <div class="plan-week-body open">
+        <div class="plan-action">
+          <div class="action-day">J1</div>
+          <div class="action-content">
+            <strong>Audit visuel de ton feed actuel</strong>
+            <p>Vérifier que les 6 derniers posts reflètent le positionnement luxe/beauty. Supprimer ou archiver les posts sous 5 eng. et trop génériques.</p>
+            <span class="action-tag tag-strategy">Stratégie</span>
+          </div>
+        </div>
+        <div class="plan-action">
+          <div class="action-day">J2</div>
+          <div class="action-content">
+            <strong>Rédiger le post "1 an de MCP" (image seule)</strong>
+            <p>Format milestone = ton meilleur ROI. Ton anniversaire d'activité est un momentum à ne pas rater. Draft + validation avant publication.</p>
+            <span class="action-tag tag-content">Contenu</span>
+          </div>
+        </div>
+        <div class="plan-action">
+          <div class="action-day">J4</div>
+          <div class="action-content">
+            <strong>Publier le post "1 an de MCP" - jeudi matin 8h</strong>
+            <p>Fenêtre optimale jeudi 7h-9h Paris. Répondre à TOUS les commentaires dans les 2h pour booster l'algorithme.</p>
+            <span class="action-tag tag-content">Contenu</span>
+          </div>
+        </div>
+        <div class="plan-action">
+          <div class="action-day">J6</div>
+          <div class="action-content">
+            <strong>Préparer le carrousel "double casquette"</strong>
+            <p>Rédiger le texte des 5-7 slides. Angle : vulnérabilité maîtrisée sur la réalité d'être coach + salariée. Sans édulcorer.</p>
+            <span class="action-tag tag-content">Contenu</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="plan-week">
+      <div class="plan-week-header" onclick="toggleWeek(this)">
+        <div class="week-badge w2">2</div>
+        <div>
+          <div class="week-title">Semaine 2 - Activation luxe</div>
+          <div class="week-subtitle">J8-J14 · Ancrer le positionnement sectoriel dans le contenu</div>
+        </div>
+        <span style="margin-left:auto;color:#8AA4AE;font-size:18px">▾</span>
+      </div>
+      <div class="plan-week-body">
+        <div class="plan-action">
+          <div class="action-day">J8</div>
+          <div class="action-content">
+            <strong>Publier le carrousel "double casquette" - lundi matin</strong>
+            <p>Ton angle différenciateur le plus fort. CTA : "Envoie-moi ÉQUILIBRE en MP si tu vis ça aussi."</p>
+            <span class="action-tag tag-content">Contenu</span>
+          </div>
+        </div>
+        <div class="plan-action">
+          <div class="action-day">J10</div>
+          <div class="action-content">
+            <strong>Rédiger l'image "data choc luxe"</strong>
+            <p>Chercher 2-3 stats réelles sur le burn-out dans le luxe/beauté. Format texte dense + photo pro. Manifeste "voilà ma mission".</p>
+            <span class="action-tag tag-strategy">Stratégie</span>
+          </div>
+        </div>
+        <div class="plan-action">
+          <div class="action-day">J11</div>
+          <div class="action-content">
+            <strong>Publier "data choc luxe" - vendredi 8h</strong>
+            <p>Fenêtre vendredi matin = pic d'engagement. Répondre aux saves + coms dans les 2h.</p>
+            <span class="action-tag tag-content">Contenu</span>
+          </div>
+        </div>
+        <div class="plan-action">
+          <div class="action-day">J13</div>
+          <div class="action-content">
+            <strong>Tester un reel de 15 sec - coulisses coaching</strong>
+            <p>Format : une phrase choc face cam, une info utile, CTA DM. Mesurer les vues vs likes pour établir ta baseline reels.</p>
+            <span class="action-tag tag-test">Test</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="plan-week">
+      <div class="plan-week-header" onclick="toggleWeek(this)">
+        <div class="week-badge w3">3</div>
+        <div>
+          <div class="week-title">Semaine 3 - Conversion & CTA</div>
+          <div class="week-subtitle">J15-J21 · Transformer l'audience en prospects qualifiés</div>
+        </div>
+        <span style="margin-left:auto;color:#8AA4AE;font-size:18px">▾</span>
+      </div>
+      <div class="plan-week-body">
+        <div class="plan-action">
+          <div class="action-day">J15</div>
+          <div class="action-content">
+            <strong>Carrousel "Tu travailles dans le luxe et tu lis ça à 23h…"</strong>
+            <p>CTA DM mot-clé "LUXE". Ce post est conçu pour convertir. Publier un dimanche soir (20h) pour toucher les cadres en mode réflexion.</p>
+            <span class="action-tag tag-content">Contenu</span>
+          </div>
+        </div>
+        <div class="plan-action">
+          <div class="action-day">J17</div>
+          <div class="action-content">
+            <strong>Lancer la série "Ce que mes clients du luxe m'apprennent"</strong>
+            <p>Épisode 1. Format récurrent = annonce de suite = fidélisation. Demander en stories de valider le concept avant de publier.</p>
+            <span class="action-tag tag-strategy">Stratégie</span>
+          </div>
+        </div>
+        <div class="plan-action">
+          <div class="action-day">J19</div>
+          <div class="action-content">
+            <strong>Image seule "premier client luxe" ou anecdote forte</strong>
+            <p>Milestone ou moment de bascule réel. Ton personnel = émotionnel = engagement. Pas de liste, pas de conseils - juste une histoire.</p>
+            <span class="action-tag tag-content">Contenu</span>
+          </div>
+        </div>
+        <div class="plan-action">
+          <div class="action-day">J21</div>
+          <div class="action-content">
+            <strong>Réanalyse des métriques semaines 1-3</strong>
+            <p>Comparer l'engagement des posts personnels vs carrousels génériques. Ajuster l'allocation pour la semaine 4.</p>
+            <span class="action-tag tag-test">Test</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="plan-week">
+      <div class="plan-week-header" onclick="toggleWeek(this)">
+        <div class="week-badge w4">4</div>
+        <div>
+          <div class="week-title">Semaine 4 - Optimisation & récurrence</div>
+          <div class="week-subtitle">J22-J30 · Installer les habitudes qui durent</div>
+        </div>
+        <span style="margin-left:auto;color:#8AA4AE;font-size:18px">▾</span>
+      </div>
+      <div class="plan-week-body">
+        <div class="plan-action">
+          <div class="action-day">J22</div>
+          <div class="action-content">
+            <strong>Publier "3 choses que le coaching N'EST PAS pour les DRH luxe"</strong>
+            <p>Carrousel démystification B2B. Angle éducatif + prise de position. Cibler les DRH en bio/hashtags. CTA découverte gratuite.</p>
+            <span class="action-tag tag-content">Contenu</span>
+          </div>
+        </div>
+        <div class="plan-action">
+          <div class="action-day">J25</div>
+          <div class="action-content">
+            <strong>Deuxième reel de test - partager une conviction forte en 30 sec</strong>
+            <p>S'appuyer sur l'analyse du premier reel (J13). Tester un format légèrement plus long avec plus de substance.</p>
+            <span class="action-tag tag-test">Test</span>
+          </div>
+        </div>
+        <div class="plan-action">
+          <div class="action-day">J28</div>
+          <div class="action-content">
+            <strong>Carrousel "4 questions que je pose avant chaque prise de poste"</strong>
+            <p>Outil pratique avec curiosity gap (question 3 surprenante). Dernière slide : CTA DM "POSTE" pour les gens en transition.</p>
+            <span class="action-tag tag-content">Contenu</span>
+          </div>
+        </div>
+        <div class="plan-action">
+          <div class="action-day">J30</div>
+          <div class="action-content">
+            <strong>Bilan 30 jours : décider la règle des 3 formats</strong>
+            <p>Fixer ton ratio définitif image/carrousel/reel. Planifier le mois 2 avec les données réelles - pas des intuitions.</p>
+            <span class="action-tag tag-strategy">Stratégie</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- end main -->
+
+<div class="footer">Clarté. Posture. Impact. - My Coaching Partner © 2026</div>
+
+<script>
+// Navigation tabs
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('section-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// Post filtering
+function filterPosts(type, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.post-card').forEach(card => {
+    if (type === 'all' || card.dataset.type === type) {
+      card.style.display = '';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+// Week accordion
+function toggleWeek(header) {
+  const body = header.nextElementSibling;
+  const arrow = header.querySelector('span');
+  if (body.classList.contains('open')) {
+    body.classList.remove('open');
+    arrow.textContent = '▾';
+  } else {
+    body.classList.add('open');
+    arrow.textContent = '▴';
+  }
+}
+
+// Animate bars on load
+window.addEventListener('load', () => {
+  document.querySelectorAll('.bar-fill').forEach(bar => {
+    const w = bar.style.width;
+    bar.style.width = '0';
+    setTimeout(() => { bar.style.width = w; }, 200);
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCP - LinkedIn - Dashboard contenus</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal-dark: #184E5A;
+    --teal-mid: #599092;
+    --teal-light: #A8C5C6;
+    --patina: #5E9E9A;
+    --nile: #4A8A8C;
+    --coral: #BF6C5C;
+    --blush: #E9B3A3;
+    --slate: #6F8B9D;
+    --cream: #F7F3EE;
+    --white: #FFFFFF;
+    --text-dark: #1A2E35;
+    --text-mid: #3D5561;
+    --text-light: #8AA4AE;
+    --border: rgba(24,78,90,0.1);
+    --shadow: 0 4px 24px rgba(24,78,90,0.08);
+    --shadow-hover: 0 12px 40px rgba(24,78,90,0.15);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--text-dark); }
+
+  /* HEADER */
+  .header { background:var(--teal-dark); padding:28px 48px; display:flex; align-items:center; justify-content:space-between; }
+  .header-left span { font-size:11px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:var(--teal-mid); display:block; margin-bottom:6px; }
+  .header-left h1 { font-family:'Playfair Display',serif; font-size:26px; color:var(--white); }
+  .header-right { text-align:right; }
+  .li-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(233,179,163,0.15); border:1px solid rgba(233,179,163,0.35); border-radius:20px; padding:6px 14px; }
+  .li-badge svg { width:16px; height:16px; fill:var(--blush); }
+  .li-badge span { font-size:13px; color:var(--blush); font-weight:600; }
+  .header-right .date { font-size:11px; color:var(--teal-mid); margin-top:8px; letter-spacing:1px; }
+
+  /* NAV */
+  .nav { background:var(--white); border-bottom:1px solid var(--border); padding:0 48px; display:flex; position:sticky; top:0; z-index:100; box-shadow:0 2px 12px rgba(24,78,90,0.05); overflow-x:auto; }
+  .nav-tab { padding:15px 22px; font-size:11px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-light); cursor:pointer; border-bottom:2px solid transparent; transition:all .2s; white-space:nowrap; }
+  .nav-tab:hover { color:var(--teal-dark); }
+  .nav-tab.active { color:var(--teal-dark); border-bottom-color:var(--teal-mid); }
+
+  /* MAIN */
+  .main { padding:36px 48px; max-width:1400px; margin:0 auto; }
+  .section { display:none; }
+  .section.active { display:block; }
+  .section-title { font-family:'Playfair Display',serif; font-size:22px; color:var(--teal-dark); margin-bottom:6px; }
+  .section-subtitle { font-size:13px; color:var(--text-light); margin-bottom:28px; }
+
+  /* KPI - 2 lignes de 3 */
+  .kpi-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:36px; }
+  .kpi-card { background:var(--white); border-radius:12px; padding:20px 16px; box-shadow:var(--shadow); border-left:3px solid var(--teal-mid); }
+  .kpi-card.coral { border-left-color:var(--coral); }
+  .kpi-card.patina { border-left-color:var(--patina); }
+  .kpi-card.nile { border-left-color:var(--nile); }
+  .kpi-card.blush { border-left-color:var(--blush); }
+  .kpi-card.slate { border-left-color:var(--slate); }
+  .kpi-label { font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-light); margin-bottom:8px; }
+  .kpi-value { font-family:'Playfair Display',serif; font-size:28px; color:var(--teal-dark); line-height:1; }
+  .kpi-sub { font-size:10px; color:var(--text-light); margin-top:5px; }
+
+  /* CARDS */
+  .card { background:var(--white); border-radius:12px; padding:26px; box-shadow:var(--shadow); margin-bottom:24px; }
+  .card h3 { font-family:'Playfair Display',serif; font-size:16px; color:var(--teal-dark); margin-bottom:4px; }
+  .card p.sub { font-size:11px; color:var(--text-light); margin-bottom:18px; }
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-bottom:24px; }
+
+  /* INSIGHT */
+  .insight { background:linear-gradient(135deg,rgba(24,78,90,.05),rgba(89,144,146,.05)); border:1px solid var(--border); border-radius:12px; padding:18px 22px; margin-bottom:22px; display:flex; gap:14px; align-items:flex-start; }
+  .insight-icon { font-size:22px; flex-shrink:0; }
+  .insight-text strong { font-size:13px; color:var(--teal-dark); display:block; margin-bottom:3px; }
+  .insight-text p { font-size:12px; color:var(--text-mid); line-height:1.5; }
+
+  /* BAR */
+  .bar-wrap { display:flex; align-items:center; gap:10px; margin-bottom:9px; }
+  .bar-label { width:160px; font-size:12px; color:var(--text-mid); flex-shrink:0; text-align:right; }
+  .bar-track { flex:1; height:8px; background:var(--cream); border-radius:4px; overflow:hidden; }
+  .bar-fill { height:100%; border-radius:4px; transition:width .8s ease; }
+  .bar-val { width:50px; font-size:12px; font-weight:700; color:var(--teal-dark); flex-shrink:0; }
+
+  /* TOP POSTS */
+  .post-filters { display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap; }
+  .filter-btn { padding:5px 14px; border:1px solid var(--border); border-radius:20px; font-size:11px; font-weight:600; letter-spacing:.5px; text-transform:uppercase; cursor:pointer; background:var(--white); color:var(--text-mid); transition:all .2s; }
+  .filter-btn:hover,.filter-btn.active { background:var(--teal-dark); color:var(--white); border-color:var(--teal-dark); }
+  .posts-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+  .post-card { background:var(--white); border-radius:12px; overflow:hidden; box-shadow:var(--shadow); transition:transform .2s,box-shadow .2s; }
+  .post-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-hover); }
+  .post-card-header { padding:12px 16px; display:flex; align-items:center; justify-content:space-between; }
+  .pc-rank { font-family:'Playfair Display',serif; font-size:20px; color:var(--blush); }
+  .pc-badge { font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:3px 8px; border-radius:10px; }
+  /* Badges thématiques - palette verts/teals uniquement */
+  .b-luxe { background:rgba(24,78,90,.15); color:#0D3440; }
+  .b-leader { background:rgba(89,144,146,.18); color:#1E5E60; }
+  .b-burnout { background:rgba(74,138,140,.15); color:#1A4E50; }
+  .b-ia { background:rgba(94,158,154,.18); color:#1C5250; }
+  .b-mgmt { background:rgba(168,197,198,.25); color:#2A6062; }
+  .b-poste { background:rgba(24,78,90,.1); color:#184E5A; }
+  /* Format badges */
+  .b-image { background:rgba(89,144,146,.12); color:var(--nile); }
+  .b-carrousel { background:rgba(24,78,90,.12); color:var(--teal-dark); }
+  .b-texte { background:rgba(168,197,198,.2); color:var(--teal-mid); }
+
+  .post-card-body { padding:14px 16px; }
+  .pc-eng { display:flex; gap:10px; margin-bottom:8px; align-items:center; }
+  .eng-item { display:flex; align-items:center; gap:3px; font-size:13px; font-weight:700; color:var(--teal-dark); }
+  .eng-item span { font-size:10px; color:var(--text-light); font-weight:400; }
+  .eng-total { font-size:12px; font-weight:700; color:var(--patina); margin-left:auto; }
+  .pc-hook { font-size:13px; font-weight:600; color:var(--text-dark); margin-bottom:6px; line-height:1.4; }
+  .pc-meta { font-size:10px; color:var(--text-light); margin-bottom:4px; }
+  .pc-badges { display:flex; gap:5px; flex-wrap:wrap; margin-top:6px; }
+  .pc-url { display:inline-block; margin-top:6px; font-size:10px; color:var(--teal-mid); text-decoration:none; font-weight:600; }
+  .pc-url:hover { color:var(--patina); }
+
+  /* PATTERNS */
+  .hook-item { display:flex; align-items:flex-start; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); }
+  .hook-item:last-child { border-bottom:none; }
+  .hook-score { flex-shrink:0; width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-size:13px; font-weight:700; }
+  .hs-high { background:rgba(24,78,90,.12); color:var(--teal-dark); }
+  .hs-mid { background:rgba(94,158,154,.15); color:var(--patina); }
+  .hs-low { background:rgba(111,139,157,.12); color:var(--slate); }
+  .hook-content h4 { font-size:13px; font-weight:700; color:var(--text-dark); margin-bottom:3px; }
+  .hook-content p { font-size:12px; color:var(--text-light); line-height:1.4; }
+  .hook-example { font-style:italic; font-size:12px; color:var(--teal-mid); margin-top:4px; border-left:2px solid var(--teal-mid); padding-left:8px; line-height:1.4; }
+
+  /* TOPICS */
+  .topic-row { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+  .topic-label { width:160px; font-size:12px; color:var(--text-mid); flex-shrink:0; }
+  .topic-bar-track { flex:1; height:10px; background:var(--cream); border-radius:5px; overflow:hidden; }
+  .topic-bar-fill { height:100%; border-radius:5px; transition:width .8s ease; }
+  .topic-meta { display:flex; gap:8px; width:110px; flex-shrink:0; }
+  .topic-avg { font-size:12px; font-weight:700; color:var(--teal-dark); }
+  .topic-count { font-size:11px; color:var(--text-light); }
+
+  /* FORMAT BOXES */
+  .format-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px; }
+  .format-box { background:var(--white); border-radius:12px; padding:20px; box-shadow:var(--shadow); border-top:3px solid var(--teal-mid); }
+  .format-box.patina { border-top-color:var(--patina); }
+  .format-box.nile { border-top-color:var(--nile); }
+  .format-name { font-family:'Playfair Display',serif; font-size:15px; color:var(--teal-dark); margin-bottom:3px; }
+  .format-count { font-size:10px; font-weight:700; letter-spacing:1px; color:var(--text-light); text-transform:uppercase; margin-bottom:14px; }
+  .format-stat { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--border); }
+  .format-stat:last-of-type { border-bottom:none; }
+  .fs-label { font-size:11px; color:var(--text-mid); }
+  .fs-val { font-size:13px; font-weight:700; color:var(--teal-dark); }
+  .format-job { margin-top:12px; padding:10px; background:rgba(24,78,90,.04); border-radius:8px; font-size:11px; color:var(--text-mid); line-height:1.5; }
+  .format-job strong { font-size:9px; letter-spacing:.5px; text-transform:uppercase; color:var(--teal-dark); display:block; margin-bottom:3px; }
+
+  /* IDEAS */
+  .ideas-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:18px; margin-bottom:36px; }
+  .idea-card { background:var(--white); border-radius:12px; padding:22px; box-shadow:var(--shadow); position:relative; overflow:hidden; }
+  .idea-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--teal-dark),var(--patina)); }
+  .idea-num { font-family:'Playfair Display',serif; font-size:44px; color:var(--cream); position:absolute; top:6px; right:14px; font-weight:700; line-height:1; }
+  .idea-format { font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--teal-mid); margin-bottom:6px; }
+  .idea-title { font-family:'Playfair Display',serif; font-size:15px; color:var(--teal-dark); margin-bottom:8px; line-height:1.3; }
+  .idea-hook { font-size:13px; color:var(--text-mid); font-style:italic; border-left:2px solid var(--patina); padding-left:10px; margin-bottom:8px; line-height:1.4; }
+  .idea-why { font-size:11px; color:var(--text-light); line-height:1.5; }
+  .idea-signal { display:inline-block; margin-top:8px; font-size:10px; font-weight:600; padding:3px 8px; background:rgba(24,78,90,.08); color:var(--teal-dark); border-radius:10px; }
+
+  /* CTA */
+  .cta-compare { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px; }
+  .cta-box { background:var(--white); border-radius:12px; padding:18px; box-shadow:var(--shadow); text-align:center; border-top:3px solid var(--teal-mid); }
+  .cta-box.b2 { border-top-color:var(--patina); }
+  .cta-box.b3 { border-top-color:var(--nile); }
+  .cta-box.b4 { border-top-color:var(--slate); }
+  .cta-name { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--text-light); margin-bottom:8px; }
+  .cta-val { font-family:'Playfair Display',serif; font-size:26px; color:var(--teal-dark); }
+  .cta-sub { font-size:11px; color:var(--text-light); margin-top:4px; }
+  .cta-job { font-size:12px; color:var(--text-mid); margin-top:10px; line-height:1.4; text-align:left; }
+
+  /* PLAN */
+  .plan-week { background:var(--white); border-radius:12px; margin-bottom:14px; overflow:hidden; box-shadow:var(--shadow); }
+  .plan-week-hdr { padding:14px 22px; display:flex; align-items:center; gap:14px; cursor:pointer; }
+  .plan-week-hdr:hover { background:rgba(24,78,90,.02); }
+  .wbadge { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-size:15px; font-weight:700; flex-shrink:0; }
+  .w1{background:var(--teal-dark);color:#fff;} .w2{background:var(--patina);color:#fff;} .w3{background:var(--nile);color:#fff;} .w4{background:var(--slate);color:#fff;}
+  .week-title { font-family:'Playfair Display',serif; font-size:15px; color:var(--teal-dark); }
+  .week-sub { font-size:11px; color:var(--text-light); }
+  .plan-body { padding:0 22px 18px; display:none; }
+  .plan-body.open { display:block; }
+  .plan-action { display:flex; gap:12px; padding:9px 0; border-bottom:1px solid var(--border); }
+  .plan-action:last-child { border-bottom:none; }
+  .pa-day { flex-shrink:0; width:34px; font-size:10px; font-weight:700; color:var(--text-light); padding-top:2px; text-transform:uppercase; }
+  .pa-content strong { font-size:13px; color:var(--text-dark); display:block; margin-bottom:2px; }
+  .pa-content p { font-size:12px; color:var(--text-mid); line-height:1.4; }
+  .pa-tag { display:inline-block; margin-top:3px; font-size:10px; padding:2px 7px; border-radius:8px; font-weight:600; }
+  .tag-c { background:rgba(89,144,146,.1); color:var(--teal-mid); }
+  .tag-s { background:rgba(94,158,154,.1); color:var(--patina); }
+  .tag-t { background:rgba(111,139,157,.1); color:var(--slate); }
+
+  /* DONUT */
+  .donut-wrap { display:flex; align-items:center; gap:22px; }
+  .legend-item { display:flex; align-items:center; gap:8px; margin-bottom:7px; }
+  .ldot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  .llabel { font-size:12px; color:var(--text-mid); }
+  .lpct { font-size:13px; font-weight:700; color:var(--teal-dark); margin-left:auto; padding-left:12px; }
+
+  .footer { background:var(--teal-dark); padding:18px 48px; text-align:center; font-family:'Playfair Display',serif; font-style:italic; color:var(--teal-mid); font-size:13px; margin-top:50px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <span>My Coaching Partner</span>
+    <h1>LinkedIn - Dashboard contenus</h1>
+  </div>
+  <div class="header-right">
+    <div class="li-badge">
+      <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      <span>capucine-legrand-coach-carriere-luxe</span>
+    </div>
+    <div class="date">Analyse - Mai 2026 - 50 posts scrappés (nov. 2025 - mai 2026)</div>
+  </div>
+</div>
+
+<nav class="nav">
+  <div class="nav-tab active" onclick="showTab('overview',this)">Vue d'ensemble</div>
+  <div class="nav-tab" onclick="showTab('topposts',this)">Top contenus</div>
+  <div class="nav-tab" onclick="showTab('patterns',this)">Patterns & accroches</div>
+  <div class="nav-tab" onclick="showTab('topics',this)">Topics & formats</div>
+  <div class="nav-tab" onclick="showTab('cta',this)">CTAs</div>
+  <div class="nav-tab" onclick="showTab('ideas',this)">Idées contenu</div>
+  <div class="nav-tab" onclick="showTab('plan',this)">Plan 30 jours</div>
+</nav>
+
+<div class="main">
+
+<!-- ===== OVERVIEW ===== -->
+<div id="tab-overview" class="section active">
+  <div class="section-title">Vue d'ensemble</div>
+  <div class="section-subtitle">50 posts analysés - novembre 2025 a mai 2026 (limite technique de l'API LinkedIn : seuls les 50 derniers posts sont accessibles sans authentification)</div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card nile">
+      <div class="kpi-label">Posts analysés</div>
+      <div class="kpi-value">50</div>
+      <div class="kpi-sub">nov. 2025 - mai 2026</div>
+    </div>
+    <div class="kpi-card coral">
+      <div class="kpi-label">Total likes</div>
+      <div class="kpi-value">456</div>
+      <div class="kpi-sub">Mediane : 8 likes/post</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Commentaires</div>
+      <div class="kpi-value">55</div>
+      <div class="kpi-sub">Mediane : 0 / post</div>
+    </div>
+    <div class="kpi-card patina">
+      <div class="kpi-label">Partages</div>
+      <div class="kpi-value">9</div>
+      <div class="kpi-sub">Format le plus rare</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Engagement total</div>
+      <div class="kpi-value">520</div>
+      <div class="kpi-sub">Mediane : 9 / post</div>
+    </div>
+    <div class="kpi-card blush">
+      <div class="kpi-label">Meilleur post</div>
+      <div class="kpi-value">30</div>
+      <div class="kpi-sub">1ere annee dirigeant - jan. 2026</div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <div class="insight-icon">⚠️</div>
+    <div class="insight-text">
+      <strong>Pourquoi seulement nov. 2025 a mai 2026 ?</strong>
+      <p>L'API publique LinkedIn (sans cookies de connexion) ne remonte que les 50 derniers posts d'un profil. Tes posts anterieurs existent mais ne sont pas accessibles via scraping public. Pour analyser l'historique complet, il faudrait soit utiliser l'API officielle LinkedIn (nécessite une app approuvée), soit exporter tes données directement depuis LinkedIn (Parametres - Confidentialite - Obtenir une copie de vos données).</p>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>Engagement total par mois</h3>
+      <p class="sub">Likes + commentaires + partages cumules</p>
+      <svg viewBox="0 0 440 180" width="100%">
+        <line x1="55" y1="160" x2="420" y2="160" stroke="#E0ECF0" stroke-width="1"/>
+        <line x1="55" y1="10" x2="55" y2="160" stroke="#E0ECF0" stroke-width="1"/>
+        <line x1="55" y1="130" x2="420" y2="130" stroke="#F0F5F7" stroke-width="1" stroke-dasharray="3,3"/>
+        <line x1="55" y1="100" x2="420" y2="100" stroke="#F0F5F7" stroke-width="1" stroke-dasharray="3,3"/>
+        <line x1="55" y1="70" x2="420" y2="70" stroke="#F0F5F7" stroke-width="1" stroke-dasharray="3,3"/>
+        <text x="48" y="164" text-anchor="end" font-size="8" fill="#8AA4AE">0</text>
+        <text x="48" y="134" text-anchor="end" font-size="8" fill="#8AA4AE">50</text>
+        <text x="48" y="104" text-anchor="end" font-size="8" fill="#8AA4AE">100</text>
+        <text x="48" y="74" text-anchor="end" font-size="8" fill="#8AA4AE">150</text>
+        <rect x="68" y="115" width="32" height="45" rx="3" fill="#BF6C5C" opacity=".7"/>
+        <text x="84" y="112" text-anchor="middle" font-size="8" fill="#184E5A" font-weight="600">42</text>
+        <text x="84" y="174" text-anchor="middle" font-size="8" fill="#8AA4AE">Nov</text>
+        <rect x="128" y="85" width="32" height="75" rx="3" fill="#599092" opacity=".8"/>
+        <text x="144" y="82" text-anchor="middle" font-size="8" fill="#184E5A" font-weight="600">70</text>
+        <text x="144" y="174" text-anchor="middle" font-size="8" fill="#8AA4AE">Dec</text>
+        <rect x="188" y="24" width="32" height="136" rx="3" fill="#184E5A"/>
+        <text x="204" y="21" text-anchor="middle" font-size="8" fill="#184E5A" font-weight="700">128</text>
+        <text x="204" y="174" text-anchor="middle" font-size="8" fill="#8AA4AE">Jan</text>
+        <rect x="248" y="10" width="32" height="150" rx="3" fill="#184E5A"/>
+        <text x="264" y="7" text-anchor="middle" font-size="8" fill="#184E5A" font-weight="700">150</text>
+        <text x="264" y="174" text-anchor="middle" font-size="8" fill="#8AA4AE">Fev</text>
+        <rect x="308" y="40" width="32" height="120" rx="3" fill="#5E9E9A" opacity=".85"/>
+        <text x="324" y="37" text-anchor="middle" font-size="8" fill="#184E5A" font-weight="600">112</text>
+        <text x="324" y="174" text-anchor="middle" font-size="8" fill="#8AA4AE">Mar</text>
+        <rect x="368" y="142" width="32" height="18" rx="3" fill="#BF6C5C" opacity=".7"/>
+        <text x="384" y="139" text-anchor="middle" font-size="8" fill="#184E5A" font-weight="600">18</text>
+        <text x="384" y="174" text-anchor="middle" font-size="8" fill="#8AA4AE">Mai</text>
+      </svg>
+    </div>
+    <div class="card">
+      <h3>Rythme et qualite par mois</h3>
+      <p class="sub">Volume de posts et moyenne d'engagement</p>
+      <div style="margin-top:4px">
+        <div class="bar-wrap"><div class="bar-label">Nov. 2025 (5 posts)</div><div class="bar-track"><div class="bar-fill" style="width:33%;background:#BF6C5C"></div></div><div class="bar-val">8.4 moy</div></div>
+        <div class="bar-wrap"><div class="bar-label">Dec. 2025 (9 posts)</div><div class="bar-track"><div class="bar-fill" style="width:52%;background:#599092"></div></div><div class="bar-val">7.8 moy</div></div>
+        <div class="bar-wrap"><div class="bar-label">Jan. 2026 (10 posts)</div><div class="bar-track"><div class="bar-fill" style="width:85%;background:#184E5A"></div></div><div class="bar-val">12.8 moy</div></div>
+        <div class="bar-wrap"><div class="bar-label">Fev. 2026 (15 posts)</div><div class="bar-track"><div class="bar-fill" style="width:67%;background:#184E5A"></div></div><div class="bar-val">10.0 moy</div></div>
+        <div class="bar-wrap"><div class="bar-label">Mar. 2026 (9 posts)</div><div class="bar-track"><div class="bar-fill" style="width:82%;background:#5E9E9A"></div></div><div class="bar-val">12.4 moy</div></div>
+        <div class="bar-wrap"><div class="bar-label">Mai 2026 (2 posts)</div><div class="bar-track"><div class="bar-fill" style="width:60%;background:#BF6C5C"></div></div><div class="bar-val">9.0 moy</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Meilleure fenetre de publication</h3>
+    <p class="sub">Analyse des 10 posts les plus performants - tous publies a 7h00-7h10 Paris</p>
+    <div class="grid-2" style="margin-bottom:0">
+      <div>
+        <div class="bar-wrap"><div class="bar-label">Mercredi 7h</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#184E5A"></div></div><div class="bar-val">30 eng</div></div>
+        <div class="bar-wrap"><div class="bar-label">Jeudi 7h</div><div class="bar-track"><div class="bar-fill" style="width:77%;background:#184E5A"></div></div><div class="bar-val">23 eng</div></div>
+        <div class="bar-wrap"><div class="bar-label">Dimanche 7h</div><div class="bar-track"><div class="bar-fill" style="width:77%;background:#5E9E9A"></div></div><div class="bar-val">23 eng</div></div>
+        <div class="bar-wrap"><div class="bar-label">Mardi 7h</div><div class="bar-track"><div class="bar-fill" style="width:67%;background:#5E9E9A"></div></div><div class="bar-val">20 eng</div></div>
+        <div class="bar-wrap"><div class="bar-label">Vendredi 7h</div><div class="bar-track"><div class="bar-fill" style="width:60%;background:#5E9E9A"></div></div><div class="bar-val">18 eng</div></div>
+        <div class="bar-wrap"><div class="bar-label">Samedi</div><div class="bar-track"><div class="bar-fill" style="width:13%;background:#BF6C5C"></div></div><div class="bar-val">4 eng</div></div>
+      </div>
+      <div class="insight" style="margin-bottom:0">
+        <div class="insight-icon">⏰</div>
+        <div class="insight-text">
+          <strong>Creneau dominant : 7h00-7h10 Paris, mardi au jeudi</strong>
+          <p>97% de tes posts performants sont publies exactement a 7h00. Mercredi est statistiquement ton meilleur creneau. Ne change pas cette habitude.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TOP POSTS ===== -->
+<div id="tab-topposts" class="section">
+  <div class="section-title">Top 10 contenus</div>
+  <div class="section-subtitle">Classés par engagement total - avec format detecte et thematique</div>
+
+  <div class="post-filters">
+    <div class="filter-btn active" onclick="filterPosts('all',this)">Tous</div>
+    <div class="filter-btn" onclick="filterPosts('image',this)">Post image</div>
+    <div class="filter-btn" onclick="filterPosts('carrousel',this)">Carrousel</div>
+    <div class="filter-btn" onclick="filterPosts('luxe',this)">Luxe</div>
+    <div class="filter-btn" onclick="filterPosts('leadership',this)">Leadership</div>
+    <div class="filter-btn" onclick="filterPosts('ia',this)">IA</div>
+  </div>
+
+  <div class="posts-grid" id="postsGrid">
+
+    <div class="post-card" data-topic="prise_de_poste" data-format="image">
+      <div class="post-card-header" style="background:#184E5A">
+        <div class="pc-rank">#1</div>
+      </div>
+      <div class="post-card-body">
+        <div class="pc-eng"><div class="eng-item">♥ 22<span> likes</span></div><div class="eng-item">💬 6<span> coms</span></div><div class="eng-item">↗ 2<span></span></div><div class="eng-total">⭐ 30</div></div>
+        <div class="pc-hook">Ce que personne ne dit sur la premiere annee en tant que dirigeant.</div>
+        <div class="pc-meta">10 janv. 2026 - 7h00</div>
+        <div class="pc-badges"><span class="pc-badge b-poste">Prise de poste</span><span class="pc-badge b-image">Post image</span></div>
+        <a href="https://www.linkedin.com/posts/capucine-legrand-coach-carri%C3%A8re-luxe-54b07622_activity-7421431747084521472" target="_blank" class="pc-url">Voir le post</a>
+      </div>
+    </div>
+
+    <div class="post-card" data-topic="management" data-format="image">
+      <div class="post-card-header" style="background:#2A6062">
+        <div class="pc-rank">#2</div>
+      </div>
+      <div class="post-card-body">
+        <div class="pc-eng"><div class="eng-item">♥ 21<span> likes</span></div><div class="eng-item">💬 1<span> com</span></div><div class="eng-item">↗ 1<span></span></div><div class="eng-total">⭐ 23</div></div>
+        <div class="pc-hook">Un conflit mal gere coute plus cher qu'une conversation claire.</div>
+        <div class="pc-meta">19 mars 2026 - 7h00</div>
+        <div class="pc-badges"><span class="pc-badge b-mgmt">Management</span><span class="pc-badge b-image">Post image</span></div>
+        <a href="https://www.linkedin.com/posts/capucine-legrand-coach-carri%C3%A8re-luxe-54b07622_activity-7440291058636197888" target="_blank" class="pc-url">Voir le post</a>
+      </div>
+    </div>
+
+    <div class="post-card" data-topic="luxe" data-format="image">
+      <div class="post-card-header" style="background:#184E5A">
+        <div class="pc-rank">#3</div>
+      </div>
+      <div class="post-card-body">
+        <div class="pc-eng"><div class="eng-item">♥ 19<span> likes</span></div><div class="eng-item">💬 3<span> coms</span></div><div class="eng-item">↗ 1<span></span></div><div class="eng-total">⭐ 23</div></div>
+        <div class="pc-hook">Le luxe forme les meilleurs managers du monde. Et pourtant, personne ne les coache.</div>
+        <div class="pc-meta">31 janv. 2026 - 7h00</div>
+        <div class="pc-badges"><span class="pc-badge b-luxe">Luxe</span><span class="pc-badge b-image">Post image</span></div>
+        <a href="https://www.linkedin.com/posts/capucine-legrand-coach-carri%C3%A8re-luxe-54b07622_activity-7426157903176232960" target="_blank" class="pc-url">Voir le post</a>
+      </div>
+    </div>
+
+    <div class="post-card" data-topic="ia" data-format="image">
+      <div class="post-card-header" style="background:#3D7070">
+        <div class="pc-rank">#4</div>
+      </div>
+      <div class="post-card-body">
+        <div class="pc-eng"><div class="eng-item">♥ 20<span> likes</span></div><div class="eng-item">💬 2<span> coms</span></div><div class="eng-item">↗ 0<span></span></div><div class="eng-total">⭐ 22</div></div>
+        <div class="pc-hook">L'IA ne remplace pas votre intelligence. Elle l'amplifie, a condition de savoir la piloter.</div>
+        <div class="pc-meta">12 fev. 2026 - 7h00</div>
+        <div class="pc-badges"><span class="pc-badge b-ia">IA</span><span class="pc-badge b-image">Post image</span></div>
+        <a href="https://www.linkedin.com/posts/capucine-legrand-coach-carri%C3%A8re-luxe-54b07622_activity-7427607472145690626" target="_blank" class="pc-url">Voir le post</a>
+      </div>
+    </div>
+
+    <div class="post-card" data-topic="leadership" data-format="image">
+      <div class="post-card-header" style="background:#2E5E60">
+        <div class="pc-rank">#5</div>
+      </div>
+      <div class="post-card-body">
+        <div class="pc-eng"><div class="eng-item">♥ 15<span> likes</span></div><div class="eng-item">💬 4<span> coms</span></div><div class="eng-item">↗ 1<span></span></div><div class="eng-total">⭐ 20</div></div>
+        <div class="pc-hook">Vous ne manquez pas de courage. Vous manquez de clarte sur vos priorites.</div>
+        <div class="pc-meta">14 janv. 2026 - 7h00</div>
+        <div class="pc-badges"><span class="pc-badge b-leader">Leadership</span><span class="pc-badge b-image">Post image</span></div>
+        <a href="https://www.linkedin.com/posts/capucine-legrand-coach-carri%C3%A8re-luxe-54b07622_activity-7422518943879393281" target="_blank" class="pc-url">Voir le post</a>
+      </div>
+    </div>
+
+    <div class="post-card" data-topic="burnout" data-format="image">
+      <div class="post-card-header" style="background:#4A8A8C">
+        <div class="pc-rank">#6</div>
+      </div>
+      <div class="post-card-body">
+        <div class="pc-eng"><div class="eng-item">♥ 14<span> likes</span></div><div class="eng-item">💬 5<span> coms</span></div><div class="eng-item">↗ 0<span></span></div><div class="eng-total">⭐ 19</div></div>
+        <div class="pc-hook">Le plus dangereux, c'est quand tout va bien.</div>
+        <div class="pc-meta">30 mars 2026 - 7h00</div>
+        <div class="pc-badges"><span class="pc-badge b-burnout">Burnout</span><span class="pc-badge b-image">Post image</span></div>
+        <a href="https://www.linkedin.com/posts/capucine-legrand-coach-carri%C3%A8re-luxe-54b07622_activity-7444277336805539840" target="_blank" class="pc-url">Voir le post</a>
+      </div>
+    </div>
+
+    <div class="post-card" data-topic="luxe" data-format="image">
+      <div class="post-card-header" style="background:#184E5A">
+        <div class="pc-rank">#7</div>
+      </div>
+      <div class="post-card-body">
+        <div class="pc-eng"><div class="eng-item">♥ 16<span> likes</span></div><div class="eng-item">💬 2<span> coms</span></div><div class="eng-item">↗ 0<span></span></div><div class="eng-total">⭐ 18</div></div>
+        <div class="pc-hook">Dans le luxe, on ne parle pas de ses doutes. On les gere.</div>
+        <div class="pc-meta">18 fev. 2026 - 7h00</div>
+        <div class="pc-badges"><span class="pc-badge b-luxe">Luxe</span><span class="pc-badge b-image">Post image</span></div>
+        <a href="https://www.linkedin.com/posts/capucine-legrand-coach-carri%C3%A8re-luxe-54b07622_activity-7429781829106302976" target="_blank" class="pc-url">Voir le post</a>
+      </div>
+    </div>
+
+    <div class="post-card" data-topic="ia" data-format="image">
+      <div class="post-card-header" style="background:#326060">
+        <div class="pc-rank">#8</div>
+      </div>
+      <div class="post-card-body">
+        <div class="pc-eng"><div class="eng-item">♥ 17<span> likes</span></div><div class="eng-item">💬 0<span></span></div><div class="eng-item">↗ 0<span></span></div><div class="eng-total">⭐ 17</div></div>
+        <div class="pc-hook">J'ai cree l'outil IA parfait pour les cadres et dirigeants du luxe.</div>
+        <div class="pc-meta">25 fev. 2026 - 7h00</div>
+        <div class="pc-badges"><span class="pc-badge b-ia">IA</span><span class="pc-badge b-image">Post image</span></div>
+        <a href="https://www.linkedin.com/posts/capucine-legrand-coach-carri%C3%A8re-luxe-54b07622_activity-7432318489199087617" target="_blank" class="pc-url">Voir le post</a>
+      </div>
+    </div>
+
+    <div class="post-card" data-topic="ia" data-format="image">
+      <div class="post-card-header" style="background:#2A7073">
+        <div class="pc-rank">#9</div>
+      </div>
+      <div class="post-card-body">
+        <div class="pc-eng"><div class="eng-item">♥ 16<span> likes</span></div><div class="eng-item">💬 3<span> coms</span></div><div class="eng-item">↗ 1<span></span></div><div class="eng-total">⭐ 20</div></div>
+        <div class="pc-hook">Dans les maisons de luxe, une transformation silencieuse est en cours.</div>
+        <div class="pc-meta">11 fev. 2026 - 7h00</div>
+        <div class="pc-badges"><span class="pc-badge b-ia">IA</span><span class="pc-badge b-luxe">Luxe</span><span class="pc-badge b-image">Post image</span></div>
+        <a href="https://www.linkedin.com/posts/capucine-legrand-coach-carri%C3%A8re-luxe-54b07622_activity-7427245131688505344" target="_blank" class="pc-url">Voir le post</a>
+      </div>
+    </div>
+
+    <div class="post-card" data-topic="leadership" data-format="image">
+      <div class="post-card-header" style="background:#2E5E60">
+        <div class="pc-rank">#10</div>
+      </div>
+      <div class="post-card-body">
+        <div class="pc-eng"><div class="eng-item">♥ 13<span> likes</span></div><div class="eng-item">💬 2<span> coms</span></div><div class="eng-item">↗ 1<span></span></div><div class="eng-total">⭐ 16</div></div>
+        <div class="pc-hook">Votre marque personnelle dans le luxe : construite ou subie ?</div>
+        <div class="pc-meta">16 dec. 2025 - 7h00</div>
+        <div class="pc-badges"><span class="pc-badge b-luxe">Luxe</span><span class="pc-badge b-image">Post image</span></div>
+        <a href="https://www.linkedin.com/posts/capucine-legrand-coach-carri%C3%A8re-luxe-54b07622_activity-7414939061661900801" target="_blank" class="pc-url">Voir le post</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== PATTERNS ===== -->
+<div id="tab-patterns" class="section">
+  <div class="section-title">Patterns & accroches</div>
+  <div class="section-subtitle">Ce qui genere de l'engagement et ce qui plombe - analyse sur les 50 posts</div>
+
+  <div class="card">
+    <h3>Accroches qui surperforment</h3>
+    <p class="sub">Patterns recurrents dans les 10 meilleurs posts</p>
+    <div class="hook-item">
+      <div class="hook-score hs-high">30</div>
+      <div class="hook-content">
+        <h4>Revelation + "personne ne vous dit"</h4>
+        <p>L'information exclusive ou tabou dans ton secteur. Positionne comme insider, cree de la curiosite immediate.</p>
+        <div class="hook-example">« Ce que personne ne dit sur la premiere annee en tant que dirigeant. »</div>
+        <div class="hook-example">« Le luxe forme les meilleurs managers du monde. Et pourtant, personne ne les coache. »</div>
+      </div>
+    </div>
+    <div class="hook-item">
+      <div class="hook-score hs-high">23</div>
+      <div class="hook-content">
+        <h4>Equation cout / consequence concrete</h4>
+        <p>Reformuler un comportement classique en termes de cout reel. Cree une dissonance cognitive immediate.</p>
+        <div class="hook-example">« Un conflit mal gere coute plus cher qu'une conversation claire. »</div>
+      </div>
+    </div>
+    <div class="hook-item">
+      <div class="hook-score hs-high">22</div>
+      <div class="hook-content">
+        <h4>Reframe "ce n'est pas X, c'est Y"</h4>
+        <p>Invalider le diagnostic classique et proposer un meilleur cadrage. Tres fort pour montrer ta valeur ajoutee.</p>
+        <div class="hook-example">« Vous ne manquez pas de courage. Vous manquez de clarte sur vos priorites. »</div>
+        <div class="hook-example">« L'IA ne remplace pas votre intelligence. Elle l'amplifie, a condition de savoir la piloter. »</div>
+      </div>
+    </div>
+    <div class="hook-item">
+      <div class="hook-score hs-high">19</div>
+      <div class="hook-content">
+        <h4>Paradoxe contre-intuitif (court, tranchant)</h4>
+        <p>Une phrase qui va a l'encontre de l'intuition. Stop-scroll garanti sur LinkedIn.</p>
+        <div class="hook-example">« Le plus dangereux, c'est quand tout va bien. »</div>
+        <div class="hook-example">« Dans le luxe, on ne parle pas de ses doutes. On les gere. »</div>
+      </div>
+    </div>
+    <div class="hook-item">
+      <div class="hook-score hs-mid">16</div>
+      <div class="hook-content">
+        <h4>Question binaire luxe : construite ou subie ?</h4>
+        <p>La question fermee qui force un positionnement. Engagement par identification ou friction.</p>
+        <div class="hook-example">« Votre marque personnelle dans le luxe : construite ou subie ? »</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Accroches qui plombent l'engagement</h3>
+    <p class="sub">Patterns recurrents dans les posts sous la mediane</p>
+    <div class="hook-item">
+      <div class="hook-score hs-low">4</div>
+      <div class="hook-content">
+        <h4>Post de vente directe sans tension narrative</h4>
+        <p>Les posts "j'ai cree une formation, inscrivez-vous" sans accroche emotionnelle forte. LinkedIn penalise le contenu percu comme publicite.</p>
+        <div class="hook-example">« Ces derniers mois, j'ai travaille pour concevoir une formation pensee pour vous... »</div>
+      </div>
+    </div>
+    <div class="hook-item">
+      <div class="hook-score hs-low">3</div>
+      <div class="hook-content">
+        <h4>Carrousel PDF sans accroche forte en intro</h4>
+        <p>Le format document LinkedIn (PDF) sous-performe systematiquement quand le corps du post ne cree pas de tension avant le swipe.</p>
+        <div class="hook-example">Post document "Alliances strategiques dans le luxe" - 3 likes malgre le sujet fort.</div>
+      </div>
+    </div>
+    <div class="hook-item">
+      <div class="hook-score hs-low">5</div>
+      <div class="hook-content">
+        <h4>CTA trop soft apres bonne accroche</h4>
+        <p>Apres une bonne ouverture data (etude Harvard), conclure en "si ce sujet vous interesse" dilue la conviction.</p>
+        <div class="hook-example">« Vous preparez vos entretiens sur vos resultats... » (bonne accroche) mais conclusion "si ce sujet vous interesse" = faible.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TOPICS & FORMATS ===== -->
+<div id="tab-topics" class="section">
+  <div class="section-title">Topics & formats</div>
+  <div class="section-subtitle">Performance par theme et analyse des formats de publication</div>
+
+  <div class="card">
+    <h3>Engagement moyen par theme</h3>
+    <p class="sub">Tous les themes identifies - classes par moyenne d'engagement</p>
+    <div style="margin-top:8px">
+      <div class="topic-row"><div class="topic-label">Luxe (positionn.)</div><div class="topic-bar-track"><div class="topic-bar-fill" style="width:100%;background:#184E5A"></div></div><div class="topic-meta"><span class="topic-avg">20.5</span><span class="topic-count">2 posts</span></div></div>
+      <div class="topic-row"><div class="topic-label">Personal branding</div><div class="topic-bar-track"><div class="topic-bar-fill" style="width:78%;background:#184E5A"></div></div><div class="topic-meta"><span class="topic-avg">16.0</span><span class="topic-count">1 post</span></div></div>
+      <div class="topic-row"><div class="topic-label">Burnout / energie</div><div class="topic-bar-track"><div class="topic-bar-fill" style="width:71%;background:#5E9E9A"></div></div><div class="topic-meta"><span class="topic-avg">14.5</span><span class="topic-count">2 posts</span></div></div>
+      <div class="topic-row"><div class="topic-label">Prise de poste</div><div class="topic-bar-track"><div class="topic-bar-fill" style="width:70%;background:#5E9E9A"></div></div><div class="topic-meta"><span class="topic-avg">14.3</span><span class="topic-count">3 posts</span></div></div>
+      <div class="topic-row"><div class="topic-label">IA (strategique)</div><div class="topic-bar-track"><div class="topic-bar-fill" style="width:64%;background:#4A8A8C"></div></div><div class="topic-meta"><span class="topic-avg">13.1</span><span class="topic-count">9 posts</span></div></div>
+      <div class="topic-row"><div class="topic-label">Reseau</div><div class="topic-bar-track"><div class="topic-bar-fill" style="width:63%;background:#4A8A8C"></div></div><div class="topic-meta"><span class="topic-avg">13.0</span><span class="topic-count">1 post</span></div></div>
+      <div class="topic-row"><div class="topic-label">Decision</div><div class="topic-bar-track"><div class="topic-bar-fill" style="width:63%;background:#4A8A8C"></div></div><div class="topic-meta"><span class="topic-avg">13.0</span><span class="topic-count">1 post</span></div></div>
+      <div class="topic-row"><div class="topic-label">Management</div><div class="topic-bar-track"><div class="topic-bar-fill" style="width:61%;background:#599092"></div></div><div class="topic-meta"><span class="topic-avg">12.5</span><span class="topic-count">4 posts</span></div></div>
+      <div class="topic-row"><div class="topic-label">Negociation</div><div class="topic-bar-track"><div class="topic-bar-fill" style="width:51%;background:#599092"></div></div><div class="topic-meta"><span class="topic-avg">10.5</span><span class="topic-count">2 posts</span></div></div>
+      <div class="topic-row"><div class="topic-label">Leadership</div><div class="topic-bar-track"><div class="topic-bar-fill" style="width:46%;background:#6F8B9D"></div></div><div class="topic-meta"><span class="topic-avg">9.4</span><span class="topic-count">7 posts</span></div></div>
+      <div class="topic-row"><div class="topic-label">Carriere</div><div class="topic-bar-track"><div class="topic-bar-fill" style="width:39%;background:#6F8B9D"></div></div><div class="topic-meta"><span class="topic-avg">8.0</span><span class="topic-count">7 posts</span></div></div>
+      <div class="topic-row"><div class="topic-label">Coaching (methode)</div><div class="topic-bar-track"><div class="topic-bar-fill" style="width:37%;background:#8AA4AE"></div></div><div class="topic-meta"><span class="topic-avg">7.6</span><span class="topic-count">8 posts</span></div></div>
+      <div class="topic-row"><div class="topic-label">Formation IA (vente)</div><div class="topic-bar-track"><div class="topic-bar-fill" style="width:20%;background:#BF6C5C"></div></div><div class="topic-meta"><span class="topic-avg">4.0</span><span class="topic-count">1 post</span></div></div>
+    </div>
+  </div>
+
+  <div class="format-grid">
+    <div class="format-box">
+      <div class="format-name">Post image</div>
+      <div class="format-count">43 posts - 86% du volume</div>
+      <div class="format-stat"><span class="fs-label">Mediane engagement</span><span class="fs-val">10</span></div>
+      <div class="format-stat"><span class="fs-label">Meilleur post</span><span class="fs-val">30 eng.</span></div>
+      <div class="format-stat"><span class="fs-label">Taux avec coms</span><span class="fs-val">45%</span></div>
+      <div class="format-job"><strong>Job ideal</strong>Posts de fond, paradoxes, reframes, revelations. C'est ton format dominant et le plus performant. Un texte fort + une image branded bien construite.</div>
+    </div>
+    <div class="format-box patina">
+      <div class="format-name">Carrousel (document PDF)</div>
+      <div class="format-count">6 posts - 12% du volume</div>
+      <div class="format-stat"><span class="fs-label">Mediane engagement</span><span class="fs-val">5.5</span></div>
+      <div class="format-stat"><span class="fs-label">Meilleur carrousel</span><span class="fs-val">10 eng.</span></div>
+      <div class="format-stat"><span class="fs-label">Taux avec coms</span><span class="fs-val">33%</span></div>
+      <div class="format-job"><strong>Job ideal</strong>Guides pratiques (5 erreurs, alliances strategiques, choisir son coach). Sous-performe vs post image. A reserver aux contenus tres structures avec un accroche ultra-forte dans le body text.</div>
+    </div>
+    <div class="format-box nile">
+      <div class="format-name">Post texte seul</div>
+      <div class="format-count">1 post - 2% du volume</div>
+      <div class="format-stat"><span class="fs-label">Engagement</span><span class="fs-val">4</span></div>
+      <div class="format-stat"><span class="fs-label">Coms</span><span class="fs-val">0</span></div>
+      <div class="format-stat"><span class="fs-label">Shares</span><span class="fs-val">0</span></div>
+      <div class="format-job"><strong>Verdict</strong>Insuffisant pour conclure. LinkedIn favorise les contenus avec visuels dans l'algorithme. Ce format est rarement utilise et sous-performe.</div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <div class="insight-icon">📌</div>
+    <div class="insight-text">
+      <strong>Post image vs carrousel : l'ecart est clair</strong>
+      <p>Mediane 10 pour les posts image contre 5.5 pour les carrousels PDF. Le carrousel LinkedIn (document) est un format lourd qui demande un effort de swipe - l'accroche dans le body text doit etre encore plus forte pour compenser. L'image seule + texte bien ecrit reste ton meilleur vecteur.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CTA ===== -->
+<div id="tab-cta" class="section">
+  <div class="section-title">Analyse des CTAs</div>
+  <div class="section-subtitle">Comparaison des 4 types d'appels a l'action utilises</div>
+
+  <div class="cta-compare">
+    <div class="cta-box">
+      <div class="cta-name">Podcast (lien en com.)</div>
+      <div class="cta-val">12.2</div>
+      <div class="cta-sub">avg engagement</div>
+      <div class="cta-job">Meilleur CTA. Le contenu standalone est riche, le lien en commentaire est algorithm-friendly (LinkedIn favorise les posts sans lien externe).</div>
+    </div>
+    <div class="cta-box b2">
+      <div class="cta-name">Newsletter (abonnement)</div>
+      <div class="cta-val">11.8</div>
+      <div class="cta-sub">avg engagement</div>
+      <div class="cta-job">Principal outil de capture. Solide. Le CTA "abonnez-vous" est plus prescriptif - fonctionne mieux quand le post est tres fort en amont.</div>
+    </div>
+    <div class="cta-box b3">
+      <div class="cta-name">Question ouverte</div>
+      <div class="cta-val">13.5</div>
+      <div class="cta-sub">avg engagement</div>
+      <div class="cta-job">Meilleur pour les commentaires. "Quelle est votre plus grande difficulte avec l'IA ?" = 3 coms. Question precise et personnelle = conversation reelle.</div>
+    </div>
+    <div class="cta-box b4">
+      <div class="cta-name">Commercial direct / RDV</div>
+      <div class="cta-val">7.5</div>
+      <div class="cta-sub">avg engagement</div>
+      <div class="cta-job">Engagement plus faible. Fonctionne mieux apres une tension narrative forte. Les posts avec URL directe dans le body underperforment systematiquement.</div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <div class="insight-icon">🎯</div>
+    <div class="insight-text">
+      <strong>Regle des 3 CTAs pour MCP LinkedIn</strong>
+      <p><strong>Posts de fond :</strong> "Lien podcast en commentaire" (algorithme-friendly, engagement preserve). <strong>Posts expertise :</strong> "Abonnez-vous a ma newsletter - lien en commentaire". <strong>Posts personnels ou paradoxes :</strong> 1 question courte et precise en fin de post = maximum de commentaires. Supprimer les "si ce sujet vous interesse" et les URLs en dur dans le body.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Commentaires par type de CTA</h3>
+    <p class="sub">Le commentaire = indicateur de vraie conversation LinkedIn</p>
+    <div class="bar-wrap"><div class="bar-label">Question ouverte fin de post</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#184E5A"></div></div><div class="bar-val">4-6 coms</div></div>
+    <div class="bar-wrap"><div class="bar-label">Lien commentaire (podcast)</div><div class="bar-track"><div class="bar-fill" style="width:33%;background:#5E9E9A"></div></div><div class="bar-val">1-2 coms</div></div>
+    <div class="bar-wrap"><div class="bar-label">Lien commentaire (newsletter)</div><div class="bar-track"><div class="bar-fill" style="width:25%;background:#5E9E9A"></div></div><div class="bar-val">1 com</div></div>
+    <div class="bar-wrap"><div class="bar-label">URL directe dans le body</div><div class="bar-track"><div class="bar-fill" style="width:8%;background:#BF6C5C"></div></div><div class="bar-val">0 com</div></div>
+    <div class="bar-wrap"><div class="bar-label">CTA commercial sans question</div><div class="bar-track"><div class="bar-fill" style="width:5%;background:#BF6C5C"></div></div><div class="bar-val">0 com</div></div>
+  </div>
+</div>
+
+<!-- ===== IDEES ===== -->
+<div id="tab-ideas" class="section">
+  <div class="section-title">10 idees calibrees sur ce qui marche</div>
+  <div class="section-subtitle">Positionnement luxe ancre dans chaque idee - formats bases sur les performances reelles</div>
+  <div class="ideas-grid">
+    <div class="idea-card">
+      <div class="idea-num">01</div>
+      <div class="idea-format">Post image - Serie "Personne ne vous dit"</div>
+      <div class="idea-title">Ce que personne ne dit sur les 100 premiers jours dans un poste de direction luxe</div>
+      <div class="idea-hook">"Tout le monde vous dit : observez, ecoutez, ne changez rien. Personne ne vous dit que les alliances se forment dans les 30 premiers jours. Apres, il est trop tard."</div>
+      <div class="idea-why">Replique directement le pattern #1 (30 eng.) avec une extension specifique luxe. Potentiel de serie : "Ce que personne ne vous dit sur..."</div>
+      <span class="idea-signal">Signal : post #1 = 30 eng. / pattern "personne ne dit"</span>
+    </div>
+    <div class="idea-card">
+      <div class="idea-num">02</div>
+      <div class="idea-format">Post image - Paradoxe luxe</div>
+      <div class="idea-title">Dans le luxe, les meilleurs managers sont souvent les moins visibles</div>
+      <div class="idea-hook">"La visibilite dans le luxe se construit dans les couloirs, pas dans les reunions. Et pourtant, vous passez 80% de votre temps dans des salles de reunion."</div>
+      <div class="idea-why">Combine paradoxe court (post #6 = 19 eng.) + ancrage luxe specifique. Dissonance cognitive = stop scroll.</div>
+      <span class="idea-signal">Signal : paradoxes courts = top 5 posts</span>
+    </div>
+    <div class="idea-card">
+      <div class="idea-num">03</div>
+      <div class="idea-format">Post image - Reframe</div>
+      <div class="idea-title">Vous ne manquez pas d'ambition. Vous manquez d'un sponsor.</div>
+      <div class="idea-hook">"Il y a 20 ans, la carriere se construisait avec de la competence. Aujourd'hui, elle se construit avec des sponsors. Question : qui parle de vous quand vous n'etes pas dans la piece ?"</div>
+      <div class="idea-why">Pattern reframe (#5 = 20 eng.) + question finale = commentaires. Universel chez les cadres ambitieux.</div>
+      <span class="idea-signal">Signal : reframes "pas X, c'est Y" = avg 20 eng.</span>
+    </div>
+    <div class="idea-card">
+      <div class="idea-num">04</div>
+      <div class="idea-format">Post image - Verite luxe</div>
+      <div class="idea-title">Le luxe recrute l'excellence. Et brule les meilleurs.</div>
+      <div class="idea-hook">"J'ai coache 30 cadres du luxe cette annee. Le meme profil revient : brillant, engage, irremplacable. Et epuise. Le secteur consomme exactement les personnes dont il a besoin."</div>
+      <div class="idea-why">Combine burnout (#6 = 19) + positionnement luxe (#3 = 23). Preuve sociale implicite (30 clients).</div>
+      <span class="idea-signal">Signal : luxe + burnout = posts #3 et #6</span>
+    </div>
+    <div class="idea-card">
+      <div class="idea-num">05</div>
+      <div class="idea-format">Post image - Equation cout</div>
+      <div class="idea-title">Une prise de poste ratee coute 18 mois. Une prise de poste preparee en coute 3.</div>
+      <div class="idea-hook">"Dans le luxe, on vous donne une semaine de passation et on vous dit bonne chance. 70% des echecs de direction dans les 18 mois viennent d'une prise de poste mal engagee."</div>
+      <div class="idea-why">Pattern equation cout (#2 = 23 eng.) + data chiffree + CTA implicite coaching. Fort potentiel B2B (DRH).</div>
+      <span class="idea-signal">Signal : equations cout = post #2 = 23 eng.</span>
+    </div>
+    <div class="idea-card">
+      <div class="idea-num">06</div>
+      <div class="idea-format">Post image - Question binaire luxe</div>
+      <div class="idea-title">Votre reseau dans le luxe : actif ou en veille depuis 3 ans ?</div>
+      <div class="idea-hook">"Vous avez 800 connexions LinkedIn. Combien sont des contacts actifs ? Je pose souvent cette question. La moyenne de mes clients est 12."</div>
+      <div class="idea-why">Format "construite ou subie" (#10 = 16 eng.) + data surprenante. Commentaires garantis.</div>
+      <span class="idea-signal">Signal : question binaire luxe = post #10 = 16 eng.</span>
+    </div>
+    <div class="idea-card">
+      <div class="idea-num">07</div>
+      <div class="idea-format">Post image - Vulnerabilite dirigeant luxe</div>
+      <div class="idea-title">Dans le luxe, montrer ses doutes est une faiblesse. Jusqu'au jour ou ce n'est plus le cas.</div>
+      <div class="idea-hook">"A 35 ans, j'etais persuadee qu'un dirigeant dans le luxe ne doutait pas. A 40 ans, j'ai compris que ceux qui avaient l'air de ne pas douter etaient ceux qui doutaient le plus - et le geraient le mieux."</div>
+      <div class="idea-why">Extension "dans le luxe on ne parle pas de ses doutes" (#7 = 18 eng.) avec dimension autobiographique forte.</div>
+      <span class="idea-signal">Signal : vulnerabilite luxe = post #7 = 18 eng.</span>
+    </div>
+    <div class="idea-card">
+      <div class="idea-num">08</div>
+      <div class="idea-format">Post image - Reframe promu/attendu</div>
+      <div class="idea-title">On vous a promu pour votre excellence operationnelle. On vous juge maintenant sur votre capacite a federer.</div>
+      <div class="idea-hook">"C'est la trap la plus commune dans le luxe. Vous etes entre par la porte de la performance individuelle. On attend de vous maintenant que vous fassiez performer les autres. Personne ne vous a appris ca."</div>
+      <div class="idea-why">Extension directe du post #5 (20 eng.) avec angle transition luxe.</div>
+      <span class="idea-signal">Signal : "promu parce que..." = 20 eng.</span>
+    </div>
+    <div class="idea-card">
+      <div class="idea-num">09</div>
+      <div class="idea-format">Post image - IA ancree luxe</div>
+      <div class="idea-title">L'IA ne vous remplacera pas. Mais le dirigeant qui l'utilise bien pourrait vous court-circuiter.</div>
+      <div class="idea-hook">"Dans le luxe, on a deux ans de retard sur la tech. Et pourtant, les decisions strategiques s'appuient maintenant sur des syntheses IA. Ce n'est pas technique - c'est politique."</div>
+      <div class="idea-why">Reinvestit l'IA en angle luxe/strategique (pas techno). Evite le format formation/pitch qui sous-performe.</div>
+      <span class="idea-signal">Signal : IA ancree luxe = posts #4 et #9</span>
+    </div>
+    <div class="idea-card">
+      <div class="idea-num">10</div>
+      <div class="idea-format">Post image - Milestone MCP</div>
+      <div class="idea-title">1 an de coaching : les 5 choses que mes clients du luxe m'ont apprises</div>
+      <div class="idea-hook">"Je n'avais pas prevu ca. J'ai accompagne des directeurs regionaux, des DG en transition, des cadres qui plafonnaient. Ce qu'ils m'ont appris sur le luxe, la performance et l'humain - voici 5 verites que je n'aurais jamais ecrites il y a 12 mois."</div>
+      <div class="idea-why">Milestone + revelation + preuve sociale client + ancrage luxe. Tous les ingredients des 3 meilleurs posts reunis.</div>
+      <span class="idea-signal">Signal : milestones + "personne ne dit" = top 3</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PLAN ===== -->
+<div id="tab-plan" class="section">
+  <div class="section-title">Plan d'action - 30 jours</div>
+  <div class="section-subtitle">3 priorites : ancrage luxe systematique, accroches paradoxales, question finale sur chaque post</div>
+
+  <div class="insight" style="margin-bottom:28px">
+    <div class="insight-icon">⚡</div>
+    <div class="insight-text">
+      <strong>3 regles non negociables a appliquer des demain</strong>
+      <p><strong>1.</strong> Chaque post commence par un paradoxe ou un reframe (jamais une description de contenu). <strong>2.</strong> Chaque post se termine par une question courte et precise OU "lien en commentaire" selon l'objectif. <strong>3.</strong> Le mot "luxe" ou une realite specifique au secteur apparait dans au moins 3 posts sur 4.</p>
+    </div>
+  </div>
+
+  <div class="plan-week">
+    <div class="plan-week-hdr" onclick="toggleWeek(this)">
+      <div class="wbadge w1">1</div>
+      <div><div class="week-title">Semaine 1 - Installer les nouvelles regles</div><div class="week-sub">J1-J7 - Corriger les 3 erreurs principales immediatement</div></div>
+      <span style="margin-left:auto;color:#8AA4AE;font-size:18px">v</span>
+    </div>
+    <div class="plan-body open">
+      <div class="plan-action"><div class="pa-day">J1</div><div class="pa-content"><strong>Audit express du feed actuel</strong><p>Identifier les posts sans CTA et sans accroche forte. Verifier que les 3 posts epingles refletent les 3 meilleurs patterns.</p><span class="pa-tag tag-s">Strategie</span></div></div>
+      <div class="plan-action"><div class="pa-day">J2</div><div class="pa-content"><strong>Rediger le post "1 an de coaching - ce que mes clients du luxe m'ont appris"</strong><p>Format post image. Milestone + revelation + 5 points. Terminer par une question sur l'experience du lecteur.</p><span class="pa-tag tag-c">Contenu</span></div></div>
+      <div class="plan-action"><div class="pa-day">J3</div><div class="pa-content"><strong>Publier mercredi 7h00</strong><p>Ton meilleur creneau. Repondre a tous les commentaires dans les 90 min. Lien uniquement en premier commentaire.</p><span class="pa-tag tag-c">Contenu</span></div></div>
+      <div class="plan-action"><div class="pa-day">J5</div><div class="pa-content"><strong>Post "Le luxe brule les meilleurs"</strong><p>Format paradoxe + preuve sociale. Vendredi 7h. Question finale : "Vous reconnaissez-vous dans ce profil ?"</p><span class="pa-tag tag-c">Contenu</span></div></div>
+    </div>
+  </div>
+
+  <div class="plan-week">
+    <div class="plan-week-hdr" onclick="toggleWeek(this)">
+      <div class="wbadge w2">2</div>
+      <div><div class="week-title">Semaine 2 - Activer les patterns top-performers</div><div class="week-sub">J8-J14 - 3 posts calibres sur les 3 meilleurs patterns</div></div>
+      <span style="margin-left:auto;color:#8AA4AE;font-size:18px">v</span>
+    </div>
+    <div class="plan-body">
+      <div class="plan-action"><div class="pa-day">J8</div><div class="pa-content"><strong>Post "Personne ne vous dit sur les 100 premiers jours luxe"</strong><p>Lundi 7h. Pattern #1 (30 eng.). 3-4 verites contre-intuitives. Lien newsletter en commentaire.</p><span class="pa-tag tag-c">Contenu</span></div></div>
+      <div class="plan-action"><div class="pa-day">J10</div><div class="pa-content"><strong>Post "Vous ne manquez pas d'ambition. Vous manquez d'un sponsor."</strong><p>Mercredi 7h. Pattern reframe. Question finale : "Qui parle de vous quand vous n'etes pas dans la piece ?"</p><span class="pa-tag tag-c">Contenu</span></div></div>
+      <div class="plan-action"><div class="pa-day">J12</div><div class="pa-content"><strong>Post podcast + lien commentaire</strong><p>Vendredi 7h. S'assurer que l'accroche est un paradoxe (pas une description de l'episode).</p><span class="pa-tag tag-c">Contenu</span></div></div>
+      <div class="plan-action"><div class="pa-day">J14</div><div class="pa-content"><strong>Bilan mi-parcours</strong><p>Comparer l'engagement des 4 posts semaines 1-2 vs. mediane habituelle (8). Ajuster si necessaire.</p><span class="pa-tag tag-t">Test</span></div></div>
+    </div>
+  </div>
+
+  <div class="plan-week">
+    <div class="plan-week-hdr" onclick="toggleWeek(this)">
+      <div class="wbadge w3">3</div>
+      <div><div class="week-title">Semaine 3 - Conversion et B2B</div><div class="week-sub">J15-J21 - Activer la cible DRH et renforcer les CTAs commerciaux</div></div>
+      <span style="margin-left:auto;color:#8AA4AE;font-size:18px">v</span>
+    </div>
+    <div class="plan-body">
+      <div class="plan-action"><div class="pa-day">J15</div><div class="pa-content"><strong>Post "Prise de poste ratee coute 18 mois" (ROI coaching)</strong><p>Lundi 7h. Angle B2B DRH. Data chiffree + equation cout. CTA conversationnel ("comment gerez-vous les 90 premiers jours ?").</p><span class="pa-tag tag-s">Strategie</span></div></div>
+      <div class="plan-action"><div class="pa-day">J17</div><div class="pa-content"><strong>Post "promu pour excellence, attendu sur federation"</strong><p>Mercredi 7h. Extension post #5. 1 question finale precise. Newsletter en commentaire.</p><span class="pa-tag tag-c">Contenu</span></div></div>
+      <div class="plan-action"><div class="pa-day">J19</div><div class="pa-content"><strong>Post IA ancre luxe : "L'IA ne vous remplacera pas"</strong><p>Vendredi 7h. Angle politique/strategique, pas technique. Question : "Dans votre secteur, qui utilise deja l'IA a des fins decisionnelles ?"</p><span class="pa-tag tag-c">Contenu</span></div></div>
+      <div class="plan-action"><div class="pa-day">J21</div><div class="pa-content"><strong>Engager sur 10 posts de ta cible</strong><p>Commenter sur les posts de DRH, directeurs luxe, RRH. Commentaires de 3-4 phrases, pas des reactions. Levier LinkedIn sous-exploite.</p><span class="pa-tag tag-s">Strategie</span></div></div>
+    </div>
+  </div>
+
+  <div class="plan-week">
+    <div class="plan-week-hdr" onclick="toggleWeek(this)">
+      <div class="wbadge w4">4</div>
+      <div><div class="week-title">Semaine 4 - Recurrence et mesure</div><div class="week-sub">J22-J30 - Installer les habitudes durables</div></div>
+      <span style="margin-left:auto;color:#8AA4AE;font-size:18px">v</span>
+    </div>
+    <div class="plan-body">
+      <div class="plan-action"><div class="pa-day">J22</div><div class="pa-content"><strong>Lancer la serie "Ce que personne ne dit" - episode 2</strong><p>Lundi 7h. Nouveau theme : negociation de salaire dans le luxe. Annoncer la serie dans le corps du post.</p><span class="pa-tag tag-c">Contenu</span></div></div>
+      <div class="plan-action"><div class="pa-day">J25</div><div class="pa-content"><strong>Post "Votre reseau dans le luxe : actif ou en veille ?"</strong><p>Mercredi 7h. Question binaire + data surprenante (moyenne = 12 contacts actifs). Fort potentiel commentaires.</p><span class="pa-tag tag-c">Contenu</span></div></div>
+      <div class="plan-action"><div class="pa-day">J28</div><div class="pa-content"><strong>Post podcast + test nouveau CTA</strong><p>Vendredi 7h. Tester : "Repondez a ce post avec votre situation" vs. "Lien en commentaire". Mesurer la difference sur les commentaires.</p><span class="pa-tag tag-t">Test</span></div></div>
+      <div class="plan-action"><div class="pa-day">J30</div><div class="pa-content"><strong>Bilan 30 jours - fixer la charte LinkedIn</strong><p>Comparer l'engagement avant/apres les nouvelles regles. Fixer : 1 paradoxe, 1 reframe, 1 revelation, 1 milestone par mois minimum.</p><span class="pa-tag tag-t">Test</span></div></div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div class="footer">Clarte. Posture. Impact. - My Coaching Partner 2026</div>
+
+<script>
+function showTab(id,el){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById('tab-'+id).classList.add('active');el.classList.add('active');}
+function filterPosts(f,btn){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.post-card').forEach(card=>{
+    if(f==='all')card.style.display='';
+    else if(f==='image'||f==='carrousel')card.style.display=card.dataset.format===f?'':'none';
+    else card.style.display=card.dataset.topic===f?'':'none';
+  });
+}
+function toggleWeek(hdr){
+  const body=hdr.nextElementSibling;
+  const arrow=hdr.querySelector('span');
+  body.classList.toggle('open');
+  arrow.textContent=body.classList.contains('open')?'^':'v';
+}
+window.addEventListener('load',()=>{
+  document.querySelectorAll('.bar-fill,.topic-bar-fill').forEach(b=>{const w=b.style.width;b.style.width='0';setTimeout(()=>{b.style.width=w;},300);});
+});
+</script>
+</body>
+</html>
