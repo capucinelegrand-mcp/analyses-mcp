@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard SEO - mycoachingpartner.fr</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal-dark: #184E5A; --teal-mid: #599092; --teal-light: #A8C5C6;
+  --patina: #5E9E9A; --nile: #4A8A8C; --coral: #BF6C5C; --blush: #E9B3A3;
+  --slate: #6F8B9D; --cream: #F7F3EE; --white: #FFFFFF;
+  --text-dark: #1A2E35; --text-mid: #3D5561; --text-light: #8AA4AE;
+  --border: rgba(24,78,90,0.1);
+  --shadow: 0 4px 24px rgba(24,78,90,0.08);
+  --shadow-hover: 0 12px 40px rgba(24,78,90,0.15);
+  --good-bg: rgba(89,144,146,0.12); --good-text: #2d6a4f;
+  --warn-bg: rgba(191,108,92,0.10); --warn-text: var(--coral);
+  --alert-bg: rgba(191,108,92,0.07); --alert-text: var(--teal-dark);
+  --info-bg: rgba(24,78,90,0.07); --info-text: var(--teal-dark);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--text-dark); display:flex; min-height:100vh; }
+
+/* === SIDEBAR === */
+.sidebar {
+  width:220px; min-width:220px; background:var(--teal-dark);
+  position:fixed; top:0; left:0; height:100vh;
+  display:flex; flex-direction:column; z-index:200;
+  box-shadow:4px 0 20px rgba(24,78,90,0.2);
+}
+.sidebar-brand { padding:28px 20px 24px; border-bottom:1px solid rgba(255,255,255,0.08); }
+.sidebar-brand .brand-label { font-size:9px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--teal-mid); display:block; margin-bottom:6px; }
+.sidebar-brand h2 { font-family:'Raleway',sans-serif; font-size:15px; font-weight:700; color:var(--white); line-height:1.2; letter-spacing:1px; text-transform:uppercase; }
+.sidebar-nav { flex:1; padding:16px 0; overflow-y:auto; }
+.sidebar-item {
+  display:flex; align-items:center; gap:12px;
+  padding:13px 20px; cursor:pointer;
+  color:rgba(168,197,198,0.7); font-size:12px; font-weight:600;
+  letter-spacing:1px; text-transform:uppercase;
+  border-left:3px solid transparent; transition:all .2s;
+}
+.sidebar-item:hover { background:rgba(255,255,255,0.06); color:var(--teal-light); }
+.sidebar-item.active { background:rgba(255,255,255,0.1); color:var(--white); border-left-color:var(--teal-mid); }
+.sidebar-item .si-icon { font-size:16px; width:22px; text-align:center; flex-shrink:0; }
+.sidebar-footer { padding:16px 20px; border-top:1px solid rgba(255,255,255,0.08); font-family:'Playfair Display',serif; font-style:italic; font-size:11px; color:var(--teal-mid); text-align:center; }
+
+/* === MAIN === */
+.main-area { margin-left:220px; flex:1; display:flex; flex-direction:column; min-height:100vh; }
+.pane { display:none; flex:1; flex-direction:column; }
+.pane.active { display:flex; }
+
+/* === HEADER === */
+.header { background:var(--teal-dark); padding:28px 48px; display:flex; align-items:center; justify-content:space-between; }
+.header-left span { font-size:11px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:var(--teal-mid); display:block; margin-bottom:6px; }
+.header-left h1 { font-family:'Playfair Display',serif; font-size:26px; color:var(--white); }
+.header-right { text-align:right; }
+.header-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(233,179,163,0.15); border:1px solid rgba(233,179,163,0.35); border-radius:20px; padding:6px 14px; }
+.header-badge span { font-size:13px; color:var(--blush); font-weight:600; }
+.header-right .date { font-size:11px; color:var(--teal-mid); margin-top:8px; letter-spacing:1px; }
+
+/* === MAIN CONTENT === */
+.main { padding:36px 48px; max-width:1400px; margin:0 auto; width:100%; }
+.section-title { font-family:'Playfair Display',serif; font-size:22px; color:var(--teal-dark); margin-bottom:6px; }
+.section-subtitle { font-size:13px; color:var(--text-light); margin-bottom:28px; }
+
+/* === KPI GRID === */
+.kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:36px; }
+.kpi-card { background:var(--white); border-radius:12px; padding:20px 16px; box-shadow:var(--shadow); border-left:3px solid var(--teal-mid); transition:transform .2s,box-shadow .2s; }
+.kpi-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-hover); }
+.kpi-card.coral { border-left-color:var(--coral); }
+.kpi-card.patina { border-left-color:var(--patina); }
+.kpi-card.slate { border-left-color:var(--slate); }
+.kpi-label { font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-light); margin-bottom:8px; }
+.kpi-value { font-family:'Playfair Display',serif; font-size:28px; color:var(--teal-dark); line-height:1; }
+.kpi-sub { font-size:10px; color:var(--text-light); margin-top:5px; }
+.kpi-trend { font-size:11px; margin-top:5px; font-weight:600; }
+.kpi-trend.up { color:var(--patina); }
+.kpi-trend.down { color:var(--coral); }
+.kpi-trend.flat { color:var(--text-light); }
+
+/* === CARD === */
+.card { background:var(--white); border-radius:12px; padding:26px; box-shadow:var(--shadow); margin-bottom:24px; }
+.card h3 { font-family:'Playfair Display',serif; font-size:16px; color:var(--teal-dark); margin-bottom:4px; }
+.card p.sub { font-size:11px; color:var(--text-light); margin-bottom:18px; }
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-bottom:24px; }
+
+/* === INSIGHT === */
+.insight { background:linear-gradient(135deg,rgba(24,78,90,.05),rgba(89,144,146,.05)); border:1px solid var(--border); border-radius:12px; padding:18px 22px; margin-bottom:16px; display:flex; gap:14px; align-items:flex-start; }
+.insight-icon { font-size:22px; flex-shrink:0; }
+.insight-text strong { font-size:13px; color:var(--teal-dark); display:block; margin-bottom:3px; }
+.insight-text p { font-size:12px; color:var(--text-mid); line-height:1.6; }
+
+/* === INSIGHT BOX (dark) === */
+.insight-dark { background:var(--teal-dark); border-radius:12px; padding:24px 28px; margin-bottom:28px; }
+.insight-dark h3 { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--teal-mid); margin-bottom:14px; }
+.insight-dark ul { list-style:none; }
+.insight-dark ul li { font-size:13px; color:rgba(255,255,255,0.85); padding:7px 0; border-bottom:1px solid rgba(255,255,255,0.07); line-height:1.55; }
+.insight-dark ul li:last-child { border-bottom:none; }
+.insight-dark ul li::before { content:"→ "; color:var(--teal-mid); font-weight:700; }
+
+/* === BARS === */
+.bar-wrap { display:flex; align-items:center; gap:10px; margin-bottom:9px; }
+.bar-label { width:200px; font-size:12px; color:var(--text-mid); flex-shrink:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.bar-track { flex:1; height:8px; background:var(--cream); border-radius:4px; overflow:hidden; }
+.bar-fill { height:100%; border-radius:4px; background:var(--teal-dark); }
+.bar-val { min-width:60px; font-size:12px; font-weight:700; color:var(--teal-dark); flex-shrink:0; text-align:right; white-space:nowrap; }
+
+/* === TABLES === */
+table { width:100%; border-collapse:collapse; font-size:13px; }
+th { text-align:left; font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--text-light); padding:10px 12px; border-bottom:1px solid var(--border); }
+td { padding:11px 12px; border-bottom:1px solid rgba(24,78,90,0.05); vertical-align:middle; }
+tr:last-child td { border-bottom:none; }
+tr:hover td { background:rgba(24,78,90,0.02); }
+
+/* === POSITION BADGES === */
+.pos { display:inline-block; padding:3px 9px; border-radius:12px; font-size:11px; font-weight:700; }
+.pos-top3 { background:rgba(89,144,146,0.18); color:var(--teal-dark); }
+.pos-top10 { background:rgba(94,158,154,0.15); color:var(--patina); }
+.pos-p11-20 { background:rgba(191,108,92,0.12); color:var(--coral); }
+.pos-p20plus { background:rgba(24,78,90,0.07); color:var(--text-light); }
+
+/* === ALERTES === */
+.alert { border-radius:10px; padding:14px 18px; margin-bottom:12px; font-size:13px; display:flex; gap:12px; align-items:flex-start; line-height:1.5; }
+.alert-icon { font-size:16px; flex-shrink:0; width:20px; text-align:center; }
+.alert-danger { background:rgba(191,108,92,0.09); border-left:4px solid var(--coral); }
+.alert-warn { background:rgba(191,108,92,0.06); border-left:4px solid var(--blush); }
+.alert-info { background:rgba(24,78,90,0.06); border-left:4px solid var(--teal-mid); }
+.alert-text strong { color:var(--text-dark); display:block; margin-bottom:2px; }
+.alert-text p { color:var(--text-mid); font-size:12px; }
+
+/* === QUICK WIN CARDS === */
+.qw-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:8px; }
+.qw-card { background:var(--white); border-radius:12px; padding:20px 22px; box-shadow:var(--shadow); border-left:4px solid var(--patina); }
+.qw-card.coral { border-left-color:var(--coral); }
+.qw-card.slate { border-left-color:var(--slate); }
+.qw-rank { font-family:'Playfair Display',serif; font-size:32px; color:var(--cream); float:right; line-height:1; margin-top:-4px; }
+.qw-title { font-family:'Playfair Display',serif; font-size:14px; color:var(--teal-dark); margin-bottom:6px; line-height:1.3; }
+.qw-meta { font-size:12px; color:var(--text-mid); margin-bottom:8px; line-height:1.4; }
+.qw-action { font-size:12px; color:var(--patina); font-style:italic; border-left:2px solid var(--patina); padding-left:8px; line-height:1.4; }
+.qw-card.coral .qw-action { color:var(--coral); border-left-color:var(--coral); }
+
+/* === PLAN D'ACTION === */
+.action-row { display:flex; gap:14px; padding:12px 0; border-bottom:1px solid var(--border); align-items:flex-start; }
+.action-row:last-child { border-bottom:none; }
+.action-num { font-family:'Playfair Display',serif; font-size:22px; color:var(--teal-light); flex-shrink:0; width:28px; line-height:1.1; }
+.action-content strong { font-size:13px; color:var(--text-dark); display:block; margin-bottom:3px; }
+.action-content p { font-size:12px; color:var(--text-mid); line-height:1.4; }
+.action-meta { display:flex; gap:8px; margin-top:6px; flex-wrap:wrap; }
+.tag { display:inline-block; font-size:10px; font-weight:700; letter-spacing:.5px; padding:3px 8px; border-radius:8px; text-transform:uppercase; }
+.tag-impact { background:rgba(24,78,90,0.1); color:var(--teal-dark); }
+.tag-low { background:rgba(94,158,154,0.15); color:var(--patina); }
+.tag-mid { background:rgba(191,108,92,0.12); color:var(--coral); }
+
+/* === SYNTHESE HERO === */
+.synthese-hero { background:var(--teal-dark); padding:44px 48px; color:var(--white); }
+.synthese-hero h1 { font-family:'Playfair Display',serif; font-size:30px; margin-bottom:8px; }
+.synthese-hero p { font-size:14px; color:var(--teal-light); opacity:.85; }
+.synthese-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:22px; padding:36px 48px 0; }
+.synthese-card { background:var(--white); border-radius:14px; padding:26px; box-shadow:var(--shadow); }
+.synthese-card h3 { font-family:'Playfair Display',serif; font-size:16px; color:var(--teal-dark); margin-bottom:14px; }
+.synthese-metric { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border); }
+.synthese-metric:last-child { border-bottom:none; }
+.sm-label { font-size:12px; color:var(--text-mid); }
+.sm-val { font-size:14px; font-weight:700; color:var(--teal-dark); }
+.sm-val.danger { color:var(--coral); }
+.sm-val.warn { color:var(--coral); }
+.sm-val.good { color:var(--patina); }
+
+/* === PAGE URL === */
+.page-url a { color:var(--teal-mid); text-decoration:none; font-weight:600; font-size:12px; }
+.page-url a:hover { color:var(--patina); }
+
+/* === FOOTER === */
+.footer { background:var(--teal-dark); padding:18px 48px; text-align:center; font-family:'Playfair Display',serif; font-style:italic; color:var(--teal-mid); font-size:13px; margin-top:auto; }
+</style>
+</head>
+<body>
+<nav id="mcp-nav" style="position:sticky;top:0;z-index:99999;background:#184e5a;display:flex;gap:6px;justify-content:center;align-items:center;padding:9px 10px;font-family:'Raleway',Arial,sans-serif;box-shadow:0 2px 10px rgba(0,0,0,.18)">
+  <a href="/" data-p="/" style="color:#f5eeea;text-decoration:none;font-weight:600;font-size:13.5px;padding:6px 15px;border-radius:8px;transition:background .15s">Contenus</a>
+  <a href="/commercial.html" data-p="/commercial.html" style="color:#f5eeea;text-decoration:none;font-weight:600;font-size:13.5px;padding:6px 15px;border-radius:8px;transition:background .15s">Commercial</a>
+  <a href="/seo.html" data-p="/seo.html" style="color:#f5eeea;text-decoration:none;font-weight:600;font-size:13.5px;padding:6px 15px;border-radius:8px;transition:background .15s">SEO</a>
+</nav>
+<script>(function(){var p=location.pathname;if(p==="/index.html")p="/";document.querySelectorAll("#mcp-nav a").forEach(function(a){var m=a.getAttribute("data-p")===p;a.style.background=m?"#bf6c5c":"transparent";a.style.color=m?"#fff":"#f5eeea";});})();</script>
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <span class="brand-label">My Coaching Partner</span>
+    <h2>SEO Dashboard</h2>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="sidebar-item active" onclick="showPane('synthese',this)">
+      <span class="si-icon">⊞</span> Synthèse
+    </div>
+    <div class="sidebar-item" onclick="showPane('performance',this)">
+      <span class="si-icon">↗</span> Performance
+    </div>
+    <div class="sidebar-item" onclick="showPane('pages',this)">
+      <span class="si-icon">⊡</span> Pages
+    </div>
+    <div class="sidebar-item" onclick="showPane('keywords',this)">
+      <span class="si-icon">⊙</span> Mots-clés
+    </div>
+    <div class="sidebar-item" onclick="showPane('quickwins',this)">
+      <span class="si-icon">⚡</span> Quick Wins
+    </div>
+    <div class="sidebar-item" onclick="showPane('actions',this)">
+      <span class="si-icon">✓</span> Plan d'action
+    </div>
+  </nav>
+  <div class="sidebar-footer">mycoachingpartner.fr</div>
+</aside>
+
+<!-- ===== MAIN AREA ===== -->
+<div class="main-area">
+
+
+<!-- ===== PANE SYNTHESE ===== -->
+<div id="pane-synthese" class="pane active" style="flex-direction:column;">
+  <div class="synthese-hero">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--teal-mid);margin-bottom:8px;">mycoachingpartner.fr</div>
+        <h1>Dashboard SEO - Juillet 2026</h1>
+        <p>Données juin 2026 (dernier mois complet) · Source : Ubersuggest (Google data) + Notion BDD mots-clés · Généré le 6 juillet 2026</p>
+      </div>
+      <div style="text-align:right;">
+        <div class="header-badge"><span>Ubersuggest · données Google</span></div>
+        <div style="font-size:11px;color:var(--teal-mid);margin-top:8px;">GSC non accessible en direct · baseline juin : 4 230 impr / 90 clics</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="synthese-grid">
+    <div class="synthese-card">
+      <h3>Top 3 à protéger</h3>
+      <div class="synthese-metric"><span class="sm-label">coaching reprise professionnelle luxe</span><span class="sm-val good">Pos 1 🟢</span></div>
+      <div class="synthese-metric"><span class="sm-label">coaching carrière luxe</span><span class="sm-val good">Pos 1 🟢</span></div>
+      <div class="synthese-metric"><span class="sm-label">Capucine Legrand coach</span><span class="sm-val good">Pos 1 🟢</span></div>
+      <div class="synthese-metric"><span class="sm-label">vs juin 2026</span><span class="sm-val good">Stables · aucune perte</span></div>
+    </div>
+    <div class="synthese-card">
+      <h3>Vue d'ensemble Ubersuggest (juin 2026)</h3>
+      <div class="synthese-metric"><span class="sm-label">Trafic organique</span><span class="sm-val good">54 (+32 % vs mai 41)</span></div>
+      <div class="synthese-metric"><span class="sm-label">Domain Authority</span><span class="sm-val warn">3 (faible · croissance attendue)</span></div>
+      <div class="synthese-metric"><span class="sm-label">Backlinks / Domaines ref.</span><span class="sm-val">36 / 9</span></div>
+      <div class="synthese-metric"><span class="sm-label">Mots-clés trackés Ubersuggest</span><span class="sm-val">7</span></div>
+    </div>
+    <div class="synthese-card">
+      <h3>Opportunité prioritaire</h3>
+      <div class="synthese-metric"><span class="sm-label">Quick win #1</span><span class="sm-val good" style="font-size:12px;">"prise de poste manager" pos 18, SD 6</span></div>
+      <div class="synthese-metric"><span class="sm-label">Page cible</span><span class="sm-val" style="font-size:12px;">/coaching-prise-de-poste/</span></div>
+      <div class="synthese-metric"><span class="sm-label">Trou de contenu majeur</span><span class="sm-val danger" style="font-size:12px;">Cluster C1 entier (ICF Paris, vol 90)</span></div>
+      <div class="synthese-metric"><span class="sm-label">Pilier C1 en rédaction</span><span class="sm-val" style="font-size:12px;">Publication cible : 13 juillet</span></div>
+    </div>
+    <div class="synthese-card">
+      <h3>Alertes &amp; points positifs</h3>
+      <div class="synthese-metric"><span class="sm-label">Score SEO on-page</span><span class="sm-val good">84 / 100</span></div>
+      <div class="synthese-metric"><span class="sm-label">4 pages bloquées (noindex)</span><span class="sm-val danger">À identifier · impact élevé</span></div>
+      <div class="synthese-metric"><span class="sm-label">coaching dirigeant Paris</span><span class="sm-val danger">Non positionné</span></div>
+      <div class="synthese-metric"><span class="sm-label">Trafic juin vs mai</span><span class="sm-val good">+32 % (41 → 54)</span></div>
+      <div class="synthese-metric"><span class="sm-label">Déclencheur cluster C2</span><span class="sm-val" style="font-size:12px;">Brief à lancer le 27 juillet</span></div>
+    </div>
+  </div>
+
+  <div style="padding:28px 48px 36px;">
+    <div class="insight-dark">
+      <h3>Lecture stratégique · Juillet 2026</h3>
+      <ul>
+        <li>Les 3 mots-clés prioritaires tiennent tous à position 1 (stable vs juin). Aucune perte à signaler sur les requêtes de marque et niche luxe.</li>
+        <li>Le trafic organique Ubersuggest progresse : 54 visites en juin vs 41 en mai (+32 %). La tendance est positive mais le volume reste faible. Le cluster C1 non publié est le principal levier de croissance.</li>
+        <li>Le quick win le plus accessible : "coaching prise de poste manager" en position 18 avec une difficulté SEO de seulement 6 sur /coaching-prise-de-poste/ déjà existante. Aucun nouveau contenu nécessaire, seule une optimisation H1/H2.</li>
+        <li>Trou de contenu majeur : le cluster C1 (coaching professionnel certifié ICF Paris, vol 90, SD 4) est en rédaction cette semaine. Publication cible le 13 juillet. C'est la priorité absolue du mois.</li>
+        <li>Déclencheur cluster C2 le 27 juillet : briefer "négocier salaire cadre luxe" (vol 140, SD 3) pour un démarrage en août et diversifier les requêtes transactionnelles.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer">Dashboard SEO MCP · Source : Ubersuggest (Google data) + Notion BDD · mycoachingpartner.fr · Juillet 2026</div>
+</div>
+
+
+<!-- ===== PANE PERFORMANCE ===== -->
+<div id="pane-performance" class="pane" style="flex-direction:column;">
+  <div class="header">
+    <div class="header-left">
+      <span>mycoachingpartner.fr</span>
+      <h1>Performance - Vue d'ensemble</h1>
+    </div>
+    <div class="header-right">
+      <div class="header-badge"><span>Juin 2026 vs mai 2026</span></div>
+      <div class="date">Source : Ubersuggest · GSC non accessible en direct</div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="section-title">Métriques clés</div>
+    <div class="section-subtitle">Source : Ubersuggest (données Google) · juin 2026 vs mai 2026 · GSC baseline : 4 230 impr / 90 clics / CTR 2,1 % / pos moy 10,2 (relevé 11 juin)</div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Trafic organique (juin)</div>
+        <div class="kpi-value">54</div>
+        <div class="kpi-sub">Source Ubersuggest</div>
+        <div class="kpi-trend up">+32 % vs mai (41)</div>
+      </div>
+      <div class="kpi-card patina">
+        <div class="kpi-label">Domain Authority</div>
+        <div class="kpi-value">3</div>
+        <div class="kpi-sub">Faible · croissance attendue</div>
+        <div class="kpi-trend flat">Stable · piliers à publier</div>
+      </div>
+      <div class="kpi-card coral">
+        <div class="kpi-label">Backlinks</div>
+        <div class="kpi-value">36</div>
+        <div class="kpi-sub">9 domaines référents · 25 follow</div>
+        <div class="kpi-trend flat">11 nofollow</div>
+      </div>
+      <div class="kpi-card slate">
+        <div class="kpi-label">Baseline GSC (11 juin)</div>
+        <div class="kpi-value">10,2</div>
+        <div class="kpi-sub">Position moyenne GSC</div>
+        <div class="kpi-trend flat">4 230 impr · 90 clics · CTR 2,1 %</div>
+      </div>
+      <div class="kpi-card patina" style="grid-column:1/3;">
+        <div class="kpi-label">Score SEO on-page (audit Ubersuggest · 6 juillet)</div>
+        <div class="kpi-value">84<span style="font-size:16px;color:var(--text-light);font-family:'Raleway',sans-serif;font-weight:400;"> / 100</span></div>
+        <div class="kpi-sub">115 pages crawlées · 21 problèmes détectés</div>
+        <div class="kpi-trend up">Bon niveau · problèmes critiques à traiter</div>
+      </div>
+      <div class="kpi-card coral" style="grid-column:3/5;">
+        <div class="kpi-label">Pages bloquées noindex (impact élevé)</div>
+        <div class="kpi-value">4</div>
+        <div class="kpi-sub">Pages non indexables par Google</div>
+        <div class="kpi-trend down">À identifier dans Ubersuggest · action immédiate</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Évolution trafic Ubersuggest</h3>
+        <p class="sub">Derniers mois disponibles</p>
+        <div class="bar-wrap"><div class="bar-label">Juin 2026</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--teal-dark)"></div></div><div class="bar-val">54</div></div>
+        <div class="bar-wrap"><div class="bar-label">Mai 2026</div><div class="bar-track"><div class="bar-fill" style="width:76%;background:var(--teal-mid)"></div></div><div class="bar-val">41</div></div>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">
+          <div class="alert alert-info" style="margin-bottom:0;">
+            <span class="alert-icon">ℹ</span>
+            <div class="alert-text"><strong>+32 % en un mois</strong><p>Tendance positive. Le volume reste faible : la publication du cluster C1 est le principal levier de croissance pour passer durablement au-dessus de 100 visites/mois.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Top requêtes (Ubersuggest · juin 2026)</h3>
+        <p class="sub">Source : Ubersuggest domain keywords · mycoachingpartner.fr</p>
+        <table>
+          <thead><tr><th>Requête</th><th>Vol.</th><th>Pos.</th><th>SD</th></tr></thead>
+          <tbody>
+            <tr><td>8 signes personnes toxiques</td><td>320</td><td><span class="pos pos-top10">5</span></td><td>20</td></tr>
+            <tr><td>coaching prise de poste</td><td>50</td><td><span class="pos pos-p11-20">13</span></td><td>—</td></tr>
+            <tr><td>coaching prise de poste manager</td><td>30</td><td><span class="pos pos-p11-20">18</span></td><td style="color:var(--patina);font-weight:700;">6 ✓</td></tr>
+            <tr><td>quitter un travail toxique</td><td>140</td><td><span class="pos pos-p11-20">18</span></td><td>22</td></tr>
+            <tr><td>coaching en psychologie</td><td>260</td><td><span class="pos pos-p20plus">22</span></td><td>30</td></tr>
+            <tr><td>Capucine Legrand coach</td><td>70</td><td><span class="pos pos-top3">1</span></td><td>—</td></tr>
+            <tr><td>coaching carrière luxe</td><td>0</td><td><span class="pos pos-top3">1</span></td><td>12</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="insight">
+      <span class="insight-icon">ℹ</span>
+      <div class="insight-text">
+        <strong>GSC non accessible en direct ce mois</strong>
+        <p>Ubersuggest est connecté à Google (isConnectedToGSC: true, isUsingGoogleData: true) et sert de substitut pour les positions et le trafic. Les impressions et CTR exacts resteront à mesurer en GSC. Baseline de référence : 11 juin 2026 (4 230 impr, 90 clics, CTR 2,1 %, pos moy 10,2).</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer">Dashboard SEO MCP · Source : Ubersuggest (Google data) + Notion BDD · mycoachingpartner.fr · Juillet 2026</div>
+</div>
+
+
+<!-- ===== PANE PAGES ===== -->
+<div id="pane-pages" class="pane" style="flex-direction:column;">
+  <div class="header">
+    <div class="header-left">
+      <span>mycoachingpartner.fr</span>
+      <h1>Pages - Trafic Ubersuggest</h1>
+    </div>
+    <div class="header-right">
+      <div class="header-badge"><span>Top pages · juin 2026</span></div>
+      <div class="date">Source : Ubersuggest domain top pages</div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="section-title">Pages par trafic organique estimé</div>
+    <div class="section-subtitle">Source : Ubersuggest domain top pages · juin 2026 · GSC non accessible en direct ce mois</div>
+
+    <div class="card" style="padding:0;overflow:hidden;">
+      <table>
+        <thead>
+          <tr>
+            <th>Page</th>
+            <th>Trafic (Ubersuggest)</th>
+            <th>Diagnostic</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="page-url"><a href="https://mycoachingpartner.fr/personne-toxique-travail/" target="_blank">/personne-toxique-travail/</a></div></td>
+            <td><strong>7</strong></td>
+            <td style="color:var(--patina);font-size:12px;">Page pilier toxicité · pos 5 sur "8 signes personnes toxiques"</td>
+          </tr>
+          <tr>
+            <td><div class="page-url"><a href="https://mycoachingpartner.fr/coach-ou-psy/" target="_blank">/coach-ou-psy/</a></div></td>
+            <td><strong>2</strong></td>
+            <td style="color:var(--coral);font-size:12px;">Pos 22 sur "coaching en psychologie" (SD 30) · enrichir FAQ, E-E-A-T</td>
+          </tr>
+          <tr>
+            <td><div class="page-url"><a href="https://mycoachingpartner.fr/quitter-travail-toxique/" target="_blank">/quitter-travail-toxique/</a></div></td>
+            <td><strong>1</strong></td>
+            <td style="color:var(--coral);font-size:12px;">Pos 18 sur "quitter un travail toxique" (SD 22) · maillage depuis /personne-toxique-travail/</td>
+          </tr>
+          <tr>
+            <td><div class="page-url"><a href="https://mycoachingpartner.fr/coaching-prise-de-poste/" target="_blank">/coaching-prise-de-poste/</a></div></td>
+            <td><strong>1</strong></td>
+            <td style="color:var(--patina);font-size:12px;">✓ Quick win #1 · pos 18 "manager" SD 6 · optimiser H1/H2 sans réécrire</td>
+          </tr>
+          <tr>
+            <td><div class="page-url"><a href="https://mycoachingpartner.fr/coaching-recrutement/" target="_blank">/coaching-recrutement/</a></div></td>
+            <td>0</td>
+            <td style="color:var(--text-mid);font-size:12px;">À surveiller · pas de positionnement fort détecté</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-2">
+      <div class="insight">
+        <span class="insight-icon">↘</span>
+        <div class="insight-text">
+          <strong>Pages commerciales luxe toujours absentes</strong>
+          <p>/coaching-carriere-luxe/ et /coaching-dirigeants-luxe/ ne génèrent pas de trafic détectable. L'ICP luxe ne trouve pas le site sur ses requêtes commerciales. Le cluster C1 (ICF Paris, transactionnel) est la réponse directe à ce trou.</p>
+        </div>
+      </div>
+      <div class="insight">
+        <span class="insight-icon">ℹ</span>
+        <div class="insight-text">
+          <strong>/coaching-prise-de-poste/ : levier immédiat</strong>
+          <p>La page est déjà indexée et en position 18 sur "coaching prise de poste manager" (SD 6). C'est le seul keyword avec une difficulté aussi faible en page 2. Aucun nouveau contenu : juste ajouter "manager" dans H1/H2 + maillage depuis C3.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">Dashboard SEO MCP · Source : Ubersuggest (Google data) + Notion BDD · mycoachingpartner.fr · Juillet 2026</div>
+</div>
+
+
+<!-- ===== PANE MOTS-CLES ===== -->
+<div id="pane-keywords" class="pane" style="flex-direction:column;">
+  <div class="header">
+    <div class="header-left">
+      <span>mycoachingpartner.fr</span>
+      <h1>Mots-clés - Positions juillet 2026</h1>
+    </div>
+    <div class="header-right">
+      <div class="header-badge"><span>Focus ICP luxe &amp; carrière</span></div>
+      <div class="date">Ubersuggest + Notion BDD · 6 juillet 2026</div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="section-title">Mots-clés stratégiques</div>
+    <div class="section-subtitle">Sources : Ubersuggest (positions mesurées) + Notion BDD mots-clés (positions déclarées) · Ubersuggest ne détecte pas les mots-clés ultra-niche &lt; 10 recherches/mois</div>
+
+    <div class="card" style="padding:0;overflow:hidden;margin-bottom:24px;">
+      <table>
+        <thead>
+          <tr><th>Mot-clé</th><th>Volume</th><th>Position</th><th>SD</th><th>Source</th><th>Statut</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>coaching reprise professionnelle luxe</strong></td><td>—</td><td><span class="pos pos-top3">1</span></td><td>—</td><td>Notion BDD</td><td style="color:var(--patina);font-size:12px;font-weight:600;">🟢 Stable vs juin</td></tr>
+          <tr><td><strong>coaching carrière luxe</strong></td><td>0</td><td><span class="pos pos-top3">1</span></td><td>12</td><td>Notion BDD</td><td style="color:var(--patina);font-size:12px;font-weight:600;">🟢 Stable vs juin</td></tr>
+          <tr><td><strong>Capucine Legrand coach</strong></td><td>70</td><td><span class="pos pos-top3">1</span></td><td>—</td><td>Notion BDD</td><td style="color:var(--patina);font-size:12px;font-weight:600;">🟢 Stable vs juin</td></tr>
+          <tr><td>8 signes personnes toxiques</td><td>320</td><td><span class="pos pos-top10">5</span></td><td>20</td><td>Ubersuggest</td><td style="color:var(--patina);font-size:12px;">Bas page 1 · page pilier</td></tr>
+          <tr><td>coaching prise de poste</td><td>50</td><td><span class="pos pos-p11-20">13</span></td><td>—</td><td>Notion BDD</td><td style="color:var(--coral);font-size:12px;">🟠 Page 2</td></tr>
+          <tr><td><strong>coaching prise de poste manager</strong></td><td>30</td><td><span class="pos pos-p11-20">18</span></td><td style="color:var(--patina);font-weight:700;">6</td><td>Ubersuggest</td><td style="color:var(--patina);font-size:12px;font-weight:600;">✓ Quick win · SD très faible</td></tr>
+          <tr><td>quitter un travail toxique</td><td>140</td><td><span class="pos pos-p11-20">18</span></td><td>22</td><td>Ubersuggest</td><td style="color:var(--coral);font-size:12px;">🟠 Page 2 · maillage à renforcer</td></tr>
+          <tr><td>coaching en psychologie</td><td>260</td><td><span class="pos pos-p20plus">22</span></td><td>30</td><td>Ubersuggest</td><td style="color:var(--text-light);font-size:12px;">Page 2-3 · enrichir /coach-ou-psy/</td></tr>
+          <tr><td>coaching dirigeant Paris</td><td>170</td><td>—</td><td>5</td><td>Notion BDD</td><td style="color:var(--coral);font-size:12px;font-weight:600;">✗ Non positionné</td></tr>
+          <tr><td>coaching professionnel certifié ICF Paris</td><td>90</td><td>—</td><td>4</td><td>Notion BDD</td><td style="color:var(--text-light);font-size:12px;">⚪ Pilier en rédaction · pub 13 juil</td></tr>
+          <tr><td>négocier salaire cadre luxe</td><td>140</td><td>—</td><td>3</td><td>Notion BDD</td><td style="color:var(--text-light);font-size:12px;">⚪ Prévu août · cluster C2</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="insight">
+      <span class="insight-icon">⚠</span>
+      <div class="insight-text">
+        <strong>Cluster C1 : le trou le plus impactant</strong>
+        <p>"coaching professionnel certifié ICF Paris" (vol 90, SD 4) et "coaching dirigeant Paris" (vol 170, SD 5) sont des requêtes transactionnelles à très faible difficulté. Le site n'y est pas positionné. La publication du pilier C1 avant le 13 juillet est la priorité absolue du mois.</p>
+      </div>
+    </div>
+
+    <div class="insight">
+      <span class="insight-icon">⊙</span>
+      <div class="insight-text">
+        <strong>"coaching prise de poste manager" : le quick win le plus accessible</strong>
+        <p>Difficulté SEO 6 (très faible), position 18, page existante. C'est le seul keyword en page 2 avec une difficulté inférieure à 10. Ajouter "manager" dans H1/H2 de /coaching-prise-de-poste/ et un maillage depuis l'article C3. Potentiel : page 1 en quelques semaines.</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer">Dashboard SEO MCP · Source : Ubersuggest (Google data) + Notion BDD · mycoachingpartner.fr · Juillet 2026</div>
+</div>
+
+
+<!-- ===== PANE QUICK WINS ===== -->
+<div id="pane-quickwins" class="pane" style="flex-direction:column;">
+  <div class="header">
+    <div class="header-left">
+      <span>mycoachingpartner.fr</span>
+      <h1>Quick Wins - Opportunités page 2</h1>
+    </div>
+    <div class="header-right">
+      <div class="header-badge"><span>3 opportunités · positions 13-22</span></div>
+      <div class="date">SD faible à moyen · pages existantes</div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="section-title">Opportunités à fort impact, effort faible ou moyen</div>
+    <div class="section-subtitle">Pages en position 11-20 identifiées via Ubersuggest · SD = score de difficulté SEO (plus bas = plus facile)</div>
+
+    <div class="qw-grid">
+      <div class="qw-card">
+        <div class="qw-rank">1</div>
+        <div class="qw-title">"coaching prise de poste manager"</div>
+        <div class="qw-meta">Vol 30 · position 18 · SD 6 (très faible)<br>Page cible : /coaching-prise-de-poste/<br>La plus faible difficulté de tous les keywords page 2. Aucun nouveau contenu requis.</div>
+        <div class="qw-action">Ajouter "manager" dans H1 et un sous-titre H2 dédié. Maillage depuis l'article C3. Potentiel : page 1 en 4-6 semaines.</div>
+      </div>
+
+      <div class="qw-card coral">
+        <div class="qw-rank">2</div>
+        <div class="qw-title">"quitter un travail toxique"</div>
+        <div class="qw-meta">Vol 140 · position 18 · SD 22<br>Page cible : /quitter-travail-toxique/<br>Volume intéressant, difficulté modérée. Page déjà existante.</div>
+        <div class="qw-action">Maillage interne depuis /personne-toxique-travail/ (pos 5). Rafraîchir l'intro, ajouter schéma HowTo. Potentiel : 1-2 mois.</div>
+      </div>
+
+      <div class="qw-card slate">
+        <div class="qw-rank">3</div>
+        <div class="qw-title">"coaching en psychologie"</div>
+        <div class="qw-meta">Vol 260 · position 22 · SD 30<br>Page cible : /coach-ou-psy/<br>Volume fort, difficulté plus élevée.</div>
+        <div class="qw-action">Enrichir la FAQ, ajouter des témoignages (E-E-A-T), structurer un schéma FAQPage. Moyen terme : 2-3 mois.</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:8px;">
+      <h3>Comparaison effort / impact</h3>
+      <p class="sub">Classement par difficulté SEO croissante</p>
+      <div class="bar-wrap" style="margin-top:8px;">
+        <div class="bar-label">QW #1 - prise de poste manager</div>
+        <div class="bar-track"><div class="bar-fill" style="width:20%;background:var(--patina)"></div></div>
+        <div class="bar-val">SD 6 · très faible</div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-label">QW #2 - quitter travail toxique</div>
+        <div class="bar-track"><div class="bar-fill" style="width:73%;background:var(--teal-mid)"></div></div>
+        <div class="bar-val">SD 22 · moyen</div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-label">QW #3 - coaching en psychologie</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--coral)"></div></div>
+        <div class="bar-val">SD 30 · élevé</div>
+      </div>
+      <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
+        <div class="alert alert-info" style="margin-bottom:0;">
+          <span class="alert-icon">ℹ</span>
+          <div class="alert-text"><strong>Focus juillet : QW #1 uniquement</strong><p>SD 6 = aucune résistance concurrentielle. Traiter ce keyword avant les autres. QW #2 et #3 peuvent attendre août une fois C1 publié.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">Dashboard SEO MCP · Source : Ubersuggest (Google data) + Notion BDD · mycoachingpartner.fr · Juillet 2026</div>
+</div>
+
+
+<!-- ===== PANE PLAN D'ACTION ===== -->
+<div id="pane-actions" class="pane" style="flex-direction:column;">
+  <div class="header">
+    <div class="header-left">
+      <span>mycoachingpartner.fr</span>
+      <h1>Plan d'action - Juillet 2026</h1>
+    </div>
+    <div class="header-right">
+      <div class="header-badge"><span>3 actions + 1 déclencheur cluster</span></div>
+      <div class="date">Roadmap S2-S4 juillet 2026</div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="section-title">3 actions prioritaires</div>
+    <div class="section-subtitle">Classées par impact / effort · sources : Ubersuggest + Notion BDD + Roadmap SEO</div>
+
+    <div class="card">
+      <div class="action-row">
+        <div class="action-num">1</div>
+        <div class="action-content">
+          <strong>Publier le pilier C1 "coaching professionnel certifié ICF Paris" avant le 13 juillet</strong>
+          <p>Cluster transactionnel, vol 90, SD 4. Aucune page positionnée sur les requêtes ICF Paris et coaching dirigeant Paris (170 recherches, SD 5). C'est le trou de contenu le plus impactant sur les conversions. Schema Service + Person via Rank Math. Maillage vers /coaching-dirigeant-paris/ et /capucine-legrand/.</p>
+          <div class="action-meta">
+            <span class="tag tag-impact">Cluster C1 · conversions directes</span>
+            <span class="tag tag-mid">S2-S3 juillet · 1 journée</span>
+          </div>
+        </div>
+      </div>
+      <div class="action-row">
+        <div class="action-num">2</div>
+        <div class="action-content">
+          <strong>Optimiser /coaching-prise-de-poste/ pour "coaching prise de poste manager" (SD 6)</strong>
+          <p>Position 18, difficulté 6. Page existante, aucun nouveau contenu à créer. Ajouter "manager" dans le H1 ou un H2 dédié. Maillage entrant depuis l'article C3 déjà publié. Potentiel : page 1 dans 4-6 semaines sans effort majeur.</p>
+          <div class="action-meta">
+            <span class="tag tag-impact">Quick win · page 1 accessible</span>
+            <span class="tag tag-low">Effort faible · 1h</span>
+          </div>
+        </div>
+      </div>
+      <div class="action-row">
+        <div class="action-num">3</div>
+        <div class="action-content">
+          <strong>Publier satellite C3 "réussir sa prise de poste directeur luxe" (vol 90, SD 2)</strong>
+          <p>Le pilier C3 est publié depuis juin. Le satellite le plus accessible a vol 90 et SD 2, soit la difficulté la plus basse du portefeuille. Renforce le cluster C3 et apporte une requête luxe non couverte. Cible : semaine du 20 juillet.</p>
+          <div class="action-meta">
+            <span class="tag tag-impact">Cluster C3 · requête luxe</span>
+            <span class="tag tag-low">Effort faible · SD 2</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-danger" style="margin-bottom:12px;">
+      <span class="alert-icon">⚠</span>
+      <div class="alert-text">
+        <strong>4 pages bloquées (noindex) · impact élevé · action immédiate</strong>
+        <p>L'audit Ubersuggest du 6 juillet détecte 4 pages bloquées pour les moteurs de recherche. Si des pages de contenu stratégique (piliers, services) sont concernées, elles ne s'indexeront jamais. Ouvrir Ubersuggest > Site Audit > Erreurs critiques > "Bloquées" pour identifier les URLs exactes, puis vérifier les réglages noindex dans Rank Math ou le code.</p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="alert alert-info">
+        <span class="alert-icon">ℹ</span>
+        <div class="alert-text">
+          <strong>Déclencheur cluster C2 : lundi 27 juillet</strong>
+          <p>Briefer le pilier C2 "négocier salaire cadre luxe" (vol 140, SD 3) pour démarrage août. Cluster transactionnel C2 = prochaine priorité après C1.</p>
+        </div>
+      </div>
+      <div class="alert alert-warn">
+        <span class="alert-icon">⚠</span>
+        <div class="alert-text">
+          <strong>coaching dirigeant Paris toujours non positionné</strong>
+          <p>Vol 170, SD 5. Le pilier C1 en publication ce mois devrait attaquer cette requête indirectement. Vérifier en août.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-info">
+      <span class="alert-icon">ℹ</span>
+      <div class="alert-text">
+        <strong>Roadmap semaine par semaine</strong>
+        <p>S2 (6 juil) : rédiger pilier C1 ICF Paris. S3 (13 juil) : publier + schema. S4 (20 juil) : bilan C1 + satellite C3 "réussir sa prise de poste directeur luxe". S1 août (27 juil) : brief cluster C2 "négocier salaire cadre luxe".</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer">Dashboard SEO MCP · Source : Ubersuggest (Google data) + Notion BDD · mycoachingpartner.fr · Juillet 2026</div>
+</div>
+
+</div><!-- /main-area -->
+
+<script>
+function showPane(id, el) {
+  document.querySelectorAll('.pane').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.sidebar-item').forEach(function(i){ i.classList.remove('active'); });
+  document.getElementById('pane-' + id).classList.add('active');
+  el.classList.add('active');
+}
+</script>
+</body>
+</html>
