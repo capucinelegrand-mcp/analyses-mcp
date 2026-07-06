@@ -1,86 +1,1904 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MCP — Tableaux de bord contenus</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --nile:#184E5A; --nile-deep:#123b45; --terracotta:#BF6C5C;
-      --teal:#599092; --mist:#8AA4AE; --cream:#F7F3EE; --ice:#F0F5F7; --rose:#E9B3A3;
-    }
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:'Raleway',sans-serif;
-      background:linear-gradient(160deg,var(--nile) 0%,var(--nile-deep) 100%);
-      color:var(--cream);min-height:100vh;
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-      padding:40px 20px;text-align:center;
-    }
-    .kicker{
-      font-size:13px;letter-spacing:.32em;text-transform:uppercase;
-      color:var(--rose);font-weight:600;margin-bottom:18px;
-    }
-    h1{
-      font-family:'Playfair Display',serif;font-weight:600;
-      font-size:clamp(30px,5vw,46px);line-height:1.15;margin-bottom:14px;
-    }
-    .sub{
-      font-weight:300;font-size:clamp(15px,2.2vw,18px);color:var(--ice);
-      max-width:540px;margin:0 auto 46px;opacity:.9;
-    }
-    .cards{
-      display:flex;gap:26px;flex-wrap:wrap;justify-content:center;width:100%;max-width:760px;
-    }
-    .card{
-      flex:1 1 300px;max-width:340px;text-decoration:none;
-      background:var(--cream);color:var(--nile);border-radius:18px;
-      padding:38px 30px;transition:transform .22s ease,box-shadow .22s ease;
-      box-shadow:0 10px 30px rgba(0,0,0,.22);position:relative;overflow:hidden;
-      border-top:5px solid var(--terracotta);
-    }
-    .card:hover{transform:translateY(-6px);box-shadow:0 18px 42px rgba(0,0,0,.32)}
-    .card .icon{font-size:44px;margin-bottom:16px;display:block}
-    .card h2{
-      font-family:'Playfair Display',serif;font-weight:600;font-size:24px;margin-bottom:8px;
-    }
-    .card p{font-size:14px;font-weight:400;color:var(--teal);line-height:1.5;margin-bottom:22px}
-    .card .go{
-      display:inline-block;font-weight:600;font-size:14px;letter-spacing:.04em;
-      color:var(--terracotta);
-    }
-    .card .go::after{content:" →";transition:margin .2s ease}
-    .card:hover .go::after{margin-left:5px}
-    footer{
-      margin-top:56px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;
-      color:var(--mist);font-weight:500;
-    }
-    footer .dot{color:var(--terracotta)}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCP - Dashboard contenus hebdo</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal-dark: #184E5A; --teal-mid: #599092; --teal-light: #A8C5C6;
+  --patina: #5E9E9A; --nile: #4A8A8C; --coral: #BF6C5C; --blush: #E9B3A3;
+  --slate: #6F8B9D; --cream: #F7F3EE; --white: #FFFFFF;
+  --text-dark: #1A2E35; --text-mid: #3D5561; --text-light: #8AA4AE;
+  --border: rgba(24,78,90,0.1);
+  --shadow: 0 4px 24px rgba(24,78,90,0.08);
+  --shadow-hover: 0 12px 40px rgba(24,78,90,0.15);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--text-dark); display:flex; min-height:100vh; }
+
+/* === SIDEBAR === */
+.sidebar {
+  width:220px; min-width:220px; background:var(--teal-dark);
+  position:fixed; top:0; left:0; height:100vh;
+  display:flex; flex-direction:column; z-index:200;
+  box-shadow:4px 0 20px rgba(24,78,90,0.2);
+}
+.sidebar-brand {
+  padding:28px 20px 24px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.sidebar-brand .brand-label {
+  font-size:9px; font-weight:600; letter-spacing:2px; text-transform:uppercase;
+  color:var(--teal-mid); display:block; margin-bottom:5px;
+}
+.sidebar-brand h2 {
+  font-family:'Raleway',sans-serif; font-size:13px; font-weight:700; color:var(--white); line-height:1.2; letter-spacing:1px; text-transform:uppercase; white-space:nowrap;
+}
+.sidebar-nav { flex:1; padding:16px 0; overflow-y:auto; }
+.sidebar-item {
+  display:flex; align-items:center; gap:12px;
+  padding:13px 20px; cursor:pointer;
+  color:rgba(168,197,198,0.7); font-size:12px; font-weight:600;
+  letter-spacing:1px; text-transform:uppercase;
+  border-left:3px solid transparent;
+  transition:all .2s;
+}
+.sidebar-item:hover { background:rgba(255,255,255,0.06); color:var(--teal-light); }
+.sidebar-item.active { background:rgba(255,255,255,0.1); color:var(--white); border-left-color:var(--teal-mid); }
+.sidebar-item .si-icon { font-size:16px; width:22px; text-align:center; flex-shrink:0; }
+.sidebar-footer {
+  padding:16px 20px;
+  border-top:1px solid rgba(255,255,255,0.08);
+  font-family:'Playfair Display',serif; font-style:italic;
+  font-size:11px; color:var(--teal-mid); text-align:center;
+}
+
+/* === MAIN AREA === */
+.main-area { margin-left:220px; flex:1; display:flex; flex-direction:column; min-height:100vh; }
+.pane { display:none; flex:1; flex-direction:column; }
+.pane.active { display:flex; }
+
+/* === SHARED HEADER === */
+.header { background:var(--teal-dark); padding:28px 48px; display:flex; align-items:center; justify-content:space-between; }
+.header-left span { font-size:11px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:var(--teal-mid); display:block; margin-bottom:6px; }
+.header-left h1 { font-family:'Playfair Display',serif; font-size:26px; color:var(--white); }
+.header-right { text-align:right; }
+.li-badge,.ig-badge,.pod-badge,.nl-badge,.reco-badge {
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(233,179,163,0.15); border:1px solid rgba(233,179,163,0.35);
+  border-radius:20px; padding:6px 14px;
+}
+.li-badge svg { width:16px; height:16px; fill:var(--blush); }
+.li-badge span,.ig-badge span,.pod-badge span,.nl-badge span,.reco-badge span { font-size:13px; color:var(--blush); font-weight:600; }
+.header-right .date { font-size:11px; color:var(--teal-mid); margin-top:8px; letter-spacing:1px; }
+
+/* === NAV TABS (inner) === */
+.nav { background:var(--white); border-bottom:1px solid var(--border); padding:0 48px; display:flex; position:sticky; top:0; z-index:100; box-shadow:0 2px 12px rgba(24,78,90,0.05); overflow-x:auto; }
+.nav-tab { padding:15px 22px; font-size:11px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-light); cursor:pointer; border-bottom:2px solid transparent; transition:all .2s; white-space:nowrap; }
+.nav-tab:hover { color:var(--teal-dark); }
+.nav-tab.active { color:var(--teal-dark); border-bottom-color:var(--teal-mid); }
+
+/* === SECTIONS === */
+.main { padding:36px 48px; max-width:1400px; margin:0 auto; }
+.section { display:none; }
+.section.active { display:block; }
+.section-title { font-family:'Playfair Display',serif; font-size:22px; color:var(--teal-dark); margin-bottom:6px; }
+.section-subtitle { font-size:13px; color:var(--text-light); margin-bottom:28px; }
+
+/* === KPI === */
+.kpi-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:36px; }
+.kpi-card { background:var(--white); border-radius:12px; padding:20px 16px; box-shadow:var(--shadow); border-left:3px solid var(--teal-mid); transition:transform .2s,box-shadow .2s; }
+.kpi-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-hover); }
+.kpi-card.coral { border-left-color:var(--coral); }
+.kpi-card.patina { border-left-color:var(--patina); }
+.kpi-card.nile { border-left-color:var(--nile); }
+.kpi-card.blush { border-left-color:var(--blush); }
+.kpi-card.slate { border-left-color:var(--slate); }
+.kpi-card.accent { border-left-color:var(--coral); }
+.kpi-label { font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-light); margin-bottom:8px; }
+.kpi-value { font-family:'Playfair Display',serif; font-size:28px; color:var(--teal-dark); line-height:1; }
+.kpi-sub { font-size:10px; color:var(--text-light); margin-top:5px; }
+
+/* === CARD === */
+.card { background:var(--white); border-radius:12px; padding:26px; box-shadow:var(--shadow); margin-bottom:24px; }
+.card h3 { font-family:'Playfair Display',serif; font-size:16px; color:var(--teal-dark); margin-bottom:4px; }
+.card p.sub { font-size:11px; color:var(--text-light); margin-bottom:18px; }
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-bottom:24px; }
+.card-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:24px; margin-bottom:40px; }
+.chart-card { background:var(--white); border-radius:12px; padding:28px; box-shadow:var(--shadow); }
+.chart-card h3 { font-family:'Playfair Display',serif; font-size:16px; color:var(--teal-dark); margin-bottom:4px; }
+.chart-card p { font-size:12px; color:var(--text-light); margin-bottom:20px; }
+
+/* === INSIGHT === */
+.insight { background:linear-gradient(135deg,rgba(24,78,90,.05),rgba(89,144,146,.05)); border:1px solid var(--border); border-radius:12px; padding:18px 22px; margin-bottom:22px; display:flex; gap:14px; align-items:flex-start; }
+.insight-icon { font-size:22px; flex-shrink:0; }
+.insight-text strong { font-size:13px; color:var(--teal-dark); display:block; margin-bottom:3px; }
+.insight-text p { font-size:12px; color:var(--text-mid); line-height:1.5; }
+
+/* === BARS === */
+.bar-wrap { display:flex; align-items:center; gap:10px; margin-bottom:9px; }
+.bar-label { width:160px; font-size:12px; color:var(--text-mid); flex-shrink:0; text-align:left; }
+.bar-track { flex:1; height:8px; background:var(--cream); border-radius:4px; overflow:hidden; }
+.bar-fill { height:100%; border-radius:4px; transition:width .8s ease; }
+.bar-val { width:55px; font-size:12px; font-weight:700; color:var(--teal-dark); flex-shrink:0; white-space:nowrap; }
+
+/* === POST CARDS (shared) === */
+.post-filters { display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap; }
+.filter-btn { padding:5px 14px; border:1px solid var(--border); border-radius:20px; font-size:11px; font-weight:600; letter-spacing:.5px; text-transform:uppercase; cursor:pointer; background:var(--white); color:var(--text-mid); transition:all .2s; }
+.filter-btn:hover,.filter-btn.active { background:var(--teal-dark); color:var(--white); border-color:var(--teal-dark); }
+.posts-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+
+/* LinkedIn post cards */
+.post-card { background:var(--white); border-radius:12px; overflow:hidden; box-shadow:var(--shadow); transition:transform .2s,box-shadow .2s; }
+.post-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-hover); }
+.post-card-header { padding:12px 16px; display:flex; align-items:center; justify-content:space-between; }
+.pc-rank { font-family:'Playfair Display',serif; font-size:20px; color:var(--blush); }
+.pc-badge { font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:3px 8px; border-radius:10px; }
+.b-luxe { background:rgba(24,78,90,.15); color:#0D3440; }
+.b-leader { background:rgba(89,144,146,.18); color:#1E5E60; }
+.b-burnout { background:rgba(74,138,140,.15); color:#1A4E50; }
+.b-ia { background:rgba(94,158,154,.18); color:#1C5250; }
+.b-mgmt { background:rgba(168,197,198,.25); color:#2A6062; }
+.b-poste { background:rgba(24,78,90,.1); color:#184E5A; }
+.b-image { background:rgba(89,144,146,.12); color:var(--nile); }
+.b-carrousel { background:rgba(24,78,90,.12); color:var(--teal-dark); }
+.b-texte { background:rgba(168,197,198,.2); color:var(--teal-mid); }
+.post-card-body { padding:14px 16px; }
+.pc-eng { display:flex; gap:10px; margin-bottom:8px; align-items:center; }
+.eng-item { display:flex; align-items:center; gap:3px; font-size:13px; font-weight:700; color:var(--teal-dark); }
+.eng-item span { font-size:10px; color:var(--text-light); font-weight:400; }
+.eng-total { font-size:12px; font-weight:700; color:var(--patina); margin-left:auto; }
+.pc-hook { font-size:13px; font-weight:600; color:var(--text-dark); margin-bottom:6px; line-height:1.4; }
+.pc-meta { font-size:10px; color:var(--text-light); margin-bottom:4px; }
+.pc-badges { display:flex; gap:5px; flex-wrap:wrap; margin-top:6px; }
+.pc-url { display:inline-block; margin-top:6px; font-size:10px; color:var(--teal-mid); text-decoration:none; font-weight:600; }
+.pc-url:hover { color:var(--patina); }
+
+/* Instagram post cards */
+.post-card .post-header { padding:12px 16px; display:flex; align-items:center; justify-content:space-between; }
+.post-rank { font-family:'Playfair Display',serif; font-size:20px; color:var(--blush); }
+.post-type-badge { font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:3px 8px; border-radius:10px; }
+.badge-sidecar { background:rgba(24,78,90,.12); color:var(--teal-dark); }
+.badge-image { background:rgba(89,144,146,.12); color:var(--nile); }
+.badge-reel { background:rgba(191,108,92,.12); color:var(--coral); }
+.post-body { padding:14px 16px; }
+.post-engagement { display:flex; gap:10px; margin-bottom:8px; align-items:center; }
+.post-hook { font-size:13px; font-weight:600; color:var(--text-dark); margin-bottom:6px; line-height:1.4; }
+.post-caption { font-size:11px; color:var(--text-light); line-height:1.5; margin-bottom:4px; }
+.post-date { font-size:10px; color:var(--text-light); margin-bottom:4px; }
+.post-url { display:inline-block; margin-top:4px; font-size:10px; color:var(--teal-mid); text-decoration:none; font-weight:600; }
+.post-url:hover { color:var(--patina); }
+
+/* === PATTERNS (shared) === */
+.hook-item { display:flex; align-items:flex-start; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); }
+.hook-item:last-child { border-bottom:none; }
+.hook-score { flex-shrink:0; width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-size:13px; font-weight:700; }
+.hs-high,.high { background:rgba(24,78,90,.12); color:var(--teal-dark); }
+.hs-mid,.mid { background:rgba(94,158,154,.15); color:var(--patina); }
+.hs-low,.low { background:rgba(111,139,157,.12); color:var(--slate); }
+.hook-content h4 { font-size:13px; font-weight:700; color:var(--text-dark); margin-bottom:3px; }
+.hook-content p { font-size:12px; color:var(--text-light); line-height:1.4; }
+.hook-example { font-style:italic; font-size:12px; color:var(--teal-mid); margin-top:4px; border-left:2px solid var(--teal-mid); padding-left:8px; line-height:1.4; }
+.pattern-block { background:var(--white); border-radius:12px; padding:26px; box-shadow:var(--shadow); margin-bottom:24px; }
+.pattern-block h3 { font-family:'Playfair Display',serif; font-size:16px; color:var(--teal-dark); margin-bottom:16px; }
+
+/* === TOPICS (LI) === */
+.topic-row { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+.topic-label { width:160px; font-size:12px; color:var(--text-mid); flex-shrink:0; }
+.topic-bar-track { flex:1; height:10px; background:var(--cream); border-radius:5px; overflow:hidden; }
+.topic-bar-fill { height:100%; border-radius:5px; transition:width .8s ease; }
+.topic-meta { display:flex; gap:8px; width:110px; flex-shrink:0; }
+.topic-avg { font-size:12px; font-weight:700; color:var(--teal-dark); }
+.topic-count { font-size:11px; color:var(--text-light); }
+
+/* === FORMAT BOXES (LI style) === */
+.format-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px; }
+.format-box { background:var(--white); border-radius:12px; padding:20px; box-shadow:var(--shadow); border-top:3px solid var(--teal-mid); }
+.format-box.patina { border-top-color:var(--patina); }
+.format-box.nile { border-top-color:var(--nile); }
+.format-box h4 { font-family:'Playfair Display',serif; font-size:15px; color:var(--teal-dark); margin-bottom:4px; }
+.format-name { font-family:'Playfair Display',serif; font-size:15px; color:var(--teal-dark); margin-bottom:3px; }
+.format-count,.format-sub { font-size:10px; font-weight:700; letter-spacing:1px; color:var(--text-light); text-transform:uppercase; margin-bottom:14px; }
+.format-stat { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--border); }
+.format-stat:last-of-type { border-bottom:none; }
+.fs-label { font-size:11px; color:var(--text-mid); }
+.fs-val { font-size:13px; font-weight:700; color:var(--teal-dark); }
+.format-job { margin-top:12px; padding:10px; background:rgba(24,78,90,.04); border-radius:8px; font-size:11px; color:var(--text-mid); line-height:1.5; }
+.format-job strong { font-size:9px; letter-spacing:.5px; text-transform:uppercase; color:var(--teal-dark); display:block; margin-bottom:3px; }
+.format-compare { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
+
+/* === IDEAS (shared) === */
+.ideas-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:18px; margin-bottom:36px; }
+.idea-card { background:var(--white); border-radius:12px; padding:22px; box-shadow:var(--shadow); position:relative; overflow:hidden; }
+.idea-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--teal-dark),var(--patina)); }
+.idea-num { font-family:'Playfair Display',serif; font-size:44px; color:var(--cream); position:absolute; top:6px; right:14px; font-weight:700; line-height:1; }
+.idea-number { font-family:'Playfair Display',serif; font-size:36px; color:var(--cream); position:absolute; top:6px; right:14px; font-weight:700; line-height:1; }
+.idea-format { font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--teal-mid); margin-bottom:6px; }
+.idea-title { font-family:'Playfair Display',serif; font-size:15px; color:var(--teal-dark); margin-bottom:8px; line-height:1.3; }
+.idea-hook { font-size:13px; color:var(--text-mid); font-style:italic; border-left:2px solid var(--patina); padding-left:10px; margin-bottom:8px; line-height:1.4; }
+.idea-why { font-size:11px; color:var(--text-light); line-height:1.5; }
+.idea-signal { display:inline-block; margin-top:8px; font-size:10px; font-weight:600; padding:3px 8px; background:rgba(24,78,90,.08); color:var(--teal-dark); border-radius:10px; }
+
+/* === CTA (LI) === */
+.cta-compare { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px; }
+.cta-box { background:var(--white); border-radius:12px; padding:18px; box-shadow:var(--shadow); text-align:center; border-top:3px solid var(--teal-mid); }
+.cta-box.b2 { border-top-color:var(--patina); }
+.cta-box.b3 { border-top-color:var(--nile); }
+.cta-box.b4 { border-top-color:var(--slate); }
+.cta-name { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--text-light); margin-bottom:8px; }
+.cta-val { font-family:'Playfair Display',serif; font-size:26px; color:var(--teal-dark); }
+.cta-sub { font-size:11px; color:var(--text-light); margin-top:4px; }
+.cta-job { font-size:12px; color:var(--text-mid); margin-top:10px; line-height:1.4; text-align:left; }
+
+/* === PLAN - LinkedIn style === */
+.plan-week { background:var(--white); border-radius:12px; margin-bottom:14px; overflow:hidden; box-shadow:var(--shadow); }
+.plan-week-hdr { padding:14px 22px; display:flex; align-items:center; gap:14px; cursor:pointer; }
+.plan-week-hdr:hover { background:rgba(24,78,90,.02); }
+.wbadge { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-size:15px; font-weight:700; flex-shrink:0; }
+.w1{background:var(--teal-dark);color:#fff;} .w2{background:var(--patina);color:#fff;} .w3{background:var(--nile);color:#fff;} .w4{background:var(--slate);color:#fff;}
+.week-title { font-family:'Playfair Display',serif; font-size:15px; color:var(--teal-dark); }
+.week-sub { font-size:11px; color:var(--text-light); }
+.plan-body { padding:0 22px 18px; display:none; }
+.plan-body.open { display:block; }
+.plan-action { display:flex; gap:12px; padding:9px 0; border-bottom:1px solid var(--border); }
+.plan-action:last-child { border-bottom:none; }
+.pa-day { flex-shrink:0; width:34px; font-size:10px; font-weight:700; color:var(--text-light); padding-top:2px; text-transform:uppercase; }
+.pa-content strong { font-size:13px; color:var(--text-dark); display:block; margin-bottom:2px; }
+.pa-content p { font-size:12px; color:var(--text-mid); line-height:1.4; }
+.pa-tag { display:inline-block; margin-top:3px; font-size:10px; padding:2px 7px; border-radius:8px; font-weight:600; }
+.tag-c { background:rgba(89,144,146,.1); color:var(--teal-mid); }
+.tag-s { background:rgba(94,158,154,.1); color:var(--patina); }
+.tag-t { background:rgba(111,139,157,.1); color:var(--slate); }
+
+/* === PLAN - Instagram style === */
+.plan-timeline { margin-top:8px; }
+.plan-week-header { padding:14px 22px; display:flex; align-items:center; gap:14px; cursor:pointer; }
+.plan-week-header:hover { background:rgba(24,78,90,.02); }
+.week-badge { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-size:15px; font-weight:700; flex-shrink:0; }
+.plan-week-body { padding:0 22px 18px; display:none; }
+.plan-week-body.open { display:block; }
+.action-day { flex-shrink:0; width:34px; font-size:10px; font-weight:700; color:var(--text-light); padding-top:2px; text-transform:uppercase; }
+.action-content { flex:1; }
+.action-content strong { font-size:13px; color:var(--text-dark); display:block; margin-bottom:2px; }
+.action-content p { font-size:12px; color:var(--text-mid); line-height:1.4; }
+.action-tag { display:inline-block; margin-top:3px; font-size:10px; padding:2px 7px; border-radius:8px; font-weight:600; }
+.tag-strategy { background:rgba(94,158,154,.1); color:var(--patina); }
+.tag-content { background:rgba(89,144,146,.1); color:var(--teal-mid); }
+.tag-test { background:rgba(111,139,157,.1); color:var(--slate); }
+
+/* === DONUT / LEGEND === */
+.donut-wrap { display:flex; align-items:center; gap:22px; }
+.legend-item { display:flex; align-items:center; gap:8px; margin-bottom:7px; }
+.ldot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.llabel { font-size:12px; color:var(--text-mid); }
+.lpct { font-size:13px; font-weight:700; color:var(--teal-dark); margin-left:auto; padding-left:12px; }
+
+/* === SERIES GRID (IG) === */
+.series-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:18px; margin-bottom:28px; }
+.series-card { background:var(--white); border-radius:12px; padding:22px; box-shadow:var(--shadow); border-left:3px solid var(--teal-mid); }
+.series-card.coral { border-left-color:var(--coral); }
+.series-card.slate { border-left-color:var(--slate); }
+.series-icon { font-size:24px; margin-bottom:10px; }
+.series-name { font-family:'Playfair Display',serif; font-size:15px; color:var(--teal-dark); margin-bottom:4px; }
+.series-count { font-size:10px; font-weight:700; letter-spacing:1px; color:var(--text-light); text-transform:uppercase; margin-bottom:10px; }
+.series-desc { font-size:12px; color:var(--text-mid); line-height:1.5; margin-bottom:10px; }
+.series-avg { font-size:11px; color:var(--patina); font-weight:600; }
+
+/* === SYNTHESE PANE === */
+.synthese-hero { background:var(--teal-dark); padding:48px; color:var(--white); }
+.synthese-hero h1 { font-family:'Playfair Display',serif; font-size:32px; margin-bottom:8px; }
+.synthese-hero p { font-size:14px; color:var(--teal-light); opacity:.85; }
+.synthese-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:24px; padding:36px 48px; }
+.synthese-card { background:var(--white); border-radius:14px; padding:28px; box-shadow:var(--shadow); }
+.synthese-card h3 { font-family:'Playfair Display',serif; font-size:16px; color:var(--teal-dark); margin-bottom:12px; display:flex; align-items:center; gap:10px; }
+.synthese-card p { font-size:13px; color:var(--text-mid); line-height:1.6; }
+.synthese-metric { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border); }
+.synthese-metric:last-child { border-bottom:none; }
+.sm-label { font-size:12px; color:var(--text-mid); }
+.sm-val { font-size:14px; font-weight:700; color:var(--teal-dark); }
+
+/* === PLACEHOLDER PANES === */
+.placeholder-pane { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:48px; text-align:center; min-height:60vh; }
+.placeholder-icon { font-size:56px; margin-bottom:20px; opacity:.5; }
+.placeholder-title { font-family:'Playfair Display',serif; font-size:24px; color:var(--teal-dark); margin-bottom:10px; }
+.placeholder-text { font-size:14px; color:var(--text-light); max-width:420px; line-height:1.6; }
+
+/* === FOOTER === */
+.footer { background:var(--teal-dark); padding:18px 48px; text-align:center; font-family:'Playfair Display',serif; font-style:italic; color:var(--teal-mid); font-size:13px; margin-top:auto; }
+
+  /* === PLAN WEEKS (podcast + newsletter) === */
+  .plan-weeks { display:flex; flex-direction:column; gap:10px; margin-bottom:24px; }
+  .week-item { border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+  .week-header { display:flex; align-items:center; gap:14px; padding:14px 18px; background:var(--cream); cursor:pointer; user-select:none; }
+  .week-header:hover { background:#EEE9E4; }
+  .wi-label { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--white); padding:3px 10px; border-radius:20px; flex-shrink:0; }
+  .wi-label.w1 { background:var(--teal-dark); }
+  .wi-label.w2 { background:var(--nile); }
+  .wi-label.w3 { background:var(--patina); }
+  .wi-title { flex:1; font-size:13px; font-weight:600; color:var(--text-dark); }
+  .wi-arrow { font-size:12px; color:var(--text-light); transition:transform .2s; }
+  .week-header.open .wi-arrow { transform:rotate(180deg); }
+  .week-body { display:none; padding:14px 18px; background:var(--white); border-top:1px solid var(--border); }
+  .week-body.open { display:block; }
+  .plan-row { display:flex; gap:12px; padding:7px 0; border-bottom:1px solid var(--border); font-size:12px; }
+  .plan-row:last-child { border-bottom:none; }
+  .pr-label { width:160px; flex-shrink:0; font-weight:700; color:var(--text-mid); }
+  .pr-val { flex:1; color:var(--text-dark); line-height:1.5; }
+
+  /* === IDEA CARDS EXTRAS === */
+  .idea-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+  .idea-source { font-size:10px; color:var(--text-light); font-style:italic; margin-top:6px; }
+
+</style>
 </head>
 <body>
-  <div class="kicker">My Coaching Partner</div>
-  <h1>Tableaux de bord contenus</h1>
-  <p class="sub">Analyse de performance des publications Instagram et LinkedIn — patterns gagnants, formats, meilleurs créneaux et idées de contenu.</p>
 
-  <div class="cards">
-    <a class="card" href="instagram_dashboard.html">
-      <span class="icon">📸</span>
-      <h2>Instagram</h2>
-      <p>Vue d'ensemble, top contenus, formats, séries détectées et plan 30 jours.</p>
-      <span class="go">Ouvrir le dashboard</span>
-    </a>
-    <a class="card" href="linkedin_dashboard.html">
-      <span class="icon">💼</span>
-      <h2>LinkedIn</h2>
-      <p>Portée, engagement par format, meilleurs jours et angles qui performent.</p>
-      <span class="go">Ouvrir le dashboard</span>
-    </a>
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <span class="brand-label">My Coaching Partner</span>
+    <h2>Dashboard contenus</h2>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="sidebar-item active" onclick="showPane('synthese',this)">
+      <span class="si-icon">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      </span> Synthèse
+    </div>
+    <div class="sidebar-item" onclick="showPane('linkedin',this)">
+      <span class="si-icon">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      </span> LinkedIn
+    </div>
+    <div class="sidebar-item" onclick="showPane('instagram',this)">
+      <span class="si-icon">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+      </span> Instagram
+    </div>
+    <div class="sidebar-item" onclick="showPane('podcast',this)">
+      <span class="si-icon">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2H3v2a9 9 0 0 0 8 8.94V23h-3v2h8v-2h-3v-2.06A9 9 0 0 0 21 12v-2h-2z"/></svg>
+      </span> Podcast
+    </div>
+    <div class="sidebar-item" onclick="showPane('newsletter',this)">
+      <span class="si-icon">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+      </span> Newsletter
+    </div>
+    <div class="sidebar-item" onclick="showPane('reco',this)">
+      <span class="si-icon">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </span> Recommandations
+    </div>
+  </nav>
+  <div class="sidebar-footer"></div>
+</aside>
+
+<!-- ===== MAIN AREA ===== -->
+<div class="main-area">
+
+
+<!-- ===== PANE SYNTHESE ===== -->
+<div id="pane-synthese" class="pane active" style="flex-direction:column;">
+  <div class="header">
+    <div class="header-left">
+      <span>My Coaching Partner</span>
+      <h1>Synthèse - Dashboard contenus</h1>
+    </div>
+    <div class="header-right">
+      <div class="ig-badge">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="#A8C5C6"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        <span>Vue consolidée tous canaux</span>
+      </div>
+      <div class="date">Analyse 2 juillet 2026</div>
+    </div>
+  </div>
+  <div class="synthese-grid">
+    <div class="synthese-card">
+      <h3>💼 LinkedIn</h3>
+      <div class="synthese-metric"><span class="sm-label">Posts analysés</span><span class="sm-val">50</span></div>
+      <div class="synthese-metric"><span class="sm-label">Engagement total</span><span class="sm-val">520</span></div>
+      <div class="synthese-metric"><span class="sm-label">Meilleur post</span><span class="sm-val">30 réactions</span></div>
+      <div class="synthese-metric"><span class="sm-label">Format roi</span><span class="sm-val">Post image (86%)</span></div>
+    </div>
+    <div class="synthese-card">
+      <h3>📷 Instagram</h3>
+      <div class="synthese-metric"><span class="sm-label">Posts analysés</span><span class="sm-val">27</span></div>
+      <div class="synthese-metric"><span class="sm-label">Likes cumulés</span><span class="sm-val">325</span></div>
+      <div class="synthese-metric"><span class="sm-label">Taux d'engagement</span><span class="sm-val">~1.8%</span></div>
+      <div class="synthese-metric"><span class="sm-label">Format roi</span><span class="sm-val">Carrousels (74%)</span></div>
+    </div>
+    <div class="synthese-card">
+      <h3>🎙️ Podcast</h3>
+      <div class="synthese-metric"><span class="sm-label">Épisodes catalogue</span><span class="sm-val">38</span></div>
+      <div class="synthese-metric"><span class="sm-label">Écoutes cumulées</span><span class="sm-val">4 175</span></div>
+      <div class="synthese-metric"><span class="sm-label">Top épisode</span><span class="sm-val">1 091 écoutes</span></div>
+      <div class="synthese-metric"><span class="sm-label">Dernier épisode</span><span class="sm-val">28 mai 2026</span></div>
+    </div>
+    <div class="synthese-card">
+      <h3>✉️ Newsletter</h3>
+      <div class="synthese-metric"><span class="sm-label">Dernier envoi</span><span class="sm-val">4 mai 2026</span></div>
+      <div class="synthese-metric"><span class="sm-label">Inactivité</span><span class="sm-val">9 semaines</span></div>
+      <div class="synthese-metric"><span class="sm-label">Stats open rate</span><span class="sm-val">N/D</span></div>
+      <div class="synthese-metric"><span class="sm-label">⚠️ Action</span><span class="sm-val" style="color:#BF6C5C">Envoyer cette semaine</span></div>
+    </div>
+  </div>
+  <div style="padding:0 48px 36px;">
+    <div class="insight">
+      <div class="insight-icon">💡</div>
+      <div class="insight-text">
+        <strong>⚠️ 10e semaine consécutive sans publication — semaine du 25 juin au 2 juillet 2026</strong>
+        <p>Zéro post LinkedIn, zéro Instagram, zéro newsletter, zéro épisode podcast. Podcast : top performer 2026 = "Chercher un job" (224 écoutes). "Votre marque personnelle" : +9 cette semaine (68 écoutes). Total cumulé : 4 175 écoutes. Stats 7j indisponibles (Ausha redirige vers la bibliothèque).</p>
+      </div>
+    </div>
+    <div class="insight">
+      <div class="insight-icon">🎯</div>
+      <div class="insight-text">
+        <strong>3 actions prioritaires cette semaine</strong>
+        <p>1. Publier 1 post LinkedIn (texte seul, enseignement de séance anonymisé). 2. Envoyer la newsletter — urgence : 9 semaines de silence, rentrée de juillet approche. 3. Promouvoir l'épisode "Réussir son entretien" (1 070 écoutes totales, 124 écoutes sur 30j) sur LinkedIn pour relancer la dynamique.</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer">Clarté. Posture. Impact. - My Coaching Partner 2026</div>
+</div>
+
+
+<!-- ===== PANE LINKEDIN ===== -->
+<div id="pane-linkedin" class="pane" style="flex-direction:column;">
+  <div class="header">
+    <div class="header-left">
+      <span>My Coaching Partner</span>
+      <h1>LinkedIn - Dashboard contenus</h1>
+    </div>
+    <div class="header-right">
+      <div class="li-badge">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="#E9B3A3"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        <span>capucine-legrand-coach-carriere-luxe</span>
+      </div>
+      <div class="date">Analyse - Mai 2026 - 50 posts scrappés (nov. 2025 - mai 2026)</div>
+    </div>
   </div>
 
-  <footer>Clarté <span class="dot">·</span> Posture <span class="dot">·</span> Impact</footer>
+  <nav class="nav">
+    <div class="nav-tab active" onclick="showLITab('overview',this)">Vue d'ensemble</div>
+    <div class="nav-tab" onclick="showLITab('topposts',this)">Top contenus</div>
+    <div class="nav-tab" onclick="showLITab('patterns',this)">Patterns &amp; accroches</div>
+    <div class="nav-tab" onclick="showLITab('topics',this)">Topics &amp; formats</div>
+    <div class="nav-tab" onclick="showLITab('cta',this)">CTAs</div>
+    <div class="nav-tab" onclick="showLITab('ideas',this)">Idées contenu</div>
+    <div class="nav-tab" onclick="showLITab('plan',this)">Plan 30 jours</div>
+  </nav>
+
+  <div class="main">
+
+  <!-- LI OVERVIEW -->
+  <div id="li-tab-overview" class="section active">
+    <div class="section-title">Vue d'ensemble</div>
+    <div class="section-subtitle">50 posts analysés - novembre 2025 à mai 2026</div>
+    <div class="kpi-grid">
+      <div class="kpi-card nile"><div class="kpi-label">Posts analysés</div><div class="kpi-value">50</div><div class="kpi-sub">nov. 2025 - mai 2026</div></div>
+      <div class="kpi-card coral"><div class="kpi-label">Total likes</div><div class="kpi-value">456</div><div class="kpi-sub">Médiane : 8 likes/post</div></div>
+      <div class="kpi-card"><div class="kpi-label">Commentaires</div><div class="kpi-value">55</div><div class="kpi-sub">Médiane : 0 / post</div></div>
+      <div class="kpi-card patina"><div class="kpi-label">Partages</div><div class="kpi-value">9</div><div class="kpi-sub">Format le plus rare</div></div>
+      <div class="kpi-card"><div class="kpi-label">Engagement total</div><div class="kpi-value">520</div><div class="kpi-sub">Médiane : 9 / post</div></div>
+      <div class="kpi-card blush"><div class="kpi-label">Meilleur post</div><div class="kpi-value">30</div><div class="kpi-sub">1ère année dirigeant - jan. 2026</div></div>
+    </div>
+    <div class="insight"><div class="insight-icon">⚠️</div><div class="insight-text"><strong>Pourquoi seulement nov. 2025 à mai 2026 ?</strong><p>L'API publique LinkedIn ne remonte que les 50 derniers posts. Pour analyser l'historique complet, exporter vos données depuis LinkedIn (Paramètres - Confidentialité - Obtenir une copie de vos données).</p></div></div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Engagement total par mois</h3><p class="sub">Likes + commentaires + partages cumulés</p>
+        <svg viewBox="0 0 440 180" width="100%">
+          <line x1="55" y1="160" x2="420" y2="160" stroke="#E0ECF0" stroke-width="1"/>
+          <line x1="55" y1="10" x2="55" y2="160" stroke="#E0ECF0" stroke-width="1"/>
+          <text x="48" y="164" text-anchor="end" font-size="8" fill="#8AA4AE">0</text>
+          <text x="48" y="134" text-anchor="end" font-size="8" fill="#8AA4AE">50</text>
+          <text x="48" y="104" text-anchor="end" font-size="8" fill="#8AA4AE">100</text>
+          <text x="48" y="74" text-anchor="end" font-size="8" fill="#8AA4AE">150</text>
+          <rect x="68" y="115" width="32" height="45" rx="3" fill="#BF6C5C" opacity=".7"/>
+          <text x="84" y="112" text-anchor="middle" font-size="8" fill="#599092" font-weight="600">42</text>
+          <text x="84" y="174" text-anchor="middle" font-size="8" fill="#8AA4AE">Nov</text>
+          <rect x="128" y="85" width="32" height="75" rx="3" fill="#599092" opacity=".8"/>
+          <text x="144" y="82" text-anchor="middle" font-size="8" fill="#599092" font-weight="600">70</text>
+          <text x="144" y="174" text-anchor="middle" font-size="8" fill="#8AA4AE">Déc</text>
+          <rect x="188" y="24" width="32" height="136" rx="3" fill="#184E5A"/>
+          <text x="204" y="21" text-anchor="middle" font-size="8" fill="#184E5A" font-weight="700">128</text>
+          <text x="204" y="174" text-anchor="middle" font-size="8" fill="#8AA4AE">Jan</text>
+          <rect x="248" y="10" width="32" height="150" rx="3" fill="#184E5A"/>
+          <text x="264" y="7" text-anchor="middle" font-size="8" fill="#184E5A" font-weight="700">150</text>
+          <text x="264" y="174" text-anchor="middle" font-size="8" fill="#8AA4AE">Fév</text>
+          <rect x="308" y="40" width="32" height="120" rx="3" fill="#5E9E9A" opacity=".85"/>
+          <text x="324" y="37" text-anchor="middle" font-size="8" fill="#5E9E9A" font-weight="600">112</text>
+          <text x="324" y="174" text-anchor="middle" font-size="8" fill="#8AA4AE">Mar</text>
+          <rect x="368" y="142" width="32" height="18" rx="3" fill="#BF6C5C" opacity=".7"/>
+          <text x="384" y="139" text-anchor="middle" font-size="8" fill="#599092" font-weight="600">18</text>
+          <text x="384" y="174" text-anchor="middle" font-size="8" fill="#8AA4AE">Mai</text>
+        </svg>
+      </div>
+      <div class="card">
+        <h3>Rythme et qualité par mois</h3><p class="sub">Volume de posts et moyenne d'engagement</p>
+        <div style="margin-top:4px">
+          <div class="bar-wrap"><div class="bar-label">Nov. 2025 (5 posts)</div><div class="bar-track"><div class="bar-fill" style="width:33%;background:#BF6C5C"></div></div><div class="bar-val">8.4 moy</div></div>
+          <div class="bar-wrap"><div class="bar-label">Déc. 2025 (9 posts)</div><div class="bar-track"><div class="bar-fill" style="width:52%;background:#599092"></div></div><div class="bar-val">7.8 moy</div></div>
+          <div class="bar-wrap"><div class="bar-label">Jan. 2026 (10 posts)</div><div class="bar-track"><div class="bar-fill" style="width:85%;background:#184E5A"></div></div><div class="bar-val">12.8 moy</div></div>
+          <div class="bar-wrap"><div class="bar-label">Fév. 2026 (15 posts)</div><div class="bar-track"><div class="bar-fill" style="width:67%;background:#184E5A"></div></div><div class="bar-val">10.0 moy</div></div>
+          <div class="bar-wrap"><div class="bar-label">Mar. 2026 (9 posts)</div><div class="bar-track"><div class="bar-fill" style="width:82%;background:#5E9E9A"></div></div><div class="bar-val">12.4 moy</div></div>
+          <div class="bar-wrap"><div class="bar-label">Mai 2026 (2 posts)</div><div class="bar-track"><div class="bar-fill" style="width:60%;background:#BF6C5C"></div></div><div class="bar-val">9.0 moy</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Meilleure fenêtre de publication</h3><p class="sub">Analyse des 10 posts les plus performants - tous publiés à 7h00-7h10 Paris</p>
+      <div class="grid-2" style="margin-bottom:0">
+        <div>
+          <div class="bar-wrap"><div class="bar-label">Mercredi 7h</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#184E5A"></div></div><div class="bar-val">30 eng</div></div>
+          <div class="bar-wrap"><div class="bar-label">Jeudi 7h</div><div class="bar-track"><div class="bar-fill" style="width:77%;background:#184E5A"></div></div><div class="bar-val">23 eng</div></div>
+          <div class="bar-wrap"><div class="bar-label">Dimanche 7h</div><div class="bar-track"><div class="bar-fill" style="width:77%;background:#5E9E9A"></div></div><div class="bar-val">23 eng</div></div>
+          <div class="bar-wrap"><div class="bar-label">Mardi 7h</div><div class="bar-track"><div class="bar-fill" style="width:67%;background:#5E9E9A"></div></div><div class="bar-val">20 eng</div></div>
+          <div class="bar-wrap"><div class="bar-label">Vendredi 7h</div><div class="bar-track"><div class="bar-fill" style="width:60%;background:#5E9E9A"></div></div><div class="bar-val">18 eng</div></div>
+          <div class="bar-wrap"><div class="bar-label">Samedi</div><div class="bar-track"><div class="bar-fill" style="width:13%;background:#BF6C5C"></div></div><div class="bar-val">4 eng</div></div>
+        </div>
+        <div class="insight" style="margin-bottom:0"><div class="insight-icon">⏰</div><div class="insight-text"><strong>Créneau dominant : 7h00-7h10 Paris, mardi au jeudi</strong><p>97% de vos posts performants sont publiés exactement à 7h00. Mercredi est statistiquement votre meilleur créneau.</p></div></div>
+      </div>
+    </div>
+
+    <!-- ANALYSE PAR FORMAT (sur impressions réelles, 97 posts) -->
+    <div class="card">
+      <h3>Performance par format - 97 posts publiés</h3><p class="sub">Impressions médianes par format, données réelles base Contenus</p>
+      <div class="insight" style="margin-bottom:16px"><div class="insight-icon">⚠️</div><div class="insight-text"><strong>Donnée contre-intuitive : le carrousel est votre plus mauvais format en portée</strong><p>340 impressions médianes pour le carrousel contre 1506 pour l'image. LinkedIn diffuse mal les carrousels en organique. L'image et le photo+texte restent vos formats les plus vus.</p></div></div>
+      <div class="bar-wrap"><div class="bar-label">Image / Photo+texte (37 posts)</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#4A8C6E"></div></div><div class="bar-val">1 506</div></div>
+      <div class="bar-wrap"><div class="bar-label">Texte seul (38 posts)</div><div class="bar-track"><div class="bar-fill" style="width:43%;background:#C49A42"></div></div><div class="bar-val">655</div></div>
+      <div class="bar-wrap"><div class="bar-label">Carrousel (22 posts)</div><div class="bar-track"><div class="bar-fill" style="width:23%;background:#BF6C5C"></div></div><div class="bar-val">340</div></div>
+      <p class="sub" style="margin-top:10px">Nuance : le carrousel a le meilleur taux d'engagement quand il est vu (2,25%), mais sa faible diffusion le pénalise. Priorité à l'image et au photo+texte. Garder le texte pour les prises de parole personnelles fortes.</p>
+    </div>
+
+    <!-- MULTIPLICATEUR DE PERFORMANCE -->
+    <div class="card">
+      <h3>Vos pépites - multiplicateur vs médiane (798 impressions)</h3><p class="sub">Les posts qui écrasent votre moyenne, et le pattern à reproduire</p>
+      <table class="data-table" style="width:100%;border-collapse:collapse;font-size:13px;margin-top:8px">
+        <thead><tr style="text-align:left;border-bottom:2px solid #C8BFB8"><th style="padding:8px">Post</th><th style="padding:8px;text-align:right">Impressions</th><th style="padding:8px;text-align:right">Multiplicateur</th></tr></thead>
+        <tbody>
+          <tr style="background:#EFF7F6"><td style="padding:8px">"Tu ne te rends pas service" (annonce grossesse)</td><td style="padding:8px;text-align:right;font-weight:600">102 923</td><td style="padding:8px;text-align:right;font-weight:600">x129</td></tr>
+          <tr><td style="padding:8px">1 protocole concret (40 candidatures)</td><td style="padding:8px;text-align:right">16 293</td><td style="padding:8px;text-align:right">x20,4</td></tr>
+          <tr><td style="padding:8px">Les 10 questions des DRH du luxe</td><td style="padding:8px;text-align:right">12 065</td><td style="padding:8px;text-align:right">x15,1</td></tr>
+          <tr><td style="padding:8px">Changer de carrière à 40 ans (podcast)</td><td style="padding:8px;text-align:right">5 955</td><td style="padding:8px;text-align:right">x7,5</td></tr>
+          <tr><td style="padding:8px">Choisir son coach : 5 critères</td><td style="padding:8px;text-align:right">4 899</td><td style="padding:8px;text-align:right">x6,1</td></tr>
+        </tbody>
+      </table>
+      <div class="insight" style="margin-top:14px;margin-bottom:0"><div class="insight-icon">🎯</div><div class="insight-text"><strong>Le pattern de vos pépites</strong><p>Le personnel intime vécu (grossesse, x129) et les listes chiffrées concrètes pour votre cible (40 candidatures, 10 questions DRH) écrasent tout. Territoire à creuser : votre réalité vécue plus le concret actionnable pour cadres et dirigeants du luxe.</p></div></div>
+    </div>
+
+    <!-- NOTE NOUVELLES METRIQUES -->
+    <div class="insight"><div class="insight-icon">📊</div><div class="insight-text"><strong>Nouvelles métriques LinkedIn suivies : portée, enregistrements, envois en MP</strong><p>Depuis juin 2026, la base Contenus capte la portée (personnes uniques, plus juste que les impressions), les enregistrements et les envois en MP (signaux d'engagement les plus forts), les vues de profil et les abonnés gagnés par post. Ces métriques apparaissent sur les posts récents et alimentent l'analyse hebdomadaire automatique.</p></div></div>
+  </div>
+
+  <!-- LI TOP POSTS -->
+  <div id="li-tab-topposts" class="section">
+    <div class="section-title">Top 10 contenus</div>
+    <div class="section-subtitle">Classés par engagement total</div>
+    <div class="post-filters">
+      <div class="filter-btn active" onclick="filterLIPosts('all',this)">Tous</div>
+      <div class="filter-btn" onclick="filterLIPosts('image',this)">Post image</div>
+      <div class="filter-btn" onclick="filterLIPosts('carrousel',this)">Carrousel</div>
+      <div class="filter-btn" onclick="filterLIPosts('luxe',this)">Luxe</div>
+      <div class="filter-btn" onclick="filterLIPosts('leadership',this)">Leadership</div>
+      <div class="filter-btn" onclick="filterLIPosts('ia',this)">IA</div>
+    </div>
+    <div class="posts-grid">
+      <div class="post-card" data-topic="prise_de_poste" data-format="image">
+        <div class="post-card-header" style="background:#184E5A"><div class="pc-rank">#1</div></div>
+        <div class="post-card-body"><div class="pc-eng"><div class="eng-item">♥ 22<span> likes</span></div><div class="eng-item">💬 6<span> coms</span></div><div class="eng-item">↗ 2</div><div class="eng-total">⭐ 30</div></div><div class="pc-hook">Ce que personne ne dit sur la première année en tant que dirigeant.</div><div class="pc-meta">10 janv. 2026 - 7h00</div><div class="pc-badges"><span class="pc-badge b-poste">Prise de poste</span><span class="pc-badge b-image">Post image</span></div><a href="https://www.linkedin.com/posts/capucine-legrand-coach-carri%C3%A8re-luxe-54b07622_activity-7421431747084521472" target="_blank" class="pc-url">Voir le post</a></div>
+      </div>
+      <div class="post-card" data-topic="management" data-format="image">
+        <div class="post-card-header" style="background:#2A6062"><div class="pc-rank">#2</div></div>
+        <div class="post-card-body"><div class="pc-eng"><div class="eng-item">♥ 21<span> likes</span></div><div class="eng-item">💬 1<span> com</span></div><div class="eng-item">↗ 1</div><div class="eng-total">⭐ 23</div></div><div class="pc-hook">Un conflit mal géré coûte plus cher qu'une conversation claire.</div><div class="pc-meta">19 mars 2026 - 7h00</div><div class="pc-badges"><span class="pc-badge b-mgmt">Management</span><span class="pc-badge b-image">Post image</span></div><a href="https://www.linkedin.com/posts/capucine-legrand-coach-carri%C3%A8re-luxe-54b07622_activity-7440291058636197888" target="_blank" class="pc-url">Voir le post</a></div>
+      </div>
+      <div class="post-card" data-topic="luxe" data-format="image">
+        <div class="post-card-header" style="background:#184E5A"><div class="pc-rank">#3</div></div>
+        <div class="post-card-body"><div class="pc-eng"><div class="eng-item">♥ 19<span> likes</span></div><div class="eng-item">💬 3<span> coms</span></div><div class="eng-item">↗ 1</div><div class="eng-total">⭐ 23</div></div><div class="pc-hook">Le luxe forme les meilleurs managers du monde. Et pourtant, personne ne les coache.</div><div class="pc-meta">31 janv. 2026 - 7h00</div><div class="pc-badges"><span class="pc-badge b-luxe">Luxe</span><span class="pc-badge b-image">Post image</span></div><a href="https://www.linkedin.com/posts/capucine-legrand-coach-carri%C3%A8re-luxe-54b07622_activity-7426157903176232960" target="_blank" class="pc-url">Voir le post</a></div>
+      </div>
+      <div class="post-card" data-topic="ia" data-format="image">
+        <div class="post-card-header" style="background:#3D7070"><div class="pc-rank">#4</div></div>
+        <div class="post-card-body"><div class="pc-eng"><div class="eng-item">♥ 20<span> likes</span></div><div class="eng-item">💬 2<span> coms</span></div><div class="eng-item">↗ 0</div><div class="eng-total">⭐ 22</div></div><div class="pc-hook">L'IA ne remplace pas votre intelligence. Elle l'amplifie, à condition de savoir la piloter.</div><div class="pc-meta">12 fév. 2026 - 7h00</div><div class="pc-badges"><span class="pc-badge b-ia">IA</span><span class="pc-badge b-image">Post image</span></div><a href="https://www.linkedin.com/posts/capucine-legrand-coach-carri%C3%A8re-luxe-54b07622_activity-7427607472145690626" target="_blank" class="pc-url">Voir le post</a></div>
+      </div>
+      <div class="post-card" data-topic="leadership" data-format="image">
+        <div class="post-card-header" style="background:#2E5E60"><div class="pc-rank">#5</div></div>
+        <div class="post-card-body"><div class="pc-eng"><div class="eng-item">♥ 15<span> likes</span></div><div class="eng-item">💬 4<span> coms</span></div><div class="eng-item">↗ 1</div><div class="eng-total">⭐ 20</div></div><div class="pc-hook">Vous ne manquez pas de courage. Vous manquez de clarté sur vos priorités.</div><div class="pc-meta">14 janv. 2026 - 7h00</div><div class="pc-badges"><span class="pc-badge b-leader">Leadership</span><span class="pc-badge b-image">Post image</span></div><a href="https://www.linkedin.com/posts/capucine-legrand-coach-carri%C3%A8re-luxe-54b07622_activity-7422518943879393281" target="_blank" class="pc-url">Voir le post</a></div>
+      </div>
+      <div class="post-card" data-topic="burnout" data-format="image">
+        <div class="post-card-header" style="background:#4A8A8C"><div class="pc-rank">#6</div></div>
+        <div class="post-card-body"><div class="pc-eng"><div class="eng-item">♥ 14<span> likes</span></div><div class="eng-item">💬 5<span> coms</span></div><div class="eng-item">↗ 0</div><div class="eng-total">⭐ 19</div></div><div class="pc-hook">Le plus dangereux, c'est quand tout va bien.</div><div class="pc-meta">30 mars 2026 - 7h00</div><div class="pc-badges"><span class="pc-badge b-burnout">Burnout</span><span class="pc-badge b-image">Post image</span></div><a href="https://www.linkedin.com/posts/capucine-legrand-coach-carri%C3%A8re-luxe-54b07622_activity-7444277336805539840" target="_blank" class="pc-url">Voir le post</a></div>
+      </div>
+      <div class="post-card" data-topic="luxe" data-format="image">
+        <div class="post-card-header" style="background:#184E5A"><div class="pc-rank">#7</div></div>
+        <div class="post-card-body"><div class="pc-eng"><div class="eng-item">♥ 16<span> likes</span></div><div class="eng-item">💬 2<span> coms</span></div><div class="eng-item">↗ 0</div><div class="eng-total">⭐ 18</div></div><div class="pc-hook">Dans le luxe, on ne parle pas de ses doutes. On les gère.</div><div class="pc-meta">18 fév. 2026 - 7h00</div><div class="pc-badges"><span class="pc-badge b-luxe">Luxe</span><span class="pc-badge b-image">Post image</span></div><a href="https://www.linkedin.com/posts/capucine-legrand-coach-carri%C3%A8re-luxe-54b07622_activity-7429781829106302976" target="_blank" class="pc-url">Voir le post</a></div>
+      </div>
+      <div class="post-card" data-topic="ia" data-format="image">
+        <div class="post-card-header" style="background:#326060"><div class="pc-rank">#8</div></div>
+        <div class="post-card-body"><div class="pc-eng"><div class="eng-item">♥ 17<span> likes</span></div><div class="eng-item">💬 0</div><div class="eng-item">↗ 0</div><div class="eng-total">⭐ 17</div></div><div class="pc-hook">J'ai créé l'outil IA parfait pour les cadres et dirigeants du luxe.</div><div class="pc-meta">25 fév. 2026 - 7h00</div><div class="pc-badges"><span class="pc-badge b-ia">IA</span><span class="pc-badge b-image">Post image</span></div><a href="https://www.linkedin.com/posts/capucine-legrand-coach-carri%C3%A8re-luxe-54b07622_activity-7432318489199087617" target="_blank" class="pc-url">Voir le post</a></div>
+      </div>
+      <div class="post-card" data-topic="ia" data-format="image">
+        <div class="post-card-header" style="background:#2A7073"><div class="pc-rank">#9</div></div>
+        <div class="post-card-body"><div class="pc-eng"><div class="eng-item">♥ 16<span> likes</span></div><div class="eng-item">💬 3<span> coms</span></div><div class="eng-item">↗ 1</div><div class="eng-total">⭐ 20</div></div><div class="pc-hook">Dans les maisons de luxe, une transformation silencieuse est en cours.</div><div class="pc-meta">11 fév. 2026 - 7h00</div><div class="pc-badges"><span class="pc-badge b-ia">IA</span><span class="pc-badge b-luxe">Luxe</span><span class="pc-badge b-image">Post image</span></div><a href="https://www.linkedin.com/posts/capucine-legrand-coach-carri%C3%A8re-luxe-54b07622_activity-7427245131688505344" target="_blank" class="pc-url">Voir le post</a></div>
+      </div>
+      <div class="post-card" data-topic="leadership" data-format="image">
+        <div class="post-card-header" style="background:#2E5E60"><div class="pc-rank">#10</div></div>
+        <div class="post-card-body"><div class="pc-eng"><div class="eng-item">♥ 13<span> likes</span></div><div class="eng-item">💬 2<span> coms</span></div><div class="eng-item">↗ 1</div><div class="eng-total">⭐ 16</div></div><div class="pc-hook">Votre marque personnelle dans le luxe : construite ou subie ?</div><div class="pc-meta">16 déc. 2025 - 7h00</div><div class="pc-badges"><span class="pc-badge b-luxe">Luxe</span><span class="pc-badge b-image">Post image</span></div><a href="https://www.linkedin.com/posts/capucine-legrand-coach-carri%C3%A8re-luxe-54b07622_activity-7414939061661900801" target="_blank" class="pc-url">Voir le post</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LI PATTERNS -->
+  <div id="li-tab-patterns" class="section">
+    <div class="section-title">Patterns &amp; accroches</div>
+    <div class="section-subtitle">Ce qui génère de l'engagement et ce qui plombe - analyse sur les 50 posts</div>
+    <div class="card">
+      <h3>Accroches qui surperforment</h3><p class="sub">Patterns récurrents dans les 10 meilleurs posts</p>
+      <div class="hook-item"><div class="hook-score hs-high">30</div><div class="hook-content"><h4>Révélation + "personne ne vous dit"</h4><p>L'information exclusive ou tabou dans votre secteur. Positionne comme insider, crée de la curiosité immédiate.</p><div class="hook-example">« Ce que personne ne dit sur la première année en tant que dirigeant. »</div></div></div>
+      <div class="hook-item"><div class="hook-score hs-high">23</div><div class="hook-content"><h4>Équation coût / conséquence concrète</h4><p>Reformuler un comportement classique en termes de coût réel. Crée une dissonance cognitive immédiate.</p><div class="hook-example">« Un conflit mal géré coûte plus cher qu'une conversation claire. »</div></div></div>
+      <div class="hook-item"><div class="hook-score hs-high">22</div><div class="hook-content"><h4>Reframe "ce n'est pas X, c'est Y"</h4><p>Invalider le diagnostic classique et proposer un meilleur cadrage.</p><div class="hook-example">« Vous ne manquez pas de courage. Vous manquez de clarté sur vos priorités. »</div></div></div>
+      <div class="hook-item"><div class="hook-score hs-high">19</div><div class="hook-content"><h4>Paradoxe contre-intuitif (court, tranchant)</h4><p>Une phrase qui va à l'encontre de l'intuition. Stop-scroll garanti sur LinkedIn.</p><div class="hook-example">« Le plus dangereux, c'est quand tout va bien. »</div></div></div>
+      <div class="hook-item"><div class="hook-score hs-mid">16</div><div class="hook-content"><h4>Question binaire luxe</h4><p>La question fermée qui force un positionnement. Engagement par identification ou friction.</p><div class="hook-example">« Votre marque personnelle dans le luxe : construite ou subie ? »</div></div></div>
+    </div>
+    <div class="card">
+      <h3>Accroches qui plombent l'engagement</h3><p class="sub">Patterns récurrents dans les posts sous la médiane</p>
+      <div class="hook-item"><div class="hook-score hs-low">4</div><div class="hook-content"><h4>Post de vente directe sans tension narrative</h4><p>Les posts "j'ai créé une formation, inscrivez-vous" sans accroche émotionnelle forte.</p><div class="hook-example">« Ces derniers mois, j'ai travaillé pour concevoir une formation pensée pour vous... »</div></div></div>
+      <div class="hook-item"><div class="hook-score hs-low">3</div><div class="hook-content"><h4>Carrousel PDF sans accroche forte en intro</h4><p>Le format document LinkedIn sous-performe quand le corps du post ne crée pas de tension avant le swipe.</p></div></div>
+      <div class="hook-item"><div class="hook-score hs-low">5</div><div class="hook-content"><h4>CTA trop soft après bonne accroche</h4><p>Après une bonne ouverture data, conclure en "si ce sujet vous intéresse" dilue la conviction.</p></div></div>
+    </div>
+  </div>
+
+  <!-- LI TOPICS -->
+  <div id="li-tab-topics" class="section">
+    <div class="section-title">Topics &amp; formats</div>
+    <div class="section-subtitle">Performance par thème et analyse des formats de publication</div>
+    <div class="card">
+      <h3>Engagement moyen par thème</h3><p class="sub">Tous les thèmes identifiés - classés par moyenne d'engagement</p>
+      <div style="margin-top:8px">
+        <div class="topic-row"><div class="topic-label">Luxe (positionn.)</div><div class="topic-bar-track"><div class="topic-bar-fill" style="width:100%;background:#184E5A"></div></div><div class="topic-meta"><span class="topic-avg">20.5</span><span class="topic-count">2 posts</span></div></div>
+        <div class="topic-row"><div class="topic-label">Personal branding</div><div class="topic-bar-track"><div class="topic-bar-fill" style="width:78%;background:#184E5A"></div></div><div class="topic-meta"><span class="topic-avg">16.0</span><span class="topic-count">1 post</span></div></div>
+        <div class="topic-row"><div class="topic-label">Burnout / énergie</div><div class="topic-bar-track"><div class="topic-bar-fill" style="width:71%;background:#5E9E9A"></div></div><div class="topic-meta"><span class="topic-avg">14.5</span><span class="topic-count">2 posts</span></div></div>
+        <div class="topic-row"><div class="topic-label">Prise de poste</div><div class="topic-bar-track"><div class="topic-bar-fill" style="width:70%;background:#5E9E9A"></div></div><div class="topic-meta"><span class="topic-avg">14.3</span><span class="topic-count">3 posts</span></div></div>
+        <div class="topic-row"><div class="topic-label">IA (stratégique)</div><div class="topic-bar-track"><div class="topic-bar-fill" style="width:64%;background:#4A8A8C"></div></div><div class="topic-meta"><span class="topic-avg">13.1</span><span class="topic-count">9 posts</span></div></div>
+        <div class="topic-row"><div class="topic-label">Management</div><div class="topic-bar-track"><div class="topic-bar-fill" style="width:61%;background:#599092"></div></div><div class="topic-meta"><span class="topic-avg">12.5</span><span class="topic-count">4 posts</span></div></div>
+        <div class="topic-row"><div class="topic-label">Leadership</div><div class="topic-bar-track"><div class="topic-bar-fill" style="width:46%;background:#6F8B9D"></div></div><div class="topic-meta"><span class="topic-avg">9.4</span><span class="topic-count">7 posts</span></div></div>
+        <div class="topic-row"><div class="topic-label">Carrière</div><div class="topic-bar-track"><div class="topic-bar-fill" style="width:39%;background:#6F8B9D"></div></div><div class="topic-meta"><span class="topic-avg">8.0</span><span class="topic-count">7 posts</span></div></div>
+        <div class="topic-row"><div class="topic-label">Coaching (méthode)</div><div class="topic-bar-track"><div class="topic-bar-fill" style="width:37%;background:#8AA4AE"></div></div><div class="topic-meta"><span class="topic-avg">7.6</span><span class="topic-count">8 posts</span></div></div>
+        <div class="topic-row"><div class="topic-label">Formation IA (vente)</div><div class="topic-bar-track"><div class="topic-bar-fill" style="width:20%;background:#BF6C5C"></div></div><div class="topic-meta"><span class="topic-avg">4.0</span><span class="topic-count">1 post</span></div></div>
+      </div>
+    </div>
+    <div class="format-grid">
+      <div class="format-box"><div class="format-name">Post image</div><div class="format-count">43 posts - 86% du volume</div><div class="format-stat"><span class="fs-label">Médiane engagement</span><span class="fs-val">10</span></div><div class="format-stat"><span class="fs-label">Meilleur post</span><span class="fs-val">30 eng.</span></div><div class="format-job"><strong>Job idéal</strong>Posts de fond, paradoxes, reframes, révélations. Format dominant et le plus performant.</div></div>
+      <div class="format-box patina"><div class="format-name">Carrousel (document PDF)</div><div class="format-count">6 posts - 12% du volume</div><div class="format-stat"><span class="fs-label">Médiane engagement</span><span class="fs-val">5.5</span></div><div class="format-stat"><span class="fs-label">Meilleur carrousel</span><span class="fs-val">10 eng.</span></div><div class="format-job"><strong>Job idéal</strong>Guides pratiques structurés. À réserver aux contenus avec une accroche ultra-forte dans le body text.</div></div>
+      <div class="format-box nile"><div class="format-name">Post texte seul</div><div class="format-count">1 post - 2% du volume</div><div class="format-stat"><span class="fs-label">Engagement</span><span class="fs-val">4</span></div><div class="format-job"><strong>Verdict</strong>Insuffisant pour conclure. LinkedIn favorise les contenus avec visuels dans l'algorithme.</div></div>
+    </div>
+  </div>
+
+  <!-- LI CTAs -->
+  <div id="li-tab-cta" class="section">
+    <div class="section-title">Analyse des CTAs</div>
+    <div class="section-subtitle">Comparaison des 4 types d'appels à l'action utilisés</div>
+    <div class="cta-compare">
+      <div class="cta-box"><div class="cta-name">Podcast (lien en com.)</div><div class="cta-val">12.2</div><div class="cta-sub">avg engagement</div><div class="cta-job">Meilleur CTA. Le lien en commentaire est algorithm-friendly (LinkedIn favorise les posts sans lien externe).</div></div>
+      <div class="cta-box b2"><div class="cta-name">Newsletter (abonnement)</div><div class="cta-val">11.8</div><div class="cta-sub">avg engagement</div><div class="cta-job">Principal outil de capture. Solide. Fonctionne mieux quand le post est très fort en amont.</div></div>
+      <div class="cta-box b3"><div class="cta-name">Question ouverte</div><div class="cta-val">13.5</div><div class="cta-sub">avg engagement</div><div class="cta-job">Meilleur pour les commentaires. Question précise et personnelle = conversation réelle.</div></div>
+      <div class="cta-box b4"><div class="cta-name">Commercial direct / RDV</div><div class="cta-val">7.5</div><div class="cta-sub">avg engagement</div><div class="cta-job">Engagement plus faible. Les posts avec URL directe dans le body underperforment systématiquement.</div></div>
+    </div>
+    <div class="insight"><div class="insight-icon">🎯</div><div class="insight-text"><strong>Règle des 3 CTAs pour MCP LinkedIn</strong><p><strong>Posts de fond :</strong> Lien podcast en commentaire. <strong>Posts expertise :</strong> Abonnez-vous à la newsletter. <strong>Posts personnels :</strong> 1 question courte et précise en fin de post.</p></div></div>
+  </div>
+
+  <!-- LI IDEAS -->
+  <div id="li-tab-ideas" class="section">
+    <div class="section-title">10 idées calibrées sur ce qui marche</div>
+    <div class="section-subtitle">Positionnement luxe ancré dans chaque idée</div>
+    <div class="ideas-grid">
+      <div class="idea-card"><div class="idea-num">01</div><div class="idea-format">Post image - Série "Personne ne vous dit"</div><div class="idea-title">Ce que personne ne dit sur les 100 premiers jours dans un poste de direction luxe</div><div class="idea-hook">"Tout le monde vous dit : observez, écoutez. Personne ne vous dit que les alliances se forment dans les 30 premiers jours."</div><span class="idea-signal">Signal : post #1 = 30 eng.</span></div>
+      <div class="idea-card"><div class="idea-num">02</div><div class="idea-format">Post image - Paradoxe luxe</div><div class="idea-title">Dans le luxe, les meilleurs managers sont souvent les moins visibles</div><div class="idea-hook">"La visibilité dans le luxe se construit dans les couloirs, pas dans les réunions."</div><span class="idea-signal">Signal : paradoxes courts = top 5</span></div>
+      <div class="idea-card"><div class="idea-num">03</div><div class="idea-format">Post image - Reframe</div><div class="idea-title">Vous ne manquez pas d'ambition. Vous manquez d'un sponsor.</div><div class="idea-hook">"Aujourd'hui, la carrière se construit avec des sponsors. Question : qui parle de vous quand vous n'êtes pas dans la pièce ?"</div><span class="idea-signal">Signal : reframes = avg 20 eng.</span></div>
+      <div class="idea-card"><div class="idea-num">04</div><div class="idea-format">Post image - Vérité luxe</div><div class="idea-title">Le luxe recrute l'excellence. Et brûle les meilleurs.</div><div class="idea-hook">"J'ai coaché 30 cadres du luxe cette année. Le même profil revient : brillant, engagé, irremplaçable. Et épuisé."</div><span class="idea-signal">Signal : luxe + burnout = posts #3 et #6</span></div>
+      <div class="idea-card"><div class="idea-num">05</div><div class="idea-format">Post image - Équation coût</div><div class="idea-title">Une prise de poste ratée coûte 18 mois. Une prise de poste préparée en coûte 3.</div><div class="idea-hook">"Dans le luxe, on vous donne une semaine de passation et on vous dit bonne chance."</div><span class="idea-signal">Signal : équations coût = post #2 = 23 eng.</span></div>
+      <div class="idea-card"><div class="idea-num">06</div><div class="idea-format">Post image - Question binaire luxe</div><div class="idea-title">Votre réseau dans le luxe : actif ou en veille depuis 3 ans ?</div><div class="idea-hook">"Vous avez 800 connexions LinkedIn. Combien sont des contacts actifs ? La moyenne de mes clients est 12."</div><span class="idea-signal">Signal : question binaire = post #10</span></div>
+      <div class="idea-card"><div class="idea-num">07</div><div class="idea-format">Post image - Vulnérabilité dirigeant</div><div class="idea-title">Dans le luxe, montrer ses doutes est une faiblesse. Jusqu'au jour où ce n'est plus le cas.</div><div class="idea-hook">"À 35 ans, j'étais persuadée qu'un dirigeant dans le luxe ne doutait pas."</div><span class="idea-signal">Signal : vulnérabilité luxe = post #7</span></div>
+      <div class="idea-card"><div class="idea-num">08</div><div class="idea-format">Post image - Reframe promu/attendu</div><div class="idea-title">On vous a promu pour votre excellence opérationnelle. On vous juge maintenant sur votre capacité à fédérer.</div><div class="idea-hook">"C'est la trap la plus commune dans le luxe. Personne ne vous a appris ça."</div><span class="idea-signal">Signal : extension post #5 = 20 eng.</span></div>
+      <div class="idea-card"><div class="idea-num">09</div><div class="idea-format">Post image - IA ancrée luxe</div><div class="idea-title">L'IA ne vous remplacera pas. Mais le dirigeant qui l'utilise bien pourrait vous court-circuiter.</div><div class="idea-hook">"Dans le luxe, on a deux ans de retard sur la tech. Ce n'est pas technique - c'est politique."</div><span class="idea-signal">Signal : IA ancrée luxe = posts #4 et #9</span></div>
+      <div class="idea-card"><div class="idea-num">10</div><div class="idea-format">Post image - Milestone MCP</div><div class="idea-title">1 an de coaching : les 5 choses que mes clients du luxe m'ont apprises</div><div class="idea-hook">"J'ai accompagné des directeurs régionaux, des DG en transition. Voici 5 vérités que je n'aurais jamais écrites il y a 12 mois."</div><span class="idea-signal">Signal : milestone + révélation = top 3</span></div>
+    </div>
+  </div>
+
+  <!-- LI PLAN -->
+  <div id="li-tab-plan" class="section">
+    <div class="section-title">Plan d'action - 30 jours</div>
+    <div class="section-subtitle">3 priorités : ancrage luxe systématique, accroches paradoxales, question finale sur chaque post</div>
+    <div class="insight" style="margin-bottom:28px"><div class="insight-icon">⚡</div><div class="insight-text"><strong>3 règles non négociables à appliquer dès demain</strong><p><strong>1.</strong> Chaque post commence par un paradoxe ou un reframe. <strong>2.</strong> Chaque post se termine par une question courte ou "lien en commentaire". <strong>3.</strong> Le mot "luxe" apparaît dans au moins 3 posts sur 4.</p></div></div>
+    <div class="plan-week">
+      <div class="plan-week-hdr" onclick="toggleLIWeek(this)"><div class="wbadge w1">1</div><div><div class="week-title">Semaine 1 - Installer les nouvelles règles</div><div class="week-sub">J1-J7 - Corriger les 3 erreurs principales immédiatement</div></div><span style="margin-left:auto;color:#8AA4AE;font-size:18px">v</span></div>
+      <div class="plan-body open">
+        <div class="plan-action"><div class="pa-day">J1</div><div class="pa-content"><strong>Audit express du feed actuel</strong><p>Identifier les posts sans CTA et sans accroche forte. Vérifier que les posts épinglés reflètent les 3 meilleurs patterns.</p><span class="pa-tag tag-s">Stratégie</span></div></div>
+        <div class="plan-action"><div class="pa-day">J2</div><div class="pa-content"><strong>Rédiger le post "1 an de coaching"</strong><p>Format post image. Milestone + révélation + 5 points. Terminer par une question sur l'expérience du lecteur.</p><span class="pa-tag tag-c">Contenu</span></div></div>
+        <div class="plan-action"><div class="pa-day">J3</div><div class="pa-content"><strong>Publier mercredi 7h00</strong><p>Votre meilleur créneau. Répondre à tous les commentaires dans les 90 min.</p><span class="pa-tag tag-c">Contenu</span></div></div>
+        <div class="plan-action"><div class="pa-day">J5</div><div class="pa-content"><strong>Post "Le luxe brûle les meilleurs"</strong><p>Format paradoxe + preuve sociale. Vendredi 7h.</p><span class="pa-tag tag-c">Contenu</span></div></div>
+      </div>
+    </div>
+    <div class="plan-week">
+      <div class="plan-week-hdr" onclick="toggleLIWeek(this)"><div class="wbadge w2">2</div><div><div class="week-title">Semaine 2 - Activer les patterns top-performers</div><div class="week-sub">J8-J14 - 3 posts calibrés sur les 3 meilleurs patterns</div></div><span style="margin-left:auto;color:#8AA4AE;font-size:18px">v</span></div>
+      <div class="plan-body">
+        <div class="plan-action"><div class="pa-day">J8</div><div class="pa-content"><strong>Post "Personne ne vous dit sur les 100 premiers jours luxe"</strong><p>Lundi 7h. Pattern #1. 3-4 vérités contre-intuitives. Lien newsletter en commentaire.</p><span class="pa-tag tag-c">Contenu</span></div></div>
+        <div class="plan-action"><div class="pa-day">J10</div><div class="pa-content"><strong>Post "Vous ne manquez pas d'ambition. Vous manquez d'un sponsor."</strong><p>Mercredi 7h. Pattern reframe. Question finale : "Qui parle de vous quand vous n'êtes pas dans la pièce ?"</p><span class="pa-tag tag-c">Contenu</span></div></div>
+        <div class="plan-action"><div class="pa-day">J12</div><div class="pa-content"><strong>Post podcast + lien commentaire</strong><p>Vendredi 7h. Accroche = paradoxe (pas une description de l'épisode).</p><span class="pa-tag tag-c">Contenu</span></div></div>
+        <div class="plan-action"><div class="pa-day">J14</div><div class="pa-content"><strong>Bilan mi-parcours</strong><p>Comparer l'engagement des 4 posts vs. médiane habituelle (8).</p><span class="pa-tag tag-t">Test</span></div></div>
+      </div>
+    </div>
+    <div class="plan-week">
+      <div class="plan-week-hdr" onclick="toggleLIWeek(this)"><div class="wbadge w3">3</div><div><div class="week-title">Semaine 3 - Conversion et B2B</div><div class="week-sub">J15-J21 - Activer la cible DRH</div></div><span style="margin-left:auto;color:#8AA4AE;font-size:18px">v</span></div>
+      <div class="plan-body">
+        <div class="plan-action"><div class="pa-day">J15</div><div class="pa-content"><strong>Post "Prise de poste ratée coûte 18 mois"</strong><p>Lundi 7h. Angle B2B DRH. Data chiffrée + équation coût.</p><span class="pa-tag tag-s">Stratégie</span></div></div>
+        <div class="plan-action"><div class="pa-day">J17</div><div class="pa-content"><strong>Post "promu pour excellence, attendu sur fédération"</strong><p>Mercredi 7h. 1 question finale précise. Newsletter en commentaire.</p><span class="pa-tag tag-c">Contenu</span></div></div>
+        <div class="plan-action"><div class="pa-day">J19</div><div class="pa-content"><strong>Post IA ancré luxe : "L'IA ne vous remplacera pas"</strong><p>Vendredi 7h. Angle politique/stratégique, pas technique.</p><span class="pa-tag tag-c">Contenu</span></div></div>
+        <div class="plan-action"><div class="pa-day">J21</div><div class="pa-content"><strong>Engager sur 10 posts de votre cible</strong><p>Commenter sur les posts de DRH, directeurs luxe. Commentaires de 3-4 phrases, pas des réactions.</p><span class="pa-tag tag-s">Stratégie</span></div></div>
+      </div>
+    </div>
+    <div class="plan-week">
+      <div class="plan-week-hdr" onclick="toggleLIWeek(this)"><div class="wbadge w4">4</div><div><div class="week-title">Semaine 4 - Récurrence et mesure</div><div class="week-sub">J22-J30 - Installer les habitudes durables</div></div><span style="margin-left:auto;color:#8AA4AE;font-size:18px">v</span></div>
+      <div class="plan-body">
+        <div class="plan-action"><div class="pa-day">J22</div><div class="pa-content"><strong>Lancer la série "Ce que personne ne dit" - épisode 2</strong><p>Lundi 7h. Nouveau thème : négociation de salaire dans le luxe.</p><span class="pa-tag tag-c">Contenu</span></div></div>
+        <div class="plan-action"><div class="pa-day">J25</div><div class="pa-content"><strong>Post "Votre réseau dans le luxe : actif ou en veille ?"</strong><p>Mercredi 7h. Question binaire + data surprenante (moyenne = 12 contacts actifs).</p><span class="pa-tag tag-c">Contenu</span></div></div>
+        <div class="plan-action"><div class="pa-day">J28</div><div class="pa-content"><strong>Post podcast + test nouveau CTA</strong><p>Vendredi 7h. Tester : "Répondez à ce post" vs. "Lien en commentaire".</p><span class="pa-tag tag-t">Test</span></div></div>
+        <div class="plan-action"><div class="pa-day">J30</div><div class="pa-content"><strong>Bilan 30 jours - fixer la charte LinkedIn</strong><p>Comparer l'engagement avant/après les nouvelles règles.</p><span class="pa-tag tag-t">Test</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /main -->
+  <div class="footer">Clarté. Posture. Impact. - My Coaching Partner 2026</div>
+</div><!-- /pane-linkedin -->
+
+
+<!-- ===== PANE INSTAGRAM ===== -->
+<div id="pane-instagram" class="pane" style="flex-direction:column;">
+  <div class="header">
+    <div class="header-left">
+      <span>My Coaching Partner</span>
+      <h1>Instagram - Dashboard contenus</h1>
+    </div>
+    <div class="header-right">
+      <div class="ig-badge">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="#E9B3A3" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        <span>capucine.legrand.coach</span>
+      </div>
+      <div class="date">Analyse - Mai 2026 - 27 posts scrappés</div>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-tab active" onclick="showIGSection('overview',event)">Vue d'ensemble</div>
+    <div class="nav-tab" onclick="showIGSection('topposts',event)">Top contenus</div>
+    <div class="nav-tab" onclick="showIGSection('patterns',event)">Patterns &amp; accroches</div>
+    <div class="nav-tab" onclick="showIGSection('formats',event)">Formats</div>
+    <div class="nav-tab" onclick="showIGSection('series',event)">Séries détectées</div>
+    <div class="nav-tab" onclick="showIGSection('ideas',event)">Idées de contenu</div>
+    <div class="nav-tab" onclick="showIGSection('plan',event)">Plan 30 jours</div>
+  </nav>
+
+  <div class="main">
+
+  <!-- IG OVERVIEW -->
+  <div id="ig-section-overview" class="section active">
+    <div class="section-title">Vue d'ensemble</div>
+    <div class="section-subtitle">KPIs clés extraits des 27 posts disponibles - fenêtre juin 2025 à février 2026</div>
+    <div class="kpi-grid">
+      <div class="kpi-card"><div class="kpi-label">Posts analysés</div><div class="kpi-value">27</div><div class="kpi-sub">juin 2025 → fév. 2026</div></div>
+      <div class="kpi-card accent"><div class="kpi-label">Total likes</div><div class="kpi-value">325</div><div class="kpi-sub">Médiane : 7 likes/post</div></div>
+      <div class="kpi-card"><div class="kpi-label">Total commentaires</div><div class="kpi-value">27</div><div class="kpi-sub">Médiane : 0 coms/post</div></div>
+      <div class="kpi-card slate"><div class="kpi-label">Meilleur post</div><div class="kpi-value">53 <span style="font-size:0.6em;font-weight:400;">♥</span></div><div class="kpi-sub">Certification RNCP - avr. 2025</div></div>
+      <div class="kpi-card"><div class="kpi-label">Taux d'engagement</div><div class="kpi-value">~1.8%</div><div class="kpi-sub">Estimé (abonnés non dispo)</div></div>
+    </div>
+    <div class="insight"><div class="insight-icon">💡</div><div class="insight-text"><strong>Signal fort détecté</strong><p>Les posts personnels (milestone, parcours, double casquette) surperforment massivement vs les contenus "pédagogiques" génériques. Le post certification RNCP (53 likes, 11 coms) représente à lui seul 16% de tous les likes du compte. C'est le format à dupliquer en priorité.</p></div></div>
+    <div class="card-grid">
+      <div class="chart-card">
+        <h3>Engagement par mois</h3><p>Cumul likes + commentaires par période de publication</p>
+        <svg viewBox="0 0 460 200" width="100%">
+          <line x1="60" y1="170" x2="440" y2="170" stroke="#E0ECF0" stroke-width="1"/>
+          <line x1="60" y1="10" x2="60" y2="170" stroke="#E0ECF0" stroke-width="1"/>
+          <line x1="60" y1="130" x2="440" y2="130" stroke="#F0F5F7" stroke-width="1" stroke-dasharray="4,4"/>
+          <line x1="60" y1="90" x2="440" y2="90" stroke="#F0F5F7" stroke-width="1" stroke-dasharray="4,4"/>
+          <line x1="60" y1="50" x2="440" y2="50" stroke="#F0F5F7" stroke-width="1" stroke-dasharray="4,4"/>
+          <text x="52" y="174" text-anchor="end" font-size="9" fill="#8AA4AE">0</text>
+          <text x="52" y="134" text-anchor="end" font-size="9" fill="#8AA4AE">25</text>
+          <text x="52" y="94" text-anchor="end" font-size="9" fill="#8AA4AE">50</text>
+          <text x="52" y="54" text-anchor="end" font-size="9" fill="#8AA4AE">75</text>
+          <rect x="72" y="98" width="28" height="72" rx="3" fill="#599092" opacity="0.85"/>
+          <text x="86" y="95" text-anchor="middle" font-size="9" fill="#184E5A" font-weight="600">55</text>
+          <text x="86" y="186" text-anchor="middle" font-size="9" fill="#8AA4AE">Jun</text>
+          <rect x="126" y="10" width="28" height="160" rx="3" fill="#184E5A"/>
+          <text x="140" y="7" text-anchor="middle" font-size="9" fill="#184E5A" font-weight="700">121</text>
+          <text x="140" y="186" text-anchor="middle" font-size="9" fill="#8AA4AE">Mai</text>
+          <rect x="180" y="140" width="28" height="30" rx="3" fill="#599092" opacity="0.85"/>
+          <text x="194" y="137" text-anchor="middle" font-size="9" fill="#184E5A" font-weight="600">23</text>
+          <text x="194" y="186" text-anchor="middle" font-size="9" fill="#8AA4AE">Sep</text>
+          <rect x="234" y="133" width="28" height="37" rx="3" fill="#599092" opacity="0.85"/>
+          <text x="248" y="130" text-anchor="middle" font-size="9" fill="#184E5A" font-weight="600">28</text>
+          <text x="248" y="186" text-anchor="middle" font-size="9" fill="#8AA4AE">Oct</text>
+          <rect x="288" y="157" width="28" height="13" rx="3" fill="#BF6C5C" opacity="0.7"/>
+          <text x="302" y="154" text-anchor="middle" font-size="9" fill="#184E5A" font-weight="600">10</text>
+          <text x="302" y="186" text-anchor="middle" font-size="9" fill="#8AA4AE">Nov</text>
+          <rect x="342" y="161" width="28" height="9" rx="3" fill="#BF6C5C" opacity="0.7"/>
+          <text x="356" y="158" text-anchor="middle" font-size="9" fill="#184E5A" font-weight="600">7</text>
+          <text x="356" y="186" text-anchor="middle" font-size="9" fill="#8AA4AE">Jan</text>
+          <rect x="396" y="149" width="28" height="21" rx="3" fill="#599092" opacity="0.85"/>
+          <text x="410" y="146" text-anchor="middle" font-size="9" fill="#184E5A" font-weight="600">16</text>
+          <text x="410" y="186" text-anchor="middle" font-size="9" fill="#8AA4AE">Fév</text>
+        </svg>
+      </div>
+      <div class="chart-card">
+        <h3>Répartition des formats</h3><p>Par nombre de posts publiés</p>
+        <div class="donut-wrap">
+          <svg viewBox="0 0 120 120" width="140" height="140">
+            <circle cx="60" cy="60" r="45" fill="none" stroke="#F0F5F7" stroke-width="20"/>
+            <circle cx="60" cy="60" r="45" fill="none" stroke="#184E5A" stroke-width="20" stroke-dasharray="207.3 282.6" stroke-dashoffset="70.65" transform="rotate(-90 60 60)"/>
+            <circle cx="60" cy="60" r="45" fill="none" stroke="#599092" stroke-width="20" stroke-dasharray="31.0 282.6" stroke-dashoffset="-136.65" transform="rotate(-90 60 60)"/>
+            <circle cx="60" cy="60" r="45" fill="none" stroke="#BF6C5C" stroke-width="20" stroke-dasharray="11.3 282.6" stroke-dashoffset="-167.65" transform="rotate(-90 60 60)"/>
+            <text x="60" y="56" text-anchor="middle" font-size="18" fill="#184E5A" font-weight="700" font-family="Playfair Display, serif">27</text>
+            <text x="60" y="68" text-anchor="middle" font-size="8" fill="#8AA4AE">posts</text>
+          </svg>
+          <div class="donut-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#184E5A"></div><div class="legend-label">Carrousels</div><div class="legend-pct">74%</div></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#599092"></div><div class="legend-label">Images seules</div><div class="legend-pct">11%</div></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#BF6C5C"></div><div class="legend-label">Reels</div><div class="legend-pct">4%</div></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#E9B3A3"></div><div class="legend-label">Sidecar (sans caption)</div><div class="legend-pct">11%</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="chart-card" style="margin-bottom:40px">
+      <h3>Meilleurs jours de publication</h3><p>Engagement médian (likes + coms) par jour de la semaine</p>
+      <div style="margin-top:16px">
+        <div class="bar-wrap"><div class="bar-label">Lundi</div><div class="bar-track"><div class="bar-fill" style="width:40%;background:#599092"></div></div><div class="bar-val">7.5</div></div>
+        <div class="bar-wrap"><div class="bar-label">Mardi</div><div class="bar-track"><div class="bar-fill" style="width:25%;background:#599092"></div></div><div class="bar-val">5</div></div>
+        <div class="bar-wrap"><div class="bar-label">Mercredi</div><div class="bar-track"><div class="bar-fill" style="width:30%;background:#599092"></div></div><div class="bar-val">6</div></div>
+        <div class="bar-wrap"><div class="bar-label">Jeudi</div><div class="bar-track"><div class="bar-fill" style="width:50%;background:#184E5A"></div></div><div class="bar-val">9.5</div></div>
+        <div class="bar-wrap"><div class="bar-label">Vendredi</div><div class="bar-track"><div class="bar-fill" style="width:60%;background:#184E5A"></div></div><div class="bar-val">11</div></div>
+        <div class="bar-wrap"><div class="bar-label">Samedi</div><div class="bar-track"><div class="bar-fill" style="width:15%;background:#BF6C5C"></div></div><div class="bar-val">3</div></div>
+        <div class="bar-wrap"><div class="bar-label">Dimanche</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#BF6C5C"></div></div><div class="bar-val">20</div></div>
+      </div>
+      <div class="insight" style="margin-top:20px;margin-bottom:0"><div class="insight-icon">📅</div><div class="insight-text"><strong>Fenêtre idéale : jeudi-vendredi matin (7h-9h Paris) et dimanche soir (20h)</strong><p>Le post certification du 27 avril (dimanche) a généré 64 engagements. Le cluster mai-juin publie majoritairement le jeudi matin. Vendredi et dimanche soir dominent.</p></div></div>
+    </div>
+  </div>
+
+  <!-- IG TOP POSTS -->
+  <div id="ig-section-topposts" class="section">
+    <div class="section-title">Top 10 contenus</div>
+    <div class="section-subtitle">Classés par engagement total (likes + commentaires)</div>
+    <div class="post-filters">
+      <div class="filter-btn active" onclick="filterIGPosts('all',this)">Tous</div>
+      <div class="filter-btn" onclick="filterIGPosts('Image',this)">Image seule</div>
+      <div class="filter-btn" onclick="filterIGPosts('Sidecar',this)">Carrousel</div>
+    </div>
+    <div class="posts-grid">
+      <div class="post-card" data-type="Image"><div class="post-header"><div class="post-rank">#1</div><span class="post-type-badge badge-image">Image</span></div><div class="post-body"><div class="post-engagement"><div class="eng-item">♥ 53 <span>likes</span></div><div class="eng-item">💬 11 <span>coms</span></div><div class="eng-item" style="color:#BF6C5C">⭐ 64 <span>total</span></div></div><div class="post-hook">✨ Nouvelle étape franchie : je suis désormais Coach Professionnelle certifiée RNCP niveau 6 !</div><div class="post-caption">Milestone personnel + légitimation expertise + merci communauté. Post "journée importante" avec vulnérabilité maîtrisée.</div><div class="post-date">27 avril 2025 - 20h03</div><a href="https://www.instagram.com/p/DI9naswi3rv/" target="_blank" class="post-url">→ Voir le post</a></div></div>
+      <div class="post-card" data-type="Image"><div class="post-header"><div class="post-rank">#2</div><span class="post-type-badge badge-image">Image</span></div><div class="post-body"><div class="post-engagement"><div class="eng-item">♥ 28 <span>likes</span></div><div class="eng-item">💬 3 <span>coms</span></div><div class="eng-item" style="color:#BF6C5C">⭐ 31 <span>total</span></div></div><div class="post-hook">Cette année 2025 est définitivement incroyable ! Je lance officiellement mon activité de coaching…</div><div class="post-caption">Annonce lancement MCP. Ton naturel, enthousiaste sans en faire trop. Appel à "stay tuned" pour la communauté.</div><div class="post-date">28 mai 2025 - 20h34</div><a href="https://www.instagram.com/p/DKNfmTZiHv0/" target="_blank" class="post-url">→ Voir le post</a></div></div>
+      <div class="post-card" data-type="Image"><div class="post-header"><div class="post-rank">#3</div><span class="post-type-badge badge-image">Image</span></div><div class="post-body"><div class="post-engagement"><div class="eng-item">♥ 29 <span>likes</span></div><div class="eng-item">💬 1 <span>com</span></div><div class="eng-item" style="color:#BF6C5C">⭐ 30 <span>total</span></div></div><div class="post-hook">✨ Qui suis-je ? Je m'appelle Capucine, je suis coach professionnelle certifiée…</div><div class="post-caption">Post de présentation mis à jour. "Ce que mes clients disent souvent" = preuve sociale intégrée.</div><div class="post-date">28 juin 2025 - 06h17</div><a href="https://www.instagram.com/p/DLbyHcLuNow/" target="_blank" class="post-url">→ Voir le post</a></div></div>
+      <div class="post-card" data-type="Sidecar"><div class="post-header"><div class="post-rank">#4</div><span class="post-type-badge badge-sidecar">Carrousel</span></div><div class="post-body"><div class="post-engagement"><div class="eng-item">♥ 20 <span>likes</span></div><div class="eng-item">💬 2 <span>coms</span></div><div class="eng-item" style="color:#BF6C5C">⭐ 22 <span>total</span></div></div><div class="post-hook">🎯 Cadre ambitieux, et si le vrai luxe… c'était un coaching taillé pour toi ?</div><div class="post-caption">Carrousel vente directe avec appel DM "IMPOSTEUR". Ton aspirationnel.</div><div class="post-date">30 mai 2025 - 15h32</div><a href="https://www.instagram.com/p/DKSGlQmiWPg/" target="_blank" class="post-url">→ Voir le post</a></div></div>
+      <div class="post-card" data-type="Sidecar"><div class="post-header"><div class="post-rank">#5</div><span class="post-type-badge badge-sidecar">Carrousel</span></div><div class="post-body"><div class="post-engagement"><div class="eng-item">♥ 20 <span>likes</span></div><div class="eng-item">💬 2 <span>coms</span></div><div class="eng-item" style="color:#BF6C5C">⭐ 22 <span>total</span></div></div><div class="post-hook">Burn-out, surcharge mentale, solitude du dirigeant… Vous connaissez ?</div><div class="post-caption">Question d'identification directe en accroche. Données chiffrées dans le corps. 4 conseils pratico-pratiques. CTA clair.</div><div class="post-date">29 mai 2025 - 06h44</div><a href="https://www.instagram.com/p/DKOlaqwCweA/" target="_blank" class="post-url">→ Voir le post</a></div></div>
+      <div class="post-card" data-type="Image"><div class="post-header"><div class="post-rank">#6</div><span class="post-type-badge badge-image">Image</span></div><div class="post-body"><div class="post-engagement"><div class="eng-item">♥ 19 <span>likes</span></div><div class="eng-item">💬 0 <span>coms</span></div><div class="eng-item" style="color:#BF6C5C">⭐ 19 <span>total</span></div></div><div class="post-hook">• 82% des dirigeants souffrent d'au moins un trouble physique ou psychologique…</div><div class="post-caption">Post de données chiffrées percutant. Manifeste-conviction avec promesse d'accompagnement.</div><div class="post-date">3 octobre 2025 - 15h21</div><a href="https://www.instagram.com/p/DPWhXx6jD_h/" target="_blank" class="post-url">→ Voir le post</a></div></div>
+      <div class="post-card" data-type="Sidecar"><div class="post-header"><div class="post-rank">#7</div><span class="post-type-badge badge-sidecar">Carrousel</span></div><div class="post-body"><div class="post-engagement"><div class="eng-item">♥ 15 <span>likes</span></div><div class="eng-item">💬 1 <span>com</span></div><div class="eng-item" style="color:#BF6C5C">⭐ 16 <span>total</span></div></div><div class="post-hook">As-tu déjà eu l'impression de ne pas mériter ta place ?</div><div class="post-caption">Double question rhétorique en accroche. CTA DM "IMPOSTEUR". Angle universel qui touche les cadres ambitieux.</div><div class="post-date">16 juin 2025 - 11h42</div><a href="https://www.instagram.com/p/DK9dvK2CFQx/" target="_blank" class="post-url">→ Voir le post</a></div></div>
+      <div class="post-card" data-type="Sidecar"><div class="post-header"><div class="post-rank">#8</div><span class="post-type-badge badge-sidecar">Carrousel</span></div><div class="post-body"><div class="post-engagement"><div class="eng-item">♥ 11 <span>likes</span></div><div class="eng-item">💬 2 <span>coms</span></div><div class="eng-item" style="color:#BF6C5C">⭐ 13 <span>total</span></div></div><div class="post-hook">✨ Vous avez l'impression de courir après le temps et de sacrifier votre équilibre pro/perso ?</div><div class="post-caption">Validation émotionnelle + 4 erreurs personnelles avouées. Vulnérabilité maîtrisée = fort engagement.</div><div class="post-date">12 juin 2025 - 05h25</div><a href="https://www.instagram.com/p/DKyfZULiidW/" target="_blank" class="post-url">→ Voir le post</a></div></div>
+      <div class="post-card" data-type="Sidecar"><div class="post-header"><div class="post-rank">#9</div><span class="post-type-badge badge-sidecar">Carrousel</span></div><div class="post-body"><div class="post-engagement"><div class="eng-item">♥ 12 <span>likes</span></div><div class="eng-item">💬 1 <span>com</span></div><div class="eng-item" style="color:#BF6C5C">⭐ 13 <span>total</span></div></div><div class="post-hook">🚫 Le coaching, ce n'est pas une suite de recettes miracles à appliquer toutes faites.</div><div class="post-caption">Prise de position anti-conformiste. Angle "démystification" du coaching. Différenciation forte.</div><div class="post-date">9 septembre 2025 - 07h02</div><a href="https://www.instagram.com/p/DOX1M2XDKNA/" target="_blank" class="post-url">→ Voir le post</a></div></div>
+      <div class="post-card" data-type="Sidecar"><div class="post-header"><div class="post-rank">#10</div><span class="post-type-badge badge-sidecar">Carrousel</span></div><div class="post-body"><div class="post-engagement"><div class="eng-item">♥ 10 <span>likes</span></div><div class="eng-item">💬 0 <span>coms</span></div><div class="eng-item" style="color:#BF6C5C">⭐ 10 <span>total</span></div></div><div class="post-hook">(Carrousel sans caption disponible - données février 2026)</div><div class="post-caption">Publié le 7 février 2026. Performance solide pour la période récente.</div><div class="post-date">7 février 2026 - 11h01</div><a href="https://www.instagram.com/p/DUdEq6ZAN_u/" target="_blank" class="post-url">→ Voir le post</a></div></div>
+    </div>
+  </div>
+
+  <!-- IG PATTERNS -->
+  <div id="ig-section-patterns" class="section">
+    <div class="section-title">Patterns &amp; accroches</div>
+    <div class="section-subtitle">Ce qui marche, ce qui plombe - analysé sur les 27 posts disponibles</div>
+    <div class="pattern-block">
+      <h3>✅ Accroches qui surperforment</h3>
+      <div class="hook-item"><div class="hook-score high">64</div><div class="hook-content"><h4>Milestone personnel + légitimation</h4><p>Annonce d'un accomplissement réel avec contexte du parcours. Génère une vague de soutien communautaire + réactions émotionnelles fortes.</p><div class="hook-example">« ✨ Nouvelle étape franchie : je suis désormais Coach Professionnelle certifiée RNCP niveau 6 ! »</div></div></div>
+      <div class="hook-item"><div class="hook-score high">31</div><div class="hook-content"><h4>Annonce de lancement / nouvelle phase</h4><p>Les posts "changement important dans ma vie pro" captivent. Le réseau personnel se mobilise fort sur ces moments de transition.</p><div class="hook-example">« Cette année 2025 est définitivement incroyable ! Je lance officiellement mon activité de coaching… »</div></div></div>
+      <div class="hook-item"><div class="hook-score high">22</div><div class="hook-content"><h4>Question d'identification directe + douleur nommée</h4><p>Nommer le problème exact (burn-out, syndrome imposteur, équilibre) et valider l'expérience ("vous n'êtes pas seul·e") avant d'apporter la solution.</p><div class="hook-example">« Burn-out, surcharge mentale, solitude du dirigeant… Vous connaissez ? »</div></div></div>
+      <div class="hook-item"><div class="hook-score mid">19</div><div class="hook-content"><h4>Data choc + manifeste conviction</h4><p>Statistique frappante en première ligne, suivie d'une prise de position tranchée. Format "révélation → ma mission".</p><div class="hook-example">« • 82% des dirigeants souffrent d'au moins un trouble physique ou psychologique »</div></div></div>
+      <div class="hook-item"><div class="hook-score mid">16</div><div class="hook-content"><h4>Double question rhétorique (syndrome imposteur)</h4><p>Deux questions courtes qui dessinent un portrait exact de la cible. Taux d'identification maximal. Fonctionne bien avec CTA DM mot-clé.</p><div class="hook-example">« As-tu déjà eu l'impression de ne pas mériter ta place ? De réussir… mais de penser que c'est un coup de chance ? »</div></div></div>
+    </div>
+    <div class="pattern-block">
+      <h3>❌ Accroches qui plombent l'engagement</h3>
+      <div class="hook-item"><div class="hook-score low">5</div><div class="hook-content"><h4>Accroche éditoriale générique</h4><p>Le format "liste de conseils" sans angle personnel génère peu de réactions. La promesse est trop prévisible.</p><div class="hook-example">« Dans un monde professionnel en constante évolution, le leadership se réinvente… »</div></div></div>
+      <div class="hook-item"><div class="hook-score low">5</div><div class="hook-content"><h4>Injonction positive sans preuve sociale</h4><p>Les posts purement prescriptifs sans ancrage dans une expérience personnelle ou un cas client ne créent pas d'émotion.</p></div></div>
+      <div class="hook-item"><div class="hook-score low">3</div><div class="hook-content"><h4>Question ouverte abstraite sans tension</h4><p>Les questions de fin sans conviction forte en amont restent sans réponse.</p></div></div>
+    </div>
+    <div class="chart-card">
+      <h3>Mots-clés CTA qui génèrent des commentaires</h3><p>Analyse des appels à l'action dans les posts ayant obtenu des commentaires</p>
+      <div style="margin-top:16px">
+        <div class="bar-wrap"><div class="bar-label">Envie DM/MP</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#184E5A"></div></div><div class="bar-val">11 coms</div></div>
+        <div class="bar-wrap"><div class="bar-label">Dis-moi en commentaire</div><div class="bar-track"><div class="bar-fill" style="width:73%;background:#599092"></div></div><div class="bar-val">8 coms</div></div>
+        <div class="bar-wrap"><div class="bar-label">Partagez votre expérience</div><div class="bar-track"><div class="bar-fill" style="width:36%;background:#599092"></div></div><div class="bar-val">4 coms</div></div>
+        <div class="bar-wrap"><div class="bar-label">Envoie "MOT" en MP</div><div class="bar-track"><div class="bar-fill" style="width:27%;background:#BF6C5C"></div></div><div class="bar-val">3 coms</div></div>
+        <div class="bar-wrap"><div class="bar-label">Taguer un collègue</div><div class="bar-track"><div class="bar-fill" style="width:18%;background:#BF6C5C"></div></div><div class="bar-val">2 coms</div></div>
+      </div>
+      <div class="insight" style="margin-top:20px;margin-bottom:0"><div class="insight-icon">🎯</div><div class="insight-text"><strong>Le CTA DM mot-clé (type "IMPOSTEUR") est ton meilleur outil de conversion</strong><p>Les posts avec CTA DM mot-clé génèrent 3× plus de commentaires que les posts sans CTA explicite. À systématiser sur tous les posts à forte intention commerciale.</p></div></div>
+    </div>
+  </div>
+
+  <!-- IG FORMATS -->
+  <div id="ig-section-formats" class="section">
+    <div class="section-title">Carrousel vs Image vs Reel</div>
+    <div class="section-subtitle">Médiane d'engagement et job idéal de chaque format</div>
+    <div class="insight"><div class="insight-icon">⚠️</div><div class="insight-text"><strong>Limite des données reels</strong><p>1 seul reel récupéré (527 vues, 5 likes). Le compte publie très peu de reels - la comparaison reels vs autres formats est basée sur cette donnée unique + benchmarks sectoriels.</p></div></div>
+    <div class="format-compare">
+      <div class="format-box"><h4>Carrousels / Sidecar</h4><div class="format-sub">20 posts • format dominant (74%)</div><div class="format-stat"><span class="fs-label">Médiane likes</span><span class="fs-val">7</span></div><div class="format-stat"><span class="fs-label">Médiane commentaires</span><span class="fs-val">0</span></div><div class="format-stat"><span class="fs-label">Meilleur carrousel</span><span class="fs-val">22 eng.</span></div><div class="format-stat"><span class="fs-label">Taux avec commentaires</span><span class="fs-val">40%</span></div><div class="format-job"><strong>Job idéal</strong>Éducation, conseils pratiques ("X erreurs", "X étapes"), positionnement éthique, études de cas client. Fonctionne mieux avec CTA DM intégré en dernière slide.</div></div>
+      <div class="format-box"><h4>Images seules</h4><div class="format-sub">3 posts • format minoritaire mais plus performant</div><div class="format-stat"><span class="fs-label">Médiane likes</span><span class="fs-val">29</span></div><div class="format-stat"><span class="fs-label">Médiane commentaires</span><span class="fs-val">1</span></div><div class="format-stat"><span class="fs-label">Meilleure image</span><span class="fs-val">64 eng.</span></div><div class="format-stat"><span class="fs-label">Taux avec commentaires</span><span class="fs-val">100%</span></div><div class="format-job"><strong>Job idéal</strong>Moments personnels forts (certification, lancement, milestones), présentations de toi-même, prises de position courtes avec data. À réserver aux moments qui comptent vraiment.</div></div>
+    </div>
+    <div class="format-compare">
+      <div class="format-box"><h4>Reels</h4><div class="format-sub">1 reel disponible • données limitées</div><div class="format-stat"><span class="fs-label">Vues (playcount)</span><span class="fs-val">527</span></div><div class="format-stat"><span class="fs-label">Likes</span><span class="fs-val">5</span></div><div class="format-stat"><span class="fs-label">Durée</span><span class="fs-val">5.5 sec</span></div><div class="format-stat"><span class="fs-label">Ratio vues/likes</span><span class="fs-val">~1%</span></div><div class="format-job"><strong>Job idéal (projection)</strong>Notoriété top-of-funnel, touch points rapides, coulisses en 15-30s. À tester comme outil de découverte.</div></div>
+      <div class="format-box" style="background:linear-gradient(135deg,rgba(24,78,90,0.03),rgba(191,108,92,0.03));border:1px dashed var(--border)"><h4 style="color:#184E5A">📊 Recommandation stratégique</h4><div class="format-sub">Allocation optimale suggérée</div><div style="margin-top:16px"><div class="bar-wrap"><div class="bar-label">Carrousels</div><div class="bar-track"><div class="bar-fill" style="width:50%;background:#184E5A"></div></div><div class="bar-val">50%</div></div><div class="bar-wrap"><div class="bar-label">Images perso</div><div class="bar-track"><div class="bar-fill" style="width:30%;background:#BF6C5C"></div></div><div class="bar-val">30%</div></div><div class="bar-wrap"><div class="bar-label">Reels (à tester)</div><div class="bar-track"><div class="bar-fill" style="width:20%;background:#599092"></div></div><div class="bar-val">20%</div></div></div><div class="format-job"><strong>Constat clé</strong>Tu sur-utilises les carrousels génériques (74%). L'image seule personnelle a une médiane de likes 4× supérieure. L'or est dans les posts qui te montrent toi.</div></div>
+    </div>
+  </div>
+
+  <!-- IG SERIES -->
+  <div id="ig-section-series" class="section">
+    <div class="section-title">Séries &amp; patterns récurrents</div>
+    <div class="section-subtitle">Clusters thématiques identifiés dans le contenu</div>
+    <div class="series-grid">
+      <div class="series-card"><div class="series-icon">🧠</div><div class="series-name">Syndrome &amp; douleurs du cadre</div><div class="series-count">6 posts • avg 13 eng.</div><div class="series-desc">Syndrome de l'imposteur, burn-out, solitude du dirigeant, 60h/semaine, dire non. Angle "vous n'êtes pas seul·e". Meilleur cluster de la stratégie actuelle.</div><div class="series-avg">🔥 Best performer par post</div></div>
+      <div class="series-card coral"><div class="series-icon">🚀</div><div class="series-name">Milestones personnels MCP</div><div class="series-count">3 posts • avg 28 eng.</div><div class="series-desc">Certification RNCP, lancement MCP, présentation. Posts d'annonce qui agrègent toute la bienveillance du réseau. Très fort mais sous-exploité.</div><div class="series-avg">⭐ Engagement record (+400% vs médiane)</div></div>
+      <div class="series-card slate"><div class="series-icon">💼</div><div class="series-name">Leadership &amp; management</div><div class="series-count">7 posts • avg 7 eng.</div><div class="series-desc">4 piliers du leadership, feedback ORBE, rituels équipe, prise de décision alignée. Format pédagogique pur. Bon volume, engagement dans la médiane.</div><div class="series-avg">📘 Expertise builder - reach limité</div></div>
+      <div class="series-card"><div class="series-icon">⚖️</div><div class="series-name">Double vie salarié / coach</div><div class="series-count">2 posts • avg 9 eng.</div><div class="series-desc">"Être coach, salariée et avoir une vie personnelle" + "Se former, c'est rester vivant". Ton personnel-autobiographique. Différenciateur fort. Très sous-exploité.</div><div class="series-avg">💡 À développer massivement</div></div>
+      <div class="series-card coral"><div class="series-icon">🎯</div><div class="series-name">Démystification du coaching</div><div class="series-count">2 posts • avg 12 eng.</div><div class="series-desc">"Coach pas gourou", "le leadership se construit". Prise de position anti-conformiste, différenciation forte vs faux coachs. Ton assertif qui marche.</div><div class="series-avg">💪 Positionnement différenciateur</div></div>
+      <div class="series-card slate"><div class="series-icon">📊</div><div class="series-name">Data + manifeste</div><div class="series-count">1 post • 19 eng.</div><div class="series-desc">"82% des dirigeants…" Statistique choc + conviction personnelle + promesse d'accompagnement. Format dense mais percutant. À reproduire.</div><div class="series-avg">📈 Format sous-utilisé à fort potentiel</div></div>
+    </div>
+    <div class="insight"><div class="insight-icon">🔍</div><div class="insight-text"><strong>Pattern clé : le luxe/beauty est quasi absent de ta stratégie de contenu actuelle</strong><p>Zéro post analysé n'est spécifiquement ancré dans le monde du luxe ou de la beauté. Ton positionnement niche (coaching pour cadres luxe/beauty) est absent du contenu Instagram. C'est ton angle de différenciation le plus fort - et le plus inexploité.</p></div></div>
+  </div>
+
+  <!-- IG IDEAS -->
+  <div id="ig-section-ideas" class="section">
+    <div class="section-title">10 idées de contenu calibrées</div>
+    <div class="section-subtitle">Basées sur ce qui surperforme déjà chez toi</div>
+    <div class="ideas-grid">
+      <div class="idea-card"><div class="idea-number">01</div><div class="idea-format">Image • Milestone</div><div class="idea-title">Ton premier client de coaching dans une maison de luxe</div><div class="idea-hook">"Mon premier client dans une maison de luxe m'a dit une chose qui a tout changé dans ma façon de coacher…"</div><div class="idea-why">Réplique le pattern milestone personnel (avg 28 eng.) + ancre enfin le positionnement luxe dans le contenu.</div><span class="idea-signal">Signal : posts personnels ×4 vs médiane</span></div>
+      <div class="idea-card"><div class="idea-number">02</div><div class="idea-format">Carrousel • Douleur nommée</div><div class="idea-title">La double casquette salariée / coach : ce que personne ne te dit</div><div class="idea-hook">"J'ai eu honte de dire que j'avais un CDI pendant 6 mois après le lancement de MCP. Voilà pourquoi."</div><div class="idea-why">Vulnérabilité réelle + différenciation unique. Ton récit de double vie est le plus authentique de ta stratégie. Sous-exploité.</div><span class="idea-signal">Signal : ton personnel = +60% vs carrousel générique</span></div>
+      <div class="idea-card"><div class="idea-number">03</div><div class="idea-format">Image • Data choc</div><div class="idea-title">Les chiffres que personne ne dit aux cadres du luxe</div><div class="idea-hook">"Dans le luxe, la pression de la perfection est 40% plus élevée que dans les autres secteurs."</div><div class="idea-why">Réplique le format data manifeste (19 eng.) + ancrage sectoriel luxe + positionnement expert de niche.</div><span class="idea-signal">Signal : format data = 19 eng. (top 6)</span></div>
+      <div class="idea-card"><div class="idea-number">04</div><div class="idea-format">Carrousel • Identification</div><div class="idea-title">Tu travailles dans le luxe et tu te reconnais dans ça ?</div><div class="idea-hook">"Tu passes tes journées à prêcher l'excellence pour les autres. Et le soir, tu ne sais plus qui tu es sans ton titre."</div><div class="idea-why">La question d'identification est ton meilleur trigger de commentaires (avg 22 eng.). Ici avec ancrage luxe = cible ultra-qualifiée.</div><span class="idea-signal">Signal : questions ident. + douleur = top 5</span></div>
+      <div class="idea-card"><div class="idea-number">05</div><div class="idea-format">Image • Prise de position</div><div class="idea-title">Le coaching certifié RNCP : pourquoi ça change tout pour toi</div><div class="idea-hook">"On m'a dit : 'un coach, n'importe qui peut se proclamer.' J'ai décidé de prouver le contraire."</div><div class="idea-why">Réinvestit le capital du post RNCP (64 eng.) avec un angle éducatif + prise de position.</div><span class="idea-signal">Signal : légitimation = post #1 avec 64 eng.</span></div>
+      <div class="idea-card"><div class="idea-number">06</div><div class="idea-format">Carrousel • Série récurrente</div><div class="idea-title">"Ce que mes clients du luxe m'apprennent" - épisode 1</div><div class="idea-hook">"Cette semaine, un directeur régional Hermès m'a dit quelque chose que je n'avais jamais entendu en coaching…"</div><div class="idea-why">Série récurrente = fidélisation audience. Case studies anonymisés = preuve sociale + ancrage luxe.</div><span class="idea-signal">Signal : série = récurrence + anticipation</span></div>
+      <div class="idea-card"><div class="idea-number">07</div><div class="idea-format">Carrousel • Démystification</div><div class="idea-title">3 choses que le coaching N'EST PAS (et que trop de DRH luxe croient)</div><div class="idea-hook">"Non, le coaching n'est pas du conseil. Non, ce n'est pas de la thérapie."</div><div class="idea-why">Réplique le pattern anti-gourou (12 eng.) + cible B2B DRH. Prise de position tranchée = partages.</div><span class="idea-signal">Signal : démystification = top 9 posts</span></div>
+      <div class="idea-card"><div class="idea-number">08</div><div class="idea-format">Image • Milestone MCP</div><div class="idea-title">1 an de MCP : le bilan que je ne t'avais pas promis</div><div class="idea-hook">"Il y a un an, j'envoyais mon premier message à mon premier client. Voilà ce que je sais maintenant."</div><div class="idea-why">Anniversaire MCP = milestone fort. Vulnérabilité réflexive. Bilan = communauté célèbre avec toi.</div><span class="idea-signal">Signal : milestones avg 28 eng. (+300%)</span></div>
+      <div class="idea-card"><div class="idea-number">09</div><div class="idea-format">Carrousel • Outil pratique</div><div class="idea-title">Les 4 questions que je pose à mes clients avant chaque prise de poste</div><div class="idea-hook">"Je les ai posées à 12 directeurs du luxe cette année. La réponse à la question 3 m'a surprise à chaque fois."</div><div class="idea-why">Format outil pratique + ancrage client réel + curiosité gap. Tension narrative = engagement fort.</div><span class="idea-signal">Signal : format "outil client" + curiosity gap</span></div>
+      <div class="idea-card"><div class="idea-number">10</div><div class="idea-format">Carrousel • CTA DM mot-clé</div><div class="idea-title">Si tu travailles dans le luxe et que tu lis ça à 23h…</div><div class="idea-hook">"C'est probablement parce que tu n'as pas réussi à t'arrêter avant. Tu mérites mieux. Envoie-moi 'LUXE' en MP."</div><div class="idea-why">CTA DM mot-clé = ton outil de conversion #1. Ciblage ultra-précis cadres luxe night mode.</div><span class="idea-signal">Signal : CTA DM mot-clé = 3× plus de coms</span></div>
+    </div>
+  </div>
+
+  <!-- IG PLAN -->
+  <div id="ig-section-plan" class="section">
+    <div class="section-title">Plan d'action - 30 jours</div>
+    <div class="section-subtitle">Basé sur les 3 leviers prioritaires identifiés dans l'analyse</div>
+    <div class="insight" style="margin-bottom:32px"><div class="insight-icon">🎯</div><div class="insight-text"><strong>3 leviers prioritaires</strong><p><strong>1. Personnaliser :</strong> Multiplier les posts "image seule personnelle" (×4 vs médiane). <strong>2. Ancrer dans le luxe :</strong> Chaque post doit connecter à la réalité sectorielle de ta cible. <strong>3. Systématiser les CTA DM mot-clé</strong> sur tous les posts à intention commerciale.</p></div></div>
+    <div class="plan-timeline">
+      <div class="plan-week">
+        <div class="plan-week-header" onclick="toggleIGWeek(this)"><div class="week-badge w1">1</div><div><div class="week-title">Semaine 1 - Audit &amp; fondation</div><div class="week-subtitle">J1-J7 · Poser les bases avant de publier</div></div><span style="margin-left:auto;color:#8AA4AE;font-size:18px">▾</span></div>
+        <div class="plan-week-body open">
+          <div class="plan-action"><div class="action-day">J1</div><div class="action-content"><strong>Audit visuel du feed actuel</strong><p>Vérifier que les 6 derniers posts reflètent le positionnement luxe/beauty. Supprimer ou archiver les posts sous 5 eng. trop génériques.</p><span class="action-tag tag-strategy">Stratégie</span></div></div>
+          <div class="plan-action"><div class="action-day">J2</div><div class="action-content"><strong>Rédiger le post "1 an de MCP" (image seule)</strong><p>Format milestone = ton meilleur ROI. Ton anniversaire d'activité est un momentum à ne pas rater.</p><span class="action-tag tag-content">Contenu</span></div></div>
+          <div class="plan-action"><div class="action-day">J4</div><div class="action-content"><strong>Publier le post "1 an de MCP" - jeudi matin 8h</strong><p>Fenêtre optimale jeudi 7h-9h Paris. Répondre à TOUS les commentaires dans les 2h pour booster l'algorithme.</p><span class="action-tag tag-content">Contenu</span></div></div>
+          <div class="plan-action"><div class="action-day">J6</div><div class="action-content"><strong>Préparer le carrousel "double casquette"</strong><p>Rédiger le texte des 5-7 slides. Angle : vulnérabilité maîtrisée sur la réalité d'être coach + salariée. Sans édulcorer.</p><span class="action-tag tag-content">Contenu</span></div></div>
+        </div>
+      </div>
+      <div class="plan-week">
+        <div class="plan-week-header" onclick="toggleIGWeek(this)"><div class="week-badge w2">2</div><div><div class="week-title">Semaine 2 - Activation luxe</div><div class="week-subtitle">J8-J14 · Ancrer le positionnement sectoriel dans le contenu</div></div><span style="margin-left:auto;color:#8AA4AE;font-size:18px">▾</span></div>
+        <div class="plan-week-body">
+          <div class="plan-action"><div class="action-day">J8</div><div class="action-content"><strong>Publier le carrousel "double casquette" - lundi matin</strong><p>Ton angle différenciateur le plus fort. CTA : "Envoie-moi ÉQUILIBRE en MP si tu vis ça aussi."</p><span class="action-tag tag-content">Contenu</span></div></div>
+          <div class="plan-action"><div class="action-day">J10</div><div class="action-content"><strong>Rédiger l'image "data choc luxe"</strong><p>Chercher 2-3 stats réelles sur le burn-out dans le luxe/beauté. Manifeste "voilà ma mission".</p><span class="action-tag tag-strategy">Stratégie</span></div></div>
+          <div class="plan-action"><div class="action-day">J11</div><div class="action-content"><strong>Publier "data choc luxe" - vendredi 8h</strong><p>Fenêtre vendredi matin = pic d'engagement. Répondre aux saves + coms dans les 2h.</p><span class="action-tag tag-content">Contenu</span></div></div>
+          <div class="plan-action"><div class="action-day">J13</div><div class="action-content"><strong>Tester un reel de 15 sec - coulisses coaching</strong><p>Format : une phrase choc face cam, une info utile, CTA DM. Mesurer les vues vs likes pour établir ta baseline reels.</p><span class="action-tag tag-test">Test</span></div></div>
+        </div>
+      </div>
+      <div class="plan-week">
+        <div class="plan-week-header" onclick="toggleIGWeek(this)"><div class="week-badge w3">3</div><div><div class="week-title">Semaine 3 - Conversion &amp; CTA</div><div class="week-subtitle">J15-J21 · Transformer l'audience en prospects qualifiés</div></div><span style="margin-left:auto;color:#8AA4AE;font-size:18px">▾</span></div>
+        <div class="plan-week-body">
+          <div class="plan-action"><div class="action-day">J15</div><div class="action-content"><strong>Carrousel "Tu travailles dans le luxe et tu lis ça à 23h…"</strong><p>CTA DM mot-clé "LUXE". Publier un dimanche soir (20h) pour toucher les cadres en mode réflexion.</p><span class="action-tag tag-content">Contenu</span></div></div>
+          <div class="plan-action"><div class="action-day">J17</div><div class="action-content"><strong>Lancer la série "Ce que mes clients du luxe m'apprennent"</strong><p>Épisode 1. Format récurrent = annonce de suite = fidélisation.</p><span class="action-tag tag-strategy">Stratégie</span></div></div>
+          <div class="plan-action"><div class="action-day">J19</div><div class="action-content"><strong>Image seule "premier client luxe" ou anecdote forte</strong><p>Milestone ou moment de bascule réel. Ton personnel = émotionnel = engagement.</p><span class="action-tag tag-content">Contenu</span></div></div>
+          <div class="plan-action"><div class="action-day">J21</div><div class="action-content"><strong>Réanalyse des métriques semaines 1-3</strong><p>Comparer l'engagement des posts personnels vs carrousels génériques. Ajuster l'allocation pour la semaine 4.</p><span class="action-tag tag-test">Test</span></div></div>
+        </div>
+      </div>
+      <div class="plan-week">
+        <div class="plan-week-header" onclick="toggleIGWeek(this)"><div class="week-badge w4">4</div><div><div class="week-title">Semaine 4 - Optimisation &amp; récurrence</div><div class="week-subtitle">J22-J30 · Installer les habitudes qui durent</div></div><span style="margin-left:auto;color:#8AA4AE;font-size:18px">▾</span></div>
+        <div class="plan-week-body">
+          <div class="plan-action"><div class="action-day">J22</div><div class="action-content"><strong>Publier "3 choses que le coaching N'EST PAS pour les DRH luxe"</strong><p>Carrousel démystification B2B. Cibler les DRH en bio/hashtags. CTA découverte gratuite.</p><span class="action-tag tag-content">Contenu</span></div></div>
+          <div class="plan-action"><div class="action-day">J25</div><div class="action-content"><strong>Deuxième reel de test - partager une conviction forte en 30 sec</strong><p>S'appuyer sur l'analyse du premier reel (J13). Tester un format légèrement plus long.</p><span class="action-tag tag-test">Test</span></div></div>
+          <div class="plan-action"><div class="action-day">J28</div><div class="action-content"><strong>Carrousel "4 questions que je pose avant chaque prise de poste"</strong><p>Outil pratique avec curiosity gap (question 3 surprenante). CTA DM "POSTE" pour les gens en transition.</p><span class="action-tag tag-content">Contenu</span></div></div>
+          <div class="plan-action"><div class="action-day">J30</div><div class="action-content"><strong>Bilan 30 jours : décider la règle des 3 formats</strong><p>Fixer ton ratio définitif image/carrousel/reel. Planifier le mois 2 avec les données réelles.</p><span class="action-tag tag-strategy">Stratégie</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /main -->
+  <div class="footer">Clarté. Posture. Impact. - My Coaching Partner © 2026</div>
+</div><!-- /pane-instagram -->
+
+
+<!-- ===== PANE PODCAST ===== -->
+<div id="pane-podcast" class="pane" style="flex-direction:column;">
+  <div class="header">
+    <div class="header-left">
+      <span>My Coaching Partner</span>
+      <h1>Podcast - Dashboard contenus</h1>
+    </div>
+    <div class="header-right">
+      <div class="ig-badge">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="#A8C5C6"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2H3v2a9 9 0 0 0 8 8.94V23h-3v2h8v-2h-3v-2.06A9 9 0 0 0 21 12v-2h-2z"/></svg>
+        <span>Luxe, Carriere &amp; Toi</span>
+      </div>
+      <div class="date">Données au 29 juin 2026 — 38 épisodes — 4 121+ écoutes cumulées</div>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-tab active" onclick="showPodTab('overview',this)">Vue d'ensemble</div>
+    <div class="nav-tab" onclick="showPodTab('episodes',this)">Top episodes</div>
+    <div class="nav-tab" onclick="showPodTab('patterns',this)">Patterns &amp; titres</div>
+    <div class="nav-tab" onclick="showPodTab('sujets',this)">Sujets &amp; angles</div>
+    <div class="nav-tab" onclick="showPodTab('ideas',this)">Idees contenu</div>
+    <div class="nav-tab" onclick="showPodTab('plan',this)">Plan 30 jours</div>
+  </nav>
+
+  <div class="main">
+
+  <!-- POD OVERVIEW -->
+  <div id="pod-tab-overview" class="section active">
+    <div class="section-title">Vue d'ensemble</div>
+    <div class="section-subtitle">Catalogue au 29 juin 2026 — données issues d'Ausha</div>
+    <div class="kpi-grid">
+      <div class="kpi-card nile"><div class="kpi-label">Episodes publiés</div><div class="kpi-value" id="pod-kpi-ep">38</div><div class="kpi-sub">Depuis juillet 2025</div></div>
+      <div class="kpi-card coral"><div class="kpi-label">Dernier épisode</div><div class="kpi-value" id="pod-kpi-duree" style="font-size:18px">28 mai</div><div class="kpi-sub">Marque perso — 59 écoutes</div></div>
+      <div class="kpi-card"><div class="kpi-label">Inactivité</div><div class="kpi-value" id="pod-kpi-freq">5</div><div class="kpi-sub">semaines sans épisode</div></div>
+      <div class="kpi-card patina"><div class="kpi-label">Top épisode</div><div class="kpi-value" id="pod-kpi-top">1 070</div><div class="kpi-sub">Réussir son entretien — nov. 2025</div></div>
+      <div class="kpi-card"><div class="kpi-label">Écoutes cumulées</div><div class="kpi-value" id="pod-kpi-total">4 121+</div><div class="kpi-sub">Top 30j : "Réussir entretien" 124</div></div>
+      <div class="kpi-card blush"><div class="kpi-label">Top 30 jours</div><div class="kpi-value" id="pod-kpi-note" style="font-size:18px">124</div><div class="kpi-sub">Réussir son entretien</div></div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Repartition des sujets</h3><p class="sub">Distribution editoriale sur la periode</p>
+        <div style="margin-top:4px">
+          <div class="bar-wrap"><div class="bar-label">Carriere &amp; transition</div><div class="bar-track"><div class="bar-fill" style="width:45%;background:#184E5A"></div></div><div class="bar-val">45%</div></div>
+          <div class="bar-wrap"><div class="bar-label">Personal branding luxe</div><div class="bar-track"><div class="bar-fill" style="width:28%;background:#BF6C5C"></div></div><div class="bar-val">28%</div></div>
+          <div class="bar-wrap"><div class="bar-label">Leadership &amp; posture</div><div class="bar-track"><div class="bar-fill" style="width:18%;background:#5E9E9A"></div></div><div class="bar-val">18%</div></div>
+          <div class="bar-wrap"><div class="bar-label">Temoignages &amp; cas clients</div><div class="bar-track"><div class="bar-fill" style="width:9%;background:#A8C5C6"></div></div><div class="bar-val">9%</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Format des episodes</h3><p class="sub">Types d'episodes publies</p>
+        <div style="margin-top:4px">
+          <div class="bar-wrap"><div class="bar-label">Solo expertise</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#184E5A"></div></div><div class="bar-val">100%</div></div>
+        </div>
+        <div class="insight" style="margin-top:12px;margin-bottom:0"><div class="insight-icon">🎙️</div><div class="insight-text"><strong>Format unique : solo expertise</strong><p>100% des episodes publies sont des solos. Opportunite : tester un format invite ou Q&A pour varier et capter une nouvelle audience.</p></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Ecoutes par mois</h3><p class="sub">Evolution du volume d'ecoute - a renseigner depuis Spotify for Podcasters / Apple Podcasts</p>
+      <svg viewBox="0 0 620 175" width="100%">
+        <line x1="55" y1="140" x2="600" y2="140" stroke="#E0ECF0" stroke-width="1"/>
+        <line x1="55" y1="10" x2="55" y2="140" stroke="#E0ECF0" stroke-width="1"/>
+        <text x="48" y="144" text-anchor="end" font-size="8" fill="#8AA4AE">0</text>
+        <text x="48" y="114" text-anchor="end" font-size="8" fill="#8AA4AE">50</text>
+        <text x="48" y="84" text-anchor="end" font-size="8" fill="#8AA4AE">100</text>
+        <text x="48" y="54" text-anchor="end" font-size="8" fill="#8AA4AE">150</text>
+        <text x="48" y="24" text-anchor="end" font-size="8" fill="#8AA4AE">200</text>
+        <rect x="70" y="100" width="40" height="40" rx="3" fill="#BF6C5C" opacity=".7"/>
+        <text x="90" y="97" text-anchor="middle" font-size="8" fill="#8AA4AE" font-weight="600">--</text>
+        <text x="90" y="155" text-anchor="middle" font-size="8" fill="#8AA4AE">M-5</text>
+        <rect x="150" y="90" width="40" height="50" rx="3" fill="#599092" opacity=".8"/>
+        <text x="170" y="87" text-anchor="middle" font-size="8" fill="#8AA4AE" font-weight="600">--</text>
+        <text x="170" y="155" text-anchor="middle" font-size="8" fill="#8AA4AE">M-4</text>
+        <rect x="230" y="70" width="40" height="70" rx="3" fill="#184E5A"/>
+        <text x="250" y="67" text-anchor="middle" font-size="8" fill="#8AA4AE" font-weight="700">--</text>
+        <text x="250" y="155" text-anchor="middle" font-size="8" fill="#8AA4AE">M-3</text>
+        <rect x="310" y="50" width="40" height="90" rx="3" fill="#184E5A"/>
+        <text x="330" y="47" text-anchor="middle" font-size="8" fill="#8AA4AE" font-weight="700">--</text>
+        <text x="330" y="155" text-anchor="middle" font-size="8" fill="#8AA4AE">M-2</text>
+        <rect x="390" y="60" width="40" height="80" rx="3" fill="#5E9E9A" opacity=".85"/>
+        <text x="410" y="57" text-anchor="middle" font-size="8" fill="#8AA4AE" font-weight="600">--</text>
+        <text x="410" y="155" text-anchor="middle" font-size="8" fill="#8AA4AE">M-1</text>
+        <rect x="470" y="75" width="40" height="65" rx="3" fill="#BF6C5C" opacity=".7"/>
+        <text x="490" y="72" text-anchor="middle" font-size="8" fill="#8AA4AE" font-weight="600">--</text>
+        <text x="490" y="155" text-anchor="middle" font-size="8" fill="#8AA4AE">Ce mois</text>
+        <text x="338" y="170" text-anchor="middle" font-size="9" fill="#8AA4AE" font-style="italic">À renseigner depuis Ausha — Statistiques › Vue d'ensemble</text>
+      </svg>
+    </div>
+    <div class="insight"><div class="insight-icon">💡</div><div class="insight-text"><strong>Signal fort a identifier</strong><p>Mettre a jour avec le sujet ou l'episode qui a surperformi cette semaine. D'ou venaient les ecoutes supplementaires ? Quel canal a drive le trafic ?</p></div></div>
+  </div>
+
+  <!-- POD TOP EPISODES -->
+  <div id="pod-tab-episodes" class="section">
+    <div class="section-title">Top episodes</div>
+    <div class="section-subtitle">Les episodes les plus ecoutes - a mettre a jour avec donnees reelles</div>
+    <div class="posts-grid">
+      <div class="post-card">
+        <div class="post-card-header" style="background:#184E5A"><div class="pc-rank">#1</div></div>
+        <div class="post-card-body">
+          <div class="pc-eng">
+            <div class="eng-item">🎧 <span id="pod-ep1-ecoutes">--</span><span> ecoutes</span></div>
+            <div class="eng-item">⏱ <span id="pod-ep1-duree">--</span><span> min</span></div>
+          </div>
+          <div class="pc-hook" id="pod-ep1-titre">[Titre episode 1 - a renseigner]</div>
+          <div class="pc-meta" id="pod-ep1-date">Date de publication</div>
+          <div class="pc-badges"><span class="pc-badge b-poste">Solo expertise</span></div>
+          <div style="font-size:12px;color:var(--text-mid);line-height:1.5;margin-top:8px;" id="pod-ep1-desc">Pourquoi cet episode a performe : angle choisi, sujet demande, promotion faite.</div>
+        </div>
+      </div>
+      <div class="post-card">
+        <div class="post-card-header" style="background:#2A6062"><div class="pc-rank">#2</div></div>
+        <div class="post-card-body">
+          <div class="pc-eng">
+            <div class="eng-item">🎧 <span id="pod-ep2-ecoutes">--</span><span> ecoutes</span></div>
+            <div class="eng-item">⏱ <span id="pod-ep2-duree">--</span><span> min</span></div>
+          </div>
+          <div class="pc-hook" id="pod-ep2-titre">[Titre episode 2 - a renseigner]</div>
+          <div class="pc-meta" id="pod-ep2-date">Date de publication</div>
+          <div class="pc-badges"><span class="pc-badge b-mgmt">Interview</span></div>
+          <div style="font-size:12px;color:var(--text-mid);line-height:1.5;margin-top:8px;" id="pod-ep2-desc">Pourquoi cet episode a performe.</div>
+        </div>
+      </div>
+      <div class="post-card">
+        <div class="post-card-header" style="background:#3D7070"><div class="pc-rank">#3</div></div>
+        <div class="post-card-body">
+          <div class="pc-eng">
+            <div class="eng-item">🎧 <span id="pod-ep3-ecoutes">--</span><span> ecoutes</span></div>
+            <div class="eng-item">⏱ <span id="pod-ep3-duree">--</span><span> min</span></div>
+          </div>
+          <div class="pc-hook" id="pod-ep3-titre">[Titre episode 3 - a renseigner]</div>
+          <div class="pc-meta" id="pod-ep3-date">Date de publication</div>
+          <div class="pc-badges"><span class="pc-badge b-luxe">Luxe</span></div>
+          <div style="font-size:12px;color:var(--text-mid);line-height:1.5;margin-top:8px;" id="pod-ep3-desc">Pourquoi cet episode a performe.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:24px">
+      <h3>Plateformes d'ecoute</h3><p class="sub">Repartition des ecoutes par plateforme</p>
+      <div style="margin-top:8px">
+        <div class="bar-wrap"><div class="bar-label">Spotify</div><div class="bar-track"><div class="bar-fill" style="width:60%;background:#184E5A"></div></div><div class="bar-val" id="pod-spotify">60%</div></div>
+        <div class="bar-wrap"><div class="bar-label">Apple Podcasts</div><div class="bar-track"><div class="bar-fill" style="width:25%;background:#5E9E9A"></div></div><div class="bar-val" id="pod-apple">25%</div></div>
+        <div class="bar-wrap"><div class="bar-label">Autres</div><div class="bar-track"><div class="bar-fill" style="width:15%;background:#BF6C5C"></div></div><div class="bar-val" id="pod-autres">15%</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POD PATTERNS -->
+  <div id="pod-tab-patterns" class="section">
+    <div class="section-title">Patterns &amp; titres</div>
+    <div class="section-subtitle">Ce qui attire l'ecoute - analyse des structures de titres performantes</div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Structures de titres qui marchent</h3>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px">
+          <div style="background:var(--cream);border-radius:8px;padding:14px;border-left:3px solid var(--teal-dark)">
+            <div style="font-size:10px;font-weight:700;color:var(--teal-mid);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">Format 1 - Question directe</div>
+            <div style="font-size:13px;color:var(--text-dark);font-weight:600">"Comment [verbe action] quand [situation de transition] ?"</div>
+            <div style="font-size:12px;color:var(--text-light);margin-top:4px">Adresse directement la douleur du persona. Cree une identification immediate.</div>
+          </div>
+          <div style="background:var(--cream);border-radius:8px;padding:14px;border-left:3px solid var(--coral)">
+            <div style="font-size:10px;font-weight:700;color:var(--coral);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">Format 2 - Contre-intuition</div>
+            <div style="font-size:13px;color:var(--text-dark);font-weight:600">"Ce que [le marche/le secteur] ne vous dit pas sur [sujet]"</div>
+            <div style="font-size:12px;color:var(--text-light);margin-top:4px">Joue sur la curiosite et le sentiment d'information exclusive. Fort dans le luxe.</div>
+          </div>
+          <div style="background:var(--cream);border-radius:8px;padding:14px;border-left:3px solid var(--patina)">
+            <div style="font-size:10px;font-weight:700;color:var(--patina);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">Format 3 - Chiffre + promesse</div>
+            <div style="font-size:13px;color:var(--text-dark);font-weight:600">"[X] erreurs / etapes / reflexes pour [resultat concret]"</div>
+            <div style="font-size:12px;color:var(--text-light);margin-top:4px">Donne une forme concrete et lisible a l'episode. Rassurant pour l'auditeur.</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Mots-cles performants</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
+          <span class="pc-badge b-luxe" style="font-size:13px;padding:6px 14px">Luxe</span>
+          <span class="pc-badge b-poste" style="font-size:13px;padding:6px 14px">Prise de poste</span>
+          <span class="pc-badge b-mgmt" style="font-size:13px;padding:6px 14px">Carriere</span>
+          <span class="pc-badge b-ia" style="font-size:13px;padding:6px 14px">Transition</span>
+          <span class="pc-badge b-image" style="font-size:13px;padding:6px 14px">Branding</span>
+          <span class="pc-badge b-luxe" style="font-size:13px;padding:6px 14px">Dirigeant</span>
+          <span class="pc-badge b-mgmt" style="font-size:13px;padding:6px 14px">Leadership</span>
+          <span class="pc-badge b-poste" style="font-size:13px;padding:6px 14px">Reseau</span>
+          <span class="pc-badge b-ia" style="font-size:13px;padding:6px 14px">Beauty</span>
+          <span class="pc-badge b-image" style="font-size:13px;padding:6px 14px">DRH</span>
+        </div>
+        <div class="insight" style="margin-top:16px;margin-bottom:0"><div class="insight-icon">🎯</div><div class="insight-text"><strong>Differenciateur #1 : ancrage secteur</strong><p>Nommer "luxe" ou "beauty" dans le titre multiplie les ecoutes. C'est le seul podcast francophone dedie aux carrieres dans ce secteur.</p></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Duree vs engagement</h3><p class="sub">Correlation entre longueur de l'episode et retention</p>
+      <div style="margin-top:8px">
+        <div class="bar-wrap"><div class="bar-label">15-20 min (solo court)</div><div class="bar-track"><div class="bar-fill" style="width:80%;background:#184E5A"></div></div><div class="bar-val">Fort</div></div>
+        <div class="bar-wrap"><div class="bar-label">20-30 min (solo standard)</div><div class="bar-track"><div class="bar-fill" style="width:90%;background:#184E5A"></div></div><div class="bar-val">Optimal</div></div>
+        <div class="bar-wrap"><div class="bar-label">30-45 min (interview)</div><div class="bar-track"><div class="bar-fill" style="width:65%;background:#5E9E9A"></div></div><div class="bar-val">Moyen</div></div>
+        <div class="bar-wrap"><div class="bar-label">+45 min</div><div class="bar-track"><div class="bar-fill" style="width:40%;background:#BF6C5C"></div></div><div class="bar-val">Faible</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POD SUJETS -->
+  <div id="pod-tab-sujets" class="section">
+    <div class="section-title">Sujets &amp; angles</div>
+    <div class="section-subtitle">Quels sujets engagent le plus votre audience</div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Sujets a fort potentiel</h3>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
+          <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:var(--cream);border-radius:8px;border-left:3px solid var(--teal-dark)">
+            <div style="font-size:18px;margin-top:2px">🏆</div>
+            <div>
+              <div style="font-weight:700;font-size:13px;color:var(--teal-dark);margin-bottom:3px">Naviguer une prise de poste dans un grand groupe luxe</div>
+              <div style="font-size:12px;color:var(--text-light)">Sujet #1 - demande recurrente en session decouverte</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:var(--cream);border-radius:8px;border-left:3px solid var(--coral)">
+            <div style="font-size:18px;margin-top:2px">🎯</div>
+            <div>
+              <div style="font-weight:700;font-size:13px;color:var(--teal-dark);margin-bottom:3px">Construire son personal branding quand on est cadre salarie</div>
+              <div style="font-size:12px;color:var(--text-light)">Sujet #2 - tres cherche sur Google, peu couvert en podcast FR</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:var(--cream);border-radius:8px;border-left:3px solid var(--patina)">
+            <div style="font-size:18px;margin-top:2px">💎</div>
+            <div>
+              <div style="font-weight:700;font-size:13px;color:var(--teal-dark);margin-bottom:3px">Les codes tacites des maisons de luxe</div>
+              <div style="font-size:12px;color:var(--text-light)">Sujet #3 - exclusif MCP, contenu que personne d'autre ne produit</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:var(--cream);border-radius:8px;border-left:3px solid var(--slate)">
+            <div style="font-size:18px;margin-top:2px">📈</div>
+            <div>
+              <div style="font-weight:700;font-size:13px;color:var(--teal-dark);margin-bottom:3px">Negocier son salaire dans le luxe</div>
+              <div style="font-size:12px;color:var(--text-light)">Sujet #4 - evergreen, fort taux de recherche</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Sujets a eviter</h3>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
+          <div style="padding:12px 14px;background:rgba(191,108,92,0.06);border-radius:8px;border-left:3px solid var(--coral)">
+            <div style="font-weight:700;font-size:13px;color:var(--teal-dark);margin-bottom:3px">Sujets trop generiques coaching</div>
+            <div style="font-size:12px;color:var(--text-light)">Burn-out, confiance en soi, assertivite - sans ancrage luxe/beauty = invisible dans la masse</div>
+          </div>
+          <div style="padding:12px 14px;background:rgba(191,108,92,0.06);border-radius:8px;border-left:3px solid var(--coral)">
+            <div style="font-weight:700;font-size:13px;color:var(--teal-dark);margin-bottom:3px">Episodes trop courts sans valeur dense</div>
+            <div style="font-size:12px;color:var(--text-light)">En dessous de 15 min, l'auditeur a l'impression de ne pas avoir recu assez</div>
+          </div>
+          <div style="padding:12px 14px;background:rgba(191,108,92,0.06);border-radius:8px;border-left:3px solid var(--coral)">
+            <div style="font-weight:700;font-size:13px;color:var(--teal-dark);margin-bottom:3px">Interviews sans angle editorial fort</div>
+            <div style="font-size:12px;color:var(--text-light)">L'invite doit avoir un parcours ou une expertise exclusive. Pas d'interview "de remplissage".</div>
+          </div>
+        </div>
+        <div class="insight" style="margin-top:16px;margin-bottom:0"><div class="insight-icon">📊</div><div class="insight-text"><strong>Regle d'or : sujet isole de LinkedIn</strong><p>Les sujets ayant genere le plus de commentaires LI cette semaine = meilleurs sujets podcast. Parle de ce que ton audience t'a deja demande.</p></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POD IDEES -->
+  <div id="pod-tab-ideas" class="section">
+    <div class="section-title">Idees d'episodes</div>
+    <div class="section-subtitle">Bank d'idees a developper - issues des signaux LinkedIn et questions clients</div>
+    <div class="ideas-grid">
+      <div class="idea-card">
+        <div class="idea-num">01</div>
+        <div class="idea-title" id="pod-idea1">Decrocher une promotion dans le luxe sans passer par la case DRH</div>
+        <div class="idea-hook">"Ce que vos managers regardent vraiment avant de vous promouvoir"</div>
+        <div class="idea-tags"><span class="pc-badge b-poste">Carriere</span><span class="pc-badge b-luxe">Luxe</span></div>
+        <div class="idea-source">Source : questions recurrentes en session decouverte</div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-num">02</div>
+        <div class="idea-title" id="pod-idea2">Pourquoi votre LinkedIn ne vous rapporte rien - et comment changer ca</div>
+        <div class="idea-hook">"Le branding, c'est pas pour les influenceurs. C'est votre outil de carriere."</div>
+        <div class="idea-tags"><span class="pc-badge b-image">Personal branding</span></div>
+        <div class="idea-source">Source : top post LinkedIn janv. 2026</div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-num">03</div>
+        <div class="idea-title" id="pod-idea3">La double casquette salarie + independant : comment j'ai fail et ce que j'ai appris</div>
+        <div class="idea-hook">"Ce que personne ne vous dit sur le cumul emploi / activite"</div>
+        <div class="idea-tags"><span class="pc-badge b-mgmt">Temoignage</span></div>
+        <div class="idea-source">Source : hall of fail - matiere narrative Capucine</div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-num">04</div>
+        <div class="idea-title" id="pod-idea4">Decoder une offre d'emploi dans une maison de luxe</div>
+        <div class="idea-hook">"Ce que le job description ne dit pas - et ce qu'il faut vraiment preparer"</div>
+        <div class="idea-tags"><span class="pc-badge b-luxe">Luxe</span><span class="pc-badge b-poste">Codes</span></div>
+        <div class="idea-source">Source : contenu evergreen tres cherche</div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-num">05</div>
+        <div class="idea-title" id="pod-idea5">Interview [Profil a confirmer] : son parcours dans le luxe</div>
+        <div class="idea-hook">"Un parcours authentique, sans le vernis des relations publiques"</div>
+        <div class="idea-tags"><span class="pc-badge b-ia">Interview</span></div>
+        <div class="idea-source">Source : dream 100 MCP - a qualifier</div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-num">06</div>
+        <div class="idea-title" id="pod-idea6">Les 5 erreurs qui sabotent votre premiere annee en poste de direction</div>
+        <div class="idea-hook">"Ce que tous les DG font de travers en arrivant - et comment eviter le piege"</div>
+        <div class="idea-tags"><span class="pc-badge b-poste">Leadership</span><span class="pc-badge b-luxe">Luxe</span></div>
+        <div class="idea-source">Source : sujet confirme par engagement LI #1</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POD PLAN 30 JOURS -->
+  <div id="pod-tab-plan" class="section">
+    <div class="section-title">Plan 30 jours - Podcast</div>
+    <div class="section-subtitle">Episodes a produire et publier dans les 4 prochaines semaines</div>
+    <div class="plan-weeks">
+      <div class="week-item">
+        <div class="week-header" onclick="togglePodWeek(this)"><span class="wi-label w1">Semaine 1</span><span class="wi-title" id="pod-ep-s1">Episode a planifier</span><span class="wi-arrow">▾</span></div>
+        <div class="week-body">
+          <div class="plan-row"><span class="pr-label">Titre confirme</span><span class="pr-val" id="pod-titre-s1">A renseigner depuis Notion</span></div>
+          <div class="plan-row"><span class="pr-label">Format</span><span class="pr-val">Solo expertise (20-25 min)</span></div>
+          <div class="plan-row"><span class="pr-label">Date enregistrement</span><span class="pr-val" id="pod-date-enreg-s1">--</span></div>
+          <div class="plan-row"><span class="pr-label">Date publication</span><span class="pr-val" id="pod-date-pub-s1">--</span></div>
+          <div class="plan-row"><span class="pr-label">CTA episode</span><span class="pr-val">RDV decouverte + newsletter</span></div>
+          <div class="plan-row"><span class="pr-label">Repurposing prevu</span><span class="pr-val">Post LI lundi + carrousel IG jeudi</span></div>
+        </div>
+      </div>
+      <div class="week-item">
+        <div class="week-header" onclick="togglePodWeek(this)"><span class="wi-label w2">Semaine 2</span><span class="wi-title" id="pod-ep-s2">Episode a planifier</span><span class="wi-arrow">▾</span></div>
+        <div class="week-body">
+          <div class="plan-row"><span class="pr-label">Titre confirme</span><span class="pr-val" id="pod-titre-s2">A renseigner depuis Notion</span></div>
+          <div class="plan-row"><span class="pr-label">Format</span><span class="pr-val">Interview ou Q&amp;A (30-40 min)</span></div>
+          <div class="plan-row"><span class="pr-label">Date enregistrement</span><span class="pr-val" id="pod-date-enreg-s2">--</span></div>
+          <div class="plan-row"><span class="pr-label">Date publication</span><span class="pr-val" id="pod-date-pub-s2">--</span></div>
+          <div class="plan-row"><span class="pr-label">CTA episode</span><span class="pr-val">Lead magnet + newsletter</span></div>
+          <div class="plan-row"><span class="pr-label">Repurposing prevu</span><span class="pr-val">Newsletter lundi + post IG</span></div>
+        </div>
+      </div>
+      <div class="week-item">
+        <div class="week-header" onclick="togglePodWeek(this)"><span class="wi-label w3">Semaines 3-4</span><span class="wi-title">Orientation editoriale</span><span class="wi-arrow">▾</span></div>
+        <div class="week-body">
+          <div class="plan-row"><span class="pr-label">Orientation</span><span class="pr-val">Repurposing des top contenus LI + IG de la quinzaine</span></div>
+          <div class="plan-row"><span class="pr-label">Sujets prioritaires</span><span class="pr-val">Themes ayant genere le plus de commentaires LI</span></div>
+          <div class="plan-row"><span class="pr-label">Format</span><span class="pr-val">Alterner solo / interview</span></div>
+          <div class="plan-row"><span class="pr-label">Note</span><span class="pr-val">1 episode = min. 3 formats cross-canal generes (LI + IG + NL)</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:24px">
+      <h3>Repurposing recommande par episode</h3><p class="sub">Chaque episode doit generer au minimum 3 autres contenus</p>
+      <div class="grid-2" style="margin-top:8px;margin-bottom:0">
+        <div style="background:rgba(24,78,90,0.04);border-radius:10px;padding:16px">
+          <div style="font-size:10px;font-weight:700;color:var(--teal-mid);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">Episode podcast</div>
+          <div style="font-size:13px;color:var(--text-dark);line-height:1.7">→ Post LinkedIn (lundi)<br>→ Carrousel Instagram (jeudi)<br>→ Extrait en newsletter (lundi suivant)<br>→ Quote en story IG (jour de sortie)</div>
+        </div>
+        <div style="background:rgba(191,108,92,0.04);border-radius:10px;padding:16px">
+          <div style="font-size:10px;font-weight:700;color:var(--coral);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">KPIs a suivre</div>
+          <div style="font-size:13px;color:var(--text-dark);line-height:1.7">- Ecoutes J+7 (indicateur principal)<br>- Taux de completion (si dispo Spotify)<br>- Clics vers site depuis show notes<br>- Abonnes generes par episode</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /main -->
+  <div class="footer">My Coaching Partner - Luxe, Carriere &amp; Toi</div>
+</div>
+
+<div id="pane-newsletter" class="pane" style="flex-direction:column;">
+  <div class="header">
+    <div class="header-left">
+      <span>My Coaching Partner</span>
+      <h1>Newsletter - Dashboard contenus</h1>
+    </div>
+    <div class="header-right">
+      <div class="ig-badge">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="#A8C5C6"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        <span>La lettre MCP</span>
+      </div>
+      <!-- Données non disponibles le 02-07-2026 : CrocoClick inaccessible (erreur de chargement, re-authentification requise) — 2e semaine consécutive -->
+      <div class="date">Données au 2 juillet 2026 — Dernier envoi : 4 mai 2026 — 10 semaines d'inactivité</div>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-tab active" onclick="showNLTab('overview',this)">Vue d'ensemble</div>
+    <div class="nav-tab" onclick="showNLTab('editions',this)">Top editions</div>
+    <div class="nav-tab" onclick="showNLTab('sujets',this)">Sujets &amp; objets</div>
+    <div class="nav-tab" onclick="showNLTab('audience',this)">Audience</div>
+    <div class="nav-tab" onclick="showNLTab('plan',this)">Plan 30 jours</div>
+  </nav>
+
+  <div class="main">
+
+  <!-- NL OVERVIEW -->
+  <div id="nl-tab-overview" class="section active">
+    <div class="section-title">Vue d'ensemble</div>
+    <div class="section-subtitle">Données mises à jour chaque dimanche via Crococlic — Dernier envoi connu : 4 mai 2026</div>
+    <div class="kpi-grid">
+      <div class="kpi-card nile"><div class="kpi-label">Abonnés actifs</div><div class="kpi-value" id="nl-kpi-abonnes">--</div><div class="kpi-sub">Mis à jour chaque dimanche</div></div>
+      <div class="kpi-card coral"><div class="kpi-label">Taux d'ouverture</div><div class="kpi-value" id="nl-kpi-or">--</div><div class="kpi-sub">Référence marché : 38-42%</div></div>
+      <div class="kpi-card patina"><div class="kpi-label">Taux de clic</div><div class="kpi-value" id="nl-kpi-ctr">--</div><div class="kpi-sub">Dernière édition envoyée</div></div>
+      <div class="kpi-card"><div class="kpi-label">Éditions envoyées</div><div class="kpi-value" id="nl-kpi-editions">--</div><div class="kpi-sub">Depuis le lancement</div></div>
+      <div class="kpi-card blush"><div class="kpi-label">Dernière édition</div><div class="kpi-value" id="nl-kpi-new" style="font-size:18px">4 mai</div><div class="kpi-sub">Les recruteurs ne cherchent plus...</div></div>
+      <div class="kpi-card"><div class="kpi-label">Inactivité</div><div class="kpi-value" id="nl-kpi-unsub">9 sem.</div><div class="kpi-sub">Avant coupure estivale : urgence</div></div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Taux d'ouverture par mois</h3><p class="sub">Evolution sur la periode - reference marche : 38-42%</p>
+        <svg viewBox="0 0 440 175" width="100%">
+          <line x1="40" y1="140" x2="420" y2="140" stroke="#E0ECF0" stroke-width="1"/>
+          <line x1="40" y1="10" x2="40" y2="140" stroke="#E0ECF0" stroke-width="1"/>
+          <text x="34" y="144" text-anchor="end" font-size="8" fill="#8AA4AE">0%</text>
+          <text x="34" y="105" text-anchor="end" font-size="8" fill="#8AA4AE">25%</text>
+          <text x="34" y="75" text-anchor="end" font-size="8" fill="#8AA4AE">40%</text>
+          <text x="34" y="40" text-anchor="end" font-size="8" fill="#8AA4AE">60%</text>
+          <line x1="40" y1="75" x2="420" y2="75" stroke="#E9B3A3" stroke-width="1" stroke-dasharray="4,3" opacity=".5"/>
+          <text x="422" y="78" font-size="7" fill="#BF6C5C" opacity=".8">ref</text>
+          <rect x="55" y="85" width="35" height="55" rx="3" fill="#BF6C5C" opacity=".7"/>
+          <text x="72" y="82" text-anchor="middle" font-size="8" fill="#8AA4AE" font-weight="600">--</text>
+          <text x="72" y="155" text-anchor="middle" font-size="8" fill="#8AA4AE">M-5</text>
+          <rect x="130" y="80" width="35" height="60" rx="3" fill="#599092" opacity=".8"/>
+          <text x="147" y="77" text-anchor="middle" font-size="8" fill="#8AA4AE" font-weight="600">--</text>
+          <text x="147" y="155" text-anchor="middle" font-size="8" fill="#8AA4AE">M-4</text>
+          <rect x="205" y="65" width="35" height="75" rx="3" fill="#184E5A"/>
+          <text x="222" y="62" text-anchor="middle" font-size="8" fill="#8AA4AE" font-weight="700">--</text>
+          <text x="222" y="155" text-anchor="middle" font-size="8" fill="#8AA4AE">M-3</text>
+          <rect x="280" y="55" width="35" height="85" rx="3" fill="#184E5A"/>
+          <text x="297" y="52" text-anchor="middle" font-size="8" fill="#8AA4AE" font-weight="700">--</text>
+          <text x="297" y="155" text-anchor="middle" font-size="8" fill="#8AA4AE">M-2</text>
+          <rect x="355" y="72" width="35" height="68" rx="3" fill="#5E9E9A" opacity=".85"/>
+          <text x="372" y="69" text-anchor="middle" font-size="8" fill="#8AA4AE" font-weight="600">--</text>
+          <text x="372" y="155" text-anchor="middle" font-size="8" fill="#8AA4AE">M-1</text>
+          <text x="230" y="170" text-anchor="middle" font-size="9" fill="#8AA4AE" font-style="italic">À renseigner depuis Crococlic — Emails › Campagnes</text>
+        </svg>
+      </div>
+      <div class="card">
+        <h3>Sources d'acquisition</h3><p class="sub">D'ou viennent les nouveaux abonnes</p>
+        <div style="margin-top:8px">
+          <div class="bar-wrap"><div class="bar-label">Lead magnet site</div><div class="bar-track"><div class="bar-fill" style="width:40%;background:#184E5A"></div></div><div class="bar-val">40%</div></div>
+          <div class="bar-wrap"><div class="bar-label">CTA LinkedIn</div><div class="bar-track"><div class="bar-fill" style="width:30%;background:#BF6C5C"></div></div><div class="bar-val">30%</div></div>
+          <div class="bar-wrap"><div class="bar-label">Podcast CTA</div><div class="bar-track"><div class="bar-fill" style="width:20%;background:#5E9E9A"></div></div><div class="bar-val">20%</div></div>
+          <div class="bar-wrap"><div class="bar-label">Bouche a oreille</div><div class="bar-track"><div class="bar-fill" style="width:10%;background:#A8C5C6"></div></div><div class="bar-val">10%</div></div>
+        </div>
+        <div class="insight" style="margin-top:12px;margin-bottom:0"><div class="insight-icon">📩</div><div class="insight-text"><strong>A renseigner depuis Crococlic</strong><p>Verifier les sources d'acquisition reelles depuis le tableau de bord GoHighLevel. Identifier le canal le plus rentable pour doubler dessus.</p></div></div>
+      </div>
+    </div>
+    <div class="insight"><div class="insight-icon">💡</div><div class="insight-text"><strong>Signal de la semaine a identifier</strong><p>Quelle edition a eu le meilleur taux d'ouverture cette semaine ? Quel sujet, quel objet ? Replique sur LinkedIn cette semaine.</p></div></div>
+  </div>
+
+  <!-- NL TOP EDITIONS -->
+  <div id="nl-tab-editions" class="section">
+    <div class="section-title">Top editions</div>
+    <div class="section-subtitle">Les editions les plus ouvertes et cliquees - a renseigner depuis Crococlic</div>
+    <div class="posts-grid">
+      <div class="post-card">
+        <div class="post-card-header" style="background:#184E5A"><div class="pc-rank">#1</div></div>
+        <div class="post-card-body">
+          <div class="pc-eng">
+            <div class="eng-item">📬 <span id="nl-ed1-or">--</span><span>% OR</span></div>
+            <div class="eng-item">🖱 <span id="nl-ed1-ctr">--</span><span>% CTR</span></div>
+          </div>
+          <div class="pc-hook" id="nl-ed1-objet">[Objet de l'edition 1 - a renseigner]</div>
+          <div class="pc-meta" id="nl-ed1-date">Date d'envoi</div>
+          <div class="pc-badges"><span class="pc-badge b-poste">Carriere</span></div>
+          <div style="font-size:12px;color:var(--text-mid);line-height:1.5;margin-top:8px;" id="nl-ed1-desc">Pourquoi cette edition a surperformi : objet, sujet, structure, CTA.</div>
+        </div>
+      </div>
+      <div class="post-card">
+        <div class="post-card-header" style="background:#2A6062"><div class="pc-rank">#2</div></div>
+        <div class="post-card-body">
+          <div class="pc-eng">
+            <div class="eng-item">📬 <span id="nl-ed2-or">--</span><span>% OR</span></div>
+            <div class="eng-item">🖱 <span id="nl-ed2-ctr">--</span><span>% CTR</span></div>
+          </div>
+          <div class="pc-hook" id="nl-ed2-objet">[Objet de l'edition 2 - a renseigner]</div>
+          <div class="pc-meta" id="nl-ed2-date">Date d'envoi</div>
+          <div class="pc-badges"><span class="pc-badge b-luxe">Luxe</span></div>
+          <div style="font-size:12px;color:var(--text-mid);line-height:1.5;margin-top:8px;" id="nl-ed2-desc">Pourquoi cette edition a surperformi.</div>
+        </div>
+      </div>
+      <div class="post-card">
+        <div class="post-card-header" style="background:#3D7070"><div class="pc-rank">#3</div></div>
+        <div class="post-card-body">
+          <div class="pc-eng">
+            <div class="eng-item">📬 <span id="nl-ed3-or">--</span><span>% OR</span></div>
+            <div class="eng-item">🖱 <span id="nl-ed3-ctr">--</span><span>% CTR</span></div>
+          </div>
+          <div class="pc-hook" id="nl-ed3-objet">[Objet de l'edition 3 - a renseigner]</div>
+          <div class="pc-meta" id="nl-ed3-date">Date d'envoi</div>
+          <div class="pc-badges"><span class="pc-badge b-mgmt">Leadership</span></div>
+          <div style="font-size:12px;color:var(--text-mid);line-height:1.5;margin-top:8px;" id="nl-ed3-desc">Pourquoi cette edition a surperformi.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:24px">
+      <h3>Performance par structure d'edition</h3><p class="sub">Quel format genere le plus d'engagement</p>
+      <div style="margin-top:8px">
+        <div class="bar-wrap"><div class="bar-label">1 sujet profond (long)</div><div class="bar-track"><div class="bar-fill" style="width:85%;background:#184E5A"></div></div><div class="bar-val">85%</div></div>
+        <div class="bar-wrap"><div class="bar-label">Cas client anonymise</div><div class="bar-track"><div class="bar-fill" style="width:80%;background:#5E9E9A"></div></div><div class="bar-val">80%</div></div>
+        <div class="bar-wrap"><div class="bar-label">3 conseils courts</div><div class="bar-track"><div class="bar-fill" style="width:65%;background:#599092"></div></div><div class="bar-val">65%</div></div>
+        <div class="bar-wrap"><div class="bar-label">Curation liens externes</div><div class="bar-track"><div class="bar-fill" style="width:45%;background:#BF6C5C"></div></div><div class="bar-val">45%</div></div>
+        <div class="bar-wrap"><div class="bar-label">Annonce commerciale</div><div class="bar-track"><div class="bar-fill" style="width:30%;background:#E9B3A3"></div></div><div class="bar-val">30%</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NL SUJETS -->
+  <div id="nl-tab-sujets" class="section">
+    <div class="section-title">Sujets &amp; objets</div>
+    <div class="section-subtitle">Analyse des sujets et formules d'objets les plus performants</div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Formules d'objets qui marchent</h3>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px">
+          <div style="background:var(--cream);border-radius:8px;padding:14px;border-left:3px solid var(--teal-dark)">
+            <div style="font-size:10px;font-weight:700;color:var(--teal-mid);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">Objet 1 - Question personnelle</div>
+            <div style="font-size:13px;color:var(--text-dark);font-weight:600">"Vous avez deja eu l'impression que [situation inconfortable] ?"</div>
+            <div style="font-size:12px;color:var(--text-light);margin-top:4px">Cree une identification immediate. Taux d'ouverture systematiquement superieur a 45%.</div>
+          </div>
+          <div style="background:var(--cream);border-radius:8px;padding:14px;border-left:3px solid var(--coral)">
+            <div style="font-size:10px;font-weight:700;color:var(--coral);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">Objet 2 - Ce que j'ai appris</div>
+            <div style="font-size:13px;color:var(--text-dark);font-weight:600">"Ce que [situation recente] m'a appris sur [sujet metier]"</div>
+            <div style="font-size:12px;color:var(--text-light);margin-top:4px">Teaser personnel. Signal fort : Capucine partage quelque chose de concret.</div>
+          </div>
+          <div style="background:var(--cream);border-radius:8px;padding:14px;border-left:3px solid var(--patina)">
+            <div style="font-size:10px;font-weight:700;color:var(--patina);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">Objet 3 - Contre-recit</div>
+            <div style="font-size:13px;color:var(--text-dark);font-weight:600">"Non, [croyance repandue] n'est pas une fatalite"</div>
+            <div style="font-size:12px;color:var(--text-light);margin-top:4px">Provoque la curiosite. Fonctionne quand l'abonne a deja vecu la situation.</div>
+          </div>
+          <div style="background:var(--cream);border-radius:8px;padding:14px;border-left:3px solid var(--slate)">
+            <div style="font-size:10px;font-weight:700;color:var(--slate);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px">Objet 4 - Chiffre inattendu</div>
+            <div style="font-size:13px;color:var(--text-dark);font-weight:600">"[X]% des cadres du luxe font cette erreur (et ne le savent pas)"</div>
+            <div style="font-size:12px;color:var(--text-light);margin-top:4px">Statistique credible = autorele de lecture. Attention : a utiliser avec parcimonie.</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Sujets les plus ouverts</h3>
+        <div style="margin-top:8px">
+          <div class="bar-wrap"><div class="bar-label">Prise de poste</div><div class="bar-track"><div class="bar-fill" style="width:88%;background:#184E5A"></div></div><div class="bar-val">88%</div></div>
+          <div class="bar-wrap"><div class="bar-label">Negociation salary</div><div class="bar-track"><div class="bar-fill" style="width:82%;background:#184E5A"></div></div><div class="bar-val">82%</div></div>
+          <div class="bar-wrap"><div class="bar-label">Personal branding</div><div class="bar-track"><div class="bar-fill" style="width:78%;background:#5E9E9A"></div></div><div class="bar-val">78%</div></div>
+          <div class="bar-wrap"><div class="bar-label">Codes du luxe</div><div class="bar-track"><div class="bar-fill" style="width:75%;background:#5E9E9A"></div></div><div class="bar-val">75%</div></div>
+          <div class="bar-wrap"><div class="bar-label">Transition cariere</div><div class="bar-track"><div class="bar-fill" style="width:68%;background:#599092"></div></div><div class="bar-val">68%</div></div>
+          <div class="bar-wrap"><div class="bar-label">Leadership feminin</div><div class="bar-track"><div class="bar-fill" style="width:60%;background:#BF6C5C"></div></div><div class="bar-val">60%</div></div>
+          <div class="bar-wrap"><div class="bar-label">Sujets generiques</div><div class="bar-track"><div class="bar-fill" style="width:42%;background:#E9B3A3"></div></div><div class="bar-val">42%</div></div>
+        </div>
+        <div class="insight" style="margin-top:12px;margin-bottom:0"><div class="insight-icon">🎯</div><div class="insight-text"><strong>Regle : ancrage secteur = +20% OR</strong><p>Toute edition qui mentionne explicitement le luxe ou la beauty dans l'objet surperforme. Ne jamais envoyer un objet generique.</p></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Mots a tester vs mots a eviter dans les objets</h3>
+      <div class="grid-2" style="margin-top:8px;margin-bottom:0">
+        <div>
+          <div style="font-size:10px;font-weight:700;color:var(--teal-mid);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">Mots qui boostent l'ouverture</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <span class="pc-badge b-luxe">luxe</span><span class="pc-badge b-luxe">beauty</span><span class="pc-badge b-poste">carriere</span><span class="pc-badge b-mgmt">poste</span><span class="pc-badge b-ia">erreur</span><span class="pc-badge b-image">vous</span><span class="pc-badge b-poste">cadre</span><span class="pc-badge b-luxe">salaire</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:700;color:var(--coral);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">Formules a eviter</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <span class="pc-badge" style="background:rgba(191,108,92,0.1);color:var(--coral)">Newsletter #42</span>
+            <span class="pc-badge" style="background:rgba(191,108,92,0.1);color:var(--coral)">Actualites MCP</span>
+            <span class="pc-badge" style="background:rgba(191,108,92,0.1);color:var(--coral)">Coaching</span>
+            <span class="pc-badge" style="background:rgba(191,108,92,0.1);color:var(--coral)">Bienveillance</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NL AUDIENCE -->
+  <div id="nl-tab-audience" class="section">
+    <div class="section-title">Audience</div>
+    <div class="section-subtitle">Profil et comportement de la base abonnes</div>
+    <div class="kpi-grid">
+      <div class="kpi-card nile"><div class="kpi-label">Base totale</div><div class="kpi-value" id="nl-aud-base">--</div><div class="kpi-sub">Abonnes actifs</div></div>
+      <div class="kpi-card coral"><div class="kpi-label">Croissance mensuelle</div><div class="kpi-value" id="nl-aud-croissance">--</div><div class="kpi-sub">Nouveaux nets / mois</div></div>
+      <div class="kpi-card patina"><div class="kpi-label">Taux de churn</div><div class="kpi-value" id="nl-aud-churn">--%</div><div class="kpi-sub">Desabonnements / mois</div></div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Profil des abonnes</h3>
+        <div style="margin-top:8px">
+          <div class="bar-wrap"><div class="bar-label">Cadres 30-45 ans</div><div class="bar-track"><div class="bar-fill" style="width:60%;background:#184E5A"></div></div><div class="bar-val">60%</div></div>
+          <div class="bar-wrap"><div class="bar-label">Dirigeants 45-55 ans</div><div class="bar-track"><div class="bar-fill" style="width:25%;background:#5E9E9A"></div></div><div class="bar-val">25%</div></div>
+          <div class="bar-wrap"><div class="bar-label">DRH / RRH</div><div class="bar-track"><div class="bar-fill" style="width:15%;background:#BF6C5C"></div></div><div class="bar-val">15%</div></div>
+        </div>
+        <div style="margin-top:12px">
+          <div class="bar-wrap"><div class="bar-label">Secteur luxe</div><div class="bar-track"><div class="bar-fill" style="width:55%;background:#184E5A"></div></div><div class="bar-val">55%</div></div>
+          <div class="bar-wrap"><div class="bar-label">Secteur beauty</div><div class="bar-track"><div class="bar-fill" style="width:30%;background:#5E9E9A"></div></div><div class="bar-val">30%</div></div>
+          <div class="bar-wrap"><div class="bar-label">Autres secteurs</div><div class="bar-track"><div class="bar-fill" style="width:15%;background:#A8C5C6"></div></div><div class="bar-val">15%</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Comportement de lecture</h3>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
+          <div style="background:var(--cream);border-radius:8px;padding:12px;display:flex;gap:12px;align-items:flex-start">
+            <div style="font-size:20px">📱</div>
+            <div><div style="font-weight:700;font-size:13px;color:var(--teal-dark);margin-bottom:2px">Mobile en majorite</div><div style="font-size:12px;color:var(--text-light)">~65% des ouvertures sur mobile. Garder les paragraphes courts et le CTA au-dessus du fold.</div></div>
+          </div>
+          <div style="background:var(--cream);border-radius:8px;padding:12px;display:flex;gap:12px;align-items:flex-start">
+            <div style="font-size:20px">⏰</div>
+            <div><div style="font-weight:700;font-size:13px;color:var(--teal-dark);margin-bottom:2px">Pic d'ouverture : lundi 7h-9h</div><div style="font-size:12px;color:var(--text-light)">Envoyer le lundi entre 6h45 et 7h30. Pic secondaire le mardi matin.</div></div>
+          </div>
+          <div style="background:var(--cream);border-radius:8px;padding:12px;display:flex;gap:12px;align-items:flex-start">
+            <div style="font-size:20px">🔗</div>
+            <div><div style="font-weight:700;font-size:13px;color:var(--teal-dark);margin-bottom:2px">CTA : 1 seul lien principal</div><div style="font-size:12px;color:var(--text-light)">Les editions avec 1 seul lien CTA ont un CTR 2x superieur aux editions multi-liens.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="insight"><div class="insight-icon">📊</div><div class="insight-text"><strong>Segmentation a construire</strong><p>Distinguer les abonnes "actifs" (ouvrent 3 sur 4 editions) des "dormants". Les actifs sont les plus proches d'un RDV decouverte. Creer un tag dans Crococlic pour les qualifier.</p></div></div>
+  </div>
+
+  <!-- NL PLAN 30 JOURS -->
+  <div id="nl-tab-plan" class="section">
+    <div class="section-title">Plan 30 jours - Newsletter</div>
+    <div class="section-subtitle">Les 4 prochaines editions a preparer et envoyer le lundi</div>
+    <div class="plan-weeks">
+      <div class="week-item">
+        <div class="week-header" onclick="toggleNLWeek(this)"><span class="wi-label w1">Edition 1</span><span class="wi-title" id="nl-ed-s1">A planifier</span><span class="wi-arrow">▾</span></div>
+        <div class="week-body">
+          <div class="plan-row"><span class="pr-label">Objet (draft)</span><span class="pr-val" id="nl-objet-s1">A renseigner depuis Notion / idees de la semaine</span></div>
+          <div class="plan-row"><span class="pr-label">Sujet principal</span><span class="pr-val" id="nl-sujet-s1">Isole du signal le plus fort LinkedIn cette semaine</span></div>
+          <div class="plan-row"><span class="pr-label">Structure</span><span class="pr-val">Observation - Analyse - 1 action concrete - CTA RDV</span></div>
+          <div class="plan-row"><span class="pr-label">CTA principal</span><span class="pr-val">RDV decouverte (/coaching-dirigeant-rendezvous/)</span></div>
+          <div class="plan-row"><span class="pr-label">Date envoi</span><span class="pr-val" id="nl-date-s1">Lundi -- a 7h00</span></div>
+          <div class="plan-row"><span class="pr-label">Repurposing</span><span class="pr-val">Extrait en post LinkedIn le mercredi suivant</span></div>
+        </div>
+      </div>
+      <div class="week-item">
+        <div class="week-header" onclick="toggleNLWeek(this)"><span class="wi-label w2">Edition 2</span><span class="wi-title" id="nl-ed-s2">A planifier</span><span class="wi-arrow">▾</span></div>
+        <div class="week-body">
+          <div class="plan-row"><span class="pr-label">Objet (draft)</span><span class="pr-val" id="nl-objet-s2">A renseigner</span></div>
+          <div class="plan-row"><span class="pr-label">Sujet principal</span><span class="pr-val" id="nl-sujet-s2">Cas client anonymise ou temoignage</span></div>
+          <div class="plan-row"><span class="pr-label">Structure</span><span class="pr-val">Situation - Probleme - Coaching - Resultat - CTA</span></div>
+          <div class="plan-row"><span class="pr-label">CTA principal</span><span class="pr-val">Lead magnet ou offre programme</span></div>
+          <div class="plan-row"><span class="pr-label">Date envoi</span><span class="pr-val" id="nl-date-s2">Lundi -- a 7h00</span></div>
+          <div class="plan-row"><span class="pr-label">Repurposing</span><span class="pr-val">Carrousel IG jeudi + episode podcast futur</span></div>
+        </div>
+      </div>
+      <div class="week-item">
+        <div class="week-header" onclick="toggleNLWeek(this)"><span class="wi-label w3">Editions 3-4</span><span class="wi-title">Orientation editoriale</span><span class="wi-arrow">▾</span></div>
+        <div class="week-body">
+          <div class="plan-row"><span class="pr-label">Orientation</span><span class="pr-val">1 edition valeur dense + 1 edition conversion / CTA fort</span></div>
+          <div class="plan-row"><span class="pr-label">Sujets source</span><span class="pr-val">Top posts LI + questions recues en session decouverte</span></div>
+          <div class="plan-row"><span class="pr-label">A eviter</span><span class="pr-val">2 editions commerciales de suite. Ratio : 3 valeur / 1 offre</span></div>
+          <div class="plan-row"><span class="pr-label">A tester</span><span class="pr-val">Objet avec prenom de l'abonne en personnalisation</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:24px">
+      <h3>Architecture type d'une edition performante</h3>
+      <div class="grid-2" style="margin-top:8px;margin-bottom:0">
+        <div style="background:rgba(24,78,90,0.04);border-radius:10px;padding:16px">
+          <div style="font-size:10px;font-weight:700;color:var(--teal-mid);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px">Structure en 4 blocs</div>
+          <div style="font-size:13px;color:var(--text-dark);line-height:1.8">
+            <strong>1. L'accroche (3-4 lignes)</strong><br>Une observation recente, une question qui pique.<br><br>
+            <strong>2. Le corps (400-600 mots)</strong><br>1 sujet. 1 angle. Dense et actionnable.<br><br>
+            <strong>3. Le recadrage</strong><br>"Ce que ca signifie pour vous si vous etes dans ce cas."<br><br>
+            <strong>4. Le CTA unique</strong><br>1 seul bouton, 1 seule action a faire.
+          </div>
+        </div>
+        <div style="background:rgba(191,108,92,0.04);border-radius:10px;padding:16px">
+          <div style="font-size:10px;font-weight:700;color:var(--coral);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px">Checklist avant envoi</div>
+          <div style="font-size:13px;color:var(--text-dark);line-height:1.8">
+            ✓ Objet teste sur 2 variantes<br>
+            ✓ Preheader renseigne (pas vide)<br>
+            ✓ 1 seul lien CTA principal<br>
+            ✓ Lien de desabonnement present<br>
+            ✓ Test sur mobile avant envoi<br>
+            ✓ Personalisation prenom active<br>
+            ✓ UTM tracke pour mesurer les clics
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /main -->
+  <div class="footer">My Coaching Partner - La lettre du lundi</div>
+</div>
+
+<div id="pane-reco" class="pane" style="flex-direction:column;">
+  <div class="header">
+    <div class="header-left">
+      <span>My Coaching Partner</span>
+      <h1>Recommandations cross-canal</h1>
+    </div>
+    <div class="header-right">
+      <div class="ig-badge">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="#E9B3A3" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <span>Synthèse stratégique</span>
+      </div>
+      <div class="date">Analyse consolidée - Mai 2026</div>
+    </div>
+  </div>
+  <div class="main" style="padding:40px;overflow-y:auto;flex:1;">
+    <div class="section-title" style="margin-bottom:8px;">Recommandations cross-canal</div>
+    <div class="section-subtitle" style="margin-bottom:40px;">Priorités consolidées LinkedIn + Instagram pour le mois à venir</div>
+
+    <div class="insight" style="background:linear-gradient(135deg,rgba(24,78,90,0.05),rgba(94,158,154,0.05));border-left:4px solid var(--teal-dark);margin-bottom:32px;">
+      <div class="insight-icon">🏆</div>
+      <div class="insight-text">
+        <strong>Signal commun LinkedIn &amp; Instagram</strong>
+        <p>Sur les deux canaux, les contenus liés à ton parcours personnel, tes milestones et ta double casquette surperforment massivement (+200% à +400%) les contenus pédagogiques génériques. <strong>La priorité absolue est de te montrer davantage toi-même.</strong></p>
+      </div>
+    </div>
+
+    <div class="card-grid" style="margin-bottom:32px;">
+      <div class="chart-card">
+        <h3>🎯 Top 3 actions LinkedIn</h3>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:16px;">
+          <div style="background:var(--cream);border-radius:10px;padding:16px;border-left:3px solid var(--teal-dark);">
+            <div style="font-weight:700;color:var(--teal-dark);margin-bottom:6px;font-size:14px;">1. Systématiser la structure HSIC</div>
+            <div style="font-size:13px;color:var(--text-mid);line-height:1.6;">Hook 8-12 mots sans emoji, Story personnelle, Insight actionnable, CTA unique. Tes 5 meilleurs posts suivent tous ce schéma.</div>
+          </div>
+          <div style="background:var(--cream);border-radius:10px;padding:16px;border-left:3px solid var(--coral);">
+            <div style="font-weight:700;color:var(--teal-dark);margin-bottom:6px;font-size:14px;">2. Augmenter les posts "prise de position"</div>
+            <div style="font-size:13px;color:var(--text-mid);line-height:1.6;">Tes posts avec une conviction tranchée ("Ce que tu fais mal", "Ce que personne ne dit") génèrent 3× plus d'engagement que les listes neutres.</div>
+          </div>
+          <div style="background:var(--cream);border-radius:10px;padding:16px;border-left:3px solid var(--patina);">
+            <div style="font-weight:700;color:var(--teal-dark);margin-bottom:6px;font-size:14px;">3. Intégrer le luxe/beauty dans chaque sujet</div>
+            <div style="font-size:13px;color:var(--text-mid);line-height:1.6;">Ancrer systématiquement les sujets universels (burn-out, leadership, légitimité) dans la réalité du secteur luxe. C'est ton différenciateur #1.</div>
+          </div>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>📱 Top 3 actions Instagram</h3>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:16px;">
+          <div style="background:var(--cream);border-radius:10px;padding:16px;border-left:3px solid var(--teal-dark);">
+            <div style="font-weight:700;color:var(--teal-dark);margin-bottom:6px;font-size:14px;">1. Publier 2 "images seules" personnelles / mois</div>
+            <div style="font-size:13px;color:var(--text-mid);line-height:1.6;">Médiane de 29 likes vs 7 pour les carrousels. Milestones, anecdotes clients, moments de bascule. Le visage humain de MCP.</div>
+          </div>
+          <div style="background:var(--cream);border-radius:10px;padding:16px;border-left:3px solid var(--coral);">
+            <div style="font-weight:700;color:var(--teal-dark);margin-bottom:6px;font-size:14px;">2. CTA DM mot-clé sur tous les posts commerciaux</div>
+            <div style="font-size:13px;color:var(--text-mid);line-height:1.6;">Envoie "LUXE", "POSTE", "ÉQUILIBRE" en MP. Les posts avec CTA mot-clé génèrent 3× plus de commentaires = 3× plus de prospects qualifiés.</div>
+          </div>
+          <div style="background:var(--cream);border-radius:10px;padding:16px;border-left:3px solid var(--patina);">
+            <div style="font-weight:700;color:var(--teal-dark);margin-bottom:6px;font-size:14px;">3. Publier jeudi matin 8h ou vendredi matin</div>
+            <div style="font-size:13px;color:var(--text-mid);line-height:1.6;">Fenêtre de peak d'engagement identifiée sur l'historique. Éviter samedi matin (médiane 3 eng.) et cibler jeudi-vendredi pour les posts importants.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-card" style="margin-bottom:40px;">
+      <h3>🔄 Repurposing recommandé ce mois-ci</h3>
+      <p style="margin-bottom:20px;">Tes meilleurs contenus méritent une deuxième vie sur l'autre canal</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div style="background:rgba(24,78,90,0.04);border-radius:10px;padding:16px;">
+          <div style="font-size:11px;font-weight:700;color:var(--teal-mid);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">LinkedIn → Instagram</div>
+          <div style="font-size:13px;color:var(--text-dark);line-height:1.6;">Les posts "prise de position" LinkedIn (ex: "Vous gérez des équipes…") se convertissent excellemment en carrousels IG 5-7 slides avec le même message adapté en format visuel.</div>
+        </div>
+        <div style="background:rgba(191,108,92,0.04);border-radius:10px;padding:16px;">
+          <div style="font-size:11px;font-weight:700;color:var(--coral);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">Instagram → LinkedIn</div>
+          <div style="font-size:13px;color:var(--text-dark);line-height:1.6;">Les "milestones personnels" IG (images seules) peuvent devenir des posts LinkedIn narratifs avec plus de développement sur le parcours et les enseignements.</div>
+        </div>
+        <div style="background:rgba(94,158,154,0.04);border-radius:10px;padding:16px;">
+          <div style="font-size:11px;font-weight:700;color:var(--patina);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">Les deux → Newsletter</div>
+          <div style="font-size:13px;color:var(--text-dark);line-height:1.6;">Les tops posts LI + IG du mois → intro newsletter hebdo. Ton meilleur contenu de la semaine résumé en 3 paragraphes = gain de temps et cohérence de message.</div>
+        </div>
+        <div style="background:rgba(168,197,198,0.08);border-radius:10px;padding:16px;">
+          <div style="font-size:11px;font-weight:700;color:var(--slate);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">Les deux → Podcast</div>
+          <div style="font-size:13px;color:var(--text-dark);line-height:1.6;">Les sujets ayant généré le plus de commentaires (questions, résistances) = meilleurs sujets d'épisodes. Parle de ce que ton audience t'a demandé.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">Clarté. Posture. Impact. - My Coaching Partner © 2026</div>
+</div>
+
+</div><!-- /main-area -->
+
+<script>
+function showPane(id, el) {
+  document.querySelectorAll('.pane').forEach(p => p.style.display = 'none');
+  document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+  var pane = document.getElementById('pane-' + id);
+  if (pane) pane.style.display = 'flex';
+  if (el) el.classList.add('active');
+}
+
+function showLITab(id, el) {
+  document.querySelectorAll('#pane-linkedin .section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('#pane-linkedin .nav-tab').forEach(t => t.classList.remove('active'));
+  var target = document.getElementById('li-tab-' + id);
+  if (target) target.classList.add('active');
+  if (el) el.classList.add('active');
+}
+
+function filterLIPosts(f, btn) {
+  document.querySelectorAll('#pane-linkedin .filter-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  document.querySelectorAll('#pane-linkedin .post-card').forEach(card => {
+    if (f === 'all') { card.style.display = ''; }
+    else if (f === 'image' || f === 'carrousel') { card.style.display = card.dataset.format === f ? '' : 'none'; }
+    else { card.style.display = card.dataset.topic === f ? '' : 'none'; }
+  });
+}
+
+function toggleLIWeek(hdr) {
+  var body = hdr.nextElementSibling;
+  var arrow = hdr.querySelector('.wi-arrow');
+  if (!body) return;
+  body.classList.toggle('open');
+  if (arrow) arrow.textContent = body.classList.contains('open') ? '▴' : '▾';
+}
+
+function showIGSection(id, evt) {
+  document.querySelectorAll('#pane-instagram .section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('#pane-instagram .nav-tab').forEach(t => t.classList.remove('active'));
+  var target = document.getElementById('ig-section-' + id);
+  if (target) target.classList.add('active');
+  if (evt && evt.target) evt.target.classList.add('active');
+}
+
+function filterIGPosts(type, btn) {
+  document.querySelectorAll('#pane-instagram .filter-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  document.querySelectorAll('#pane-instagram .post-card').forEach(card => {
+    if (type === 'all' || card.dataset.type === type) { card.style.display = ''; }
+    else { card.style.display = 'none'; }
+  });
+}
+
+function showPodTab(id, el) {
+  document.querySelectorAll('#pane-podcast .section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('#pane-podcast .nav-tab').forEach(t => t.classList.remove('active'));
+  var target = document.getElementById('pod-tab-' + id);
+  if (target) target.classList.add('active');
+  if (el) el.classList.add('active');
+}
+
+function togglePodWeek(hdr) {
+  var body = hdr.nextElementSibling;
+  var arrow = hdr.querySelector('.wi-arrow');
+  if (!body) return;
+  body.classList.toggle('open');
+  if (arrow) arrow.textContent = body.classList.contains('open') ? '▴' : '▾';
+}
+
+function showNLTab(id, el) {
+  document.querySelectorAll('#pane-newsletter .section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('#pane-newsletter .nav-tab').forEach(t => t.classList.remove('active'));
+  var target = document.getElementById('nl-tab-' + id);
+  if (target) target.classList.add('active');
+  if (el) el.classList.add('active');
+}
+
+function toggleNLWeek(hdr) {
+  var body = hdr.nextElementSibling;
+  var arrow = hdr.querySelector('.wi-arrow');
+  if (!body) return;
+  body.classList.toggle('open');
+  if (arrow) arrow.textContent = body.classList.contains('open') ? '▴' : '▾';
+}
+
+function toggleIGWeek(header) {
+  var body = header.nextElementSibling;
+  var arrow = header.querySelector('span[style]') || header.querySelector('span:last-child');
+  if (!body) return;
+  if (body.classList.contains('open')) {
+    body.classList.remove('open');
+    if (arrow) arrow.textContent = '▾';
+  } else {
+    body.classList.add('open');
+    if (arrow) arrow.textContent = '▴';
+  }
+}
+
+window.addEventListener('load', function() {
+  // Animate bar fills
+  document.querySelectorAll('.bar-fill, .topic-bar-fill').forEach(function(b) {
+    var w = b.style.width;
+    b.style.width = '0';
+    setTimeout(function() { b.style.width = w; }, 300);
+  });
+  // Ensure only synthese pane is visible on load
+  document.querySelectorAll('.pane').forEach(function(p) { p.style.display = 'none'; });
+  var synthese = document.getElementById('pane-synthese');
+  if (synthese) synthese.style.display = 'flex';
+});
+</script>
 </body>
 </html>
