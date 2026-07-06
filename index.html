@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCP — Tableaux de bord contenus</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --nile:#184E5A; --nile-deep:#123b45; --terracotta:#BF6C5C;
+      --teal:#599092; --mist:#8AA4AE; --cream:#F7F3EE; --ice:#F0F5F7; --rose:#E9B3A3;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:'Raleway',sans-serif;
+      background:linear-gradient(160deg,var(--nile) 0%,var(--nile-deep) 100%);
+      color:var(--cream);min-height:100vh;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      padding:40px 20px;text-align:center;
+    }
+    .kicker{
+      font-size:13px;letter-spacing:.32em;text-transform:uppercase;
+      color:var(--rose);font-weight:600;margin-bottom:18px;
+    }
+    h1{
+      font-family:'Playfair Display',serif;font-weight:600;
+      font-size:clamp(30px,5vw,46px);line-height:1.15;margin-bottom:14px;
+    }
+    .sub{
+      font-weight:300;font-size:clamp(15px,2.2vw,18px);color:var(--ice);
+      max-width:540px;margin:0 auto 46px;opacity:.9;
+    }
+    .cards{
+      display:flex;gap:26px;flex-wrap:wrap;justify-content:center;width:100%;max-width:760px;
+    }
+    .card{
+      flex:1 1 300px;max-width:340px;text-decoration:none;
+      background:var(--cream);color:var(--nile);border-radius:18px;
+      padding:38px 30px;transition:transform .22s ease,box-shadow .22s ease;
+      box-shadow:0 10px 30px rgba(0,0,0,.22);position:relative;overflow:hidden;
+      border-top:5px solid var(--terracotta);
+    }
+    .card:hover{transform:translateY(-6px);box-shadow:0 18px 42px rgba(0,0,0,.32)}
+    .card .icon{font-size:44px;margin-bottom:16px;display:block}
+    .card h2{
+      font-family:'Playfair Display',serif;font-weight:600;font-size:24px;margin-bottom:8px;
+    }
+    .card p{font-size:14px;font-weight:400;color:var(--teal);line-height:1.5;margin-bottom:22px}
+    .card .go{
+      display:inline-block;font-weight:600;font-size:14px;letter-spacing:.04em;
+      color:var(--terracotta);
+    }
+    .card .go::after{content:" →";transition:margin .2s ease}
+    .card:hover .go::after{margin-left:5px}
+    footer{
+      margin-top:56px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+      color:var(--mist);font-weight:500;
+    }
+    footer .dot{color:var(--terracotta)}
+  </style>
+</head>
+<body>
+  <div class="kicker">My Coaching Partner</div>
+  <h1>Tableaux de bord contenus</h1>
+  <p class="sub">Analyse de performance des publications Instagram et LinkedIn — patterns gagnants, formats, meilleurs créneaux et idées de contenu.</p>
+
+  <div class="cards">
+    <a class="card" href="instagram_dashboard.html">
+      <span class="icon">📸</span>
+      <h2>Instagram</h2>
+      <p>Vue d'ensemble, top contenus, formats, séries détectées et plan 30 jours.</p>
+      <span class="go">Ouvrir le dashboard</span>
+    </a>
+    <a class="card" href="linkedin_dashboard.html">
+      <span class="icon">💼</span>
+      <h2>LinkedIn</h2>
+      <p>Portée, engagement par format, meilleurs jours et angles qui performent.</p>
+      <span class="go">Ouvrir le dashboard</span>
+    </a>
+  </div>
+
+  <footer>Clarté <span class="dot">·</span> Posture <span class="dot">·</span> Impact</footer>
+</body>
+</html>
