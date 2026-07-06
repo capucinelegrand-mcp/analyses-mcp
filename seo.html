@@ -177,12 +177,8 @@ tr:hover td { background:rgba(24,78,90,0.02); }
 </style>
 </head>
 <body>
-<nav id="mcp-nav" style="position:sticky;top:0;z-index:99999;background:#184e5a;display:flex;gap:6px;justify-content:center;align-items:center;padding:9px 10px;font-family:'Raleway',Arial,sans-serif;box-shadow:0 2px 10px rgba(0,0,0,.18)">
-  <a href="/" data-p="/" style="color:#f5eeea;text-decoration:none;font-weight:600;font-size:13.5px;padding:6px 15px;border-radius:8px;transition:background .15s">Contenus</a>
-  <a href="/commercial.html" data-p="/commercial.html" style="color:#f5eeea;text-decoration:none;font-weight:600;font-size:13.5px;padding:6px 15px;border-radius:8px;transition:background .15s">Commercial</a>
-  <a href="/seo.html" data-p="/seo.html" style="color:#f5eeea;text-decoration:none;font-weight:600;font-size:13.5px;padding:6px 15px;border-radius:8px;transition:background .15s">SEO</a>
-</nav>
-<script>(function(){var p=location.pathname;if(p==="/index.html")p="/";document.querySelectorAll("#mcp-nav a").forEach(function(a){var m=a.getAttribute("data-p")===p;a.style.background=m?"#bf6c5c":"transparent";a.style.color=m?"#fff":"#f5eeea";});})();</script>
+<nav id="mcp-nav" style="position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:2147483647;background:rgba(24,78,90,.96);display:flex;gap:4px;padding:5px 6px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.30);font-family:Arial,Helvetica,sans-serif"><a href="/" data-p="/" style="color:#f5eeea;text-decoration:none;font-weight:700;font-size:13px;padding:5px 14px;border-radius:999px">Contenus</a><a href="/commercial.html" data-p="/commercial.html" style="color:#f5eeea;text-decoration:none;font-weight:700;font-size:13px;padding:5px 14px;border-radius:999px">Commercial</a><a href="/seo.html" data-p="/seo.html" style="color:#f5eeea;text-decoration:none;font-weight:700;font-size:13px;padding:5px 14px;border-radius:999px">SEO</a></nav><script>(function(){var p=location.pathname;if(p==="/index.html")p="/";document.querySelectorAll("#mcp-nav a").forEach(function(a){var m=a.getAttribute("data-p")===p;a.style.background=m?"#bf6c5c":"transparent";a.style.color=m?"#fff":"#f5eeea";});})();</script>
+
 
 <!-- ===== SIDEBAR ===== -->
 <aside class="sidebar">
