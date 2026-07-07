@@ -32,7 +32,7 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--te
 }
 .sidebar-brand { padding:28px 20px 24px; border-bottom:1px solid rgba(255,255,255,0.08); }
 .sidebar-brand .brand-label { font-size:9px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--teal-mid); display:block; margin-bottom:6px; }
-.sidebar-brand h2 { font-family:'Raleway',sans-serif; font-size:15px; font-weight:700; color:var(--white); line-height:1.2; letter-spacing:1px; text-transform:uppercase; }
+.sidebar-brand h2 { font-family:'Raleway',sans-serif; font-size:13.5px; font-weight:700; color:var(--white); line-height:1.2; letter-spacing:0.5px; text-transform:uppercase; white-space:nowrap; }
 .sidebar-nav { flex:1; padding:16px 0; overflow-y:auto; }
 .sidebar-item {
   display:flex; align-items:center; gap:12px;
@@ -154,8 +154,8 @@ tr:hover td { background:rgba(24,78,90,0.02); }
 .tag-mid { background:rgba(191,108,92,0.12); color:var(--coral); }
 
 /* === SYNTHESE HERO === */
-.synthese-hero { background:var(--teal-dark); padding:44px 48px; color:var(--white); }
-.synthese-hero h1 { font-family:'Playfair Display',serif; font-size:30px; margin-bottom:8px; }
+.synthese-hero { background:var(--teal-dark); padding:28px 48px; color:var(--white); }
+.synthese-hero h1 { font-family:'Playfair Display',serif; font-size:26px; margin-bottom:8px; }
 .synthese-hero p { font-size:14px; color:var(--teal-light); opacity:.85; }
 .synthese-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:22px; padding:36px 48px 0; }
 .synthese-card { background:var(--white); border-radius:14px; padding:26px; box-shadow:var(--shadow); }
@@ -200,7 +200,7 @@ tr:hover td { background:rgba(24,78,90,0.02); }
       <span class="si-icon">⊙</span> Mots-clés
     </div>
     <div class="sidebar-item" onclick="showPane('quickwins',this)">
-      <span class="si-icon">⚡</span> Quick Wins
+      <span class="si-icon">✦</span> Quick Wins
     </div>
     <div class="sidebar-item" onclick="showPane('actions',this)">
       <span class="si-icon">✓</span> Plan d'action
@@ -218,13 +218,14 @@ tr:hover td { background:rgba(24,78,90,0.02); }
   <div class="synthese-hero">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;">
       <div>
-        <div style="font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--teal-mid);margin-bottom:8px;">mycoachingpartner.fr</div>
-        <h1>Dashboard SEO - Juillet 2026</h1>
-        <p>Données juin 2026 (dernier mois complet) · Source : Ubersuggest (Google data) + Notion BDD mots-clés · Généré le 6 juillet 2026</p>
+        <div style="font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--teal-mid);margin-bottom:8px;">mycoachingpartner.fr · suivi mensuel</div>
+        <h1>Analyse SEO · Juillet 2026</h1>
       </div>
       <div style="text-align:right;">
         <div class="header-badge"><span>Ubersuggest · données Google</span></div>
         <div style="font-size:11px;color:var(--teal-mid);margin-top:8px;">GSC non accessible en direct · baseline juin : 4 230 impr / 90 clics</div>
+        <div style="font-size:11px;color:var(--teal-mid);margin-top:6px;">Données juin 2026 (dernier mois complet)</div>
+        <div style="font-size:10px;color:var(--teal-mid);opacity:.75;">Ubersuggest (Google data) + Notion BDD mots-clés</div>
       </div>
     </div>
   </div>
@@ -354,11 +355,11 @@ tr:hover td { background:rgba(24,78,90,0.02); }
           <thead><tr><th>Requête</th><th>Vol.</th><th>Pos.</th><th>SD</th></tr></thead>
           <tbody>
             <tr><td>8 signes personnes toxiques</td><td>320</td><td><span class="pos pos-top10">5</span></td><td>20</td></tr>
-            <tr><td>coaching prise de poste</td><td>50</td><td><span class="pos pos-p11-20">13</span></td><td>—</td></tr>
+            <tr><td>coaching prise de poste</td><td>50</td><td><span class="pos pos-p11-20">13</span></td><td>-</td></tr>
             <tr><td>coaching prise de poste manager</td><td>30</td><td><span class="pos pos-p11-20">18</span></td><td style="color:var(--patina);font-weight:700;">6 ✓</td></tr>
             <tr><td>quitter un travail toxique</td><td>140</td><td><span class="pos pos-p11-20">18</span></td><td>22</td></tr>
             <tr><td>coaching en psychologie</td><td>260</td><td><span class="pos pos-p20plus">22</span></td><td>30</td></tr>
-            <tr><td>Capucine Legrand coach</td><td>70</td><td><span class="pos pos-top3">1</span></td><td>—</td></tr>
+            <tr><td>Capucine Legrand coach</td><td>70</td><td><span class="pos pos-top3">1</span></td><td>-</td></tr>
             <tr><td>coaching carrière luxe</td><td>0</td><td><span class="pos pos-top3">1</span></td><td>12</td></tr>
           </tbody>
         </table>
@@ -477,17 +478,17 @@ tr:hover td { background:rgba(24,78,90,0.02); }
           <tr><th>Mot-clé</th><th>Volume</th><th>Position</th><th>SD</th><th>Source</th><th>Statut</th></tr>
         </thead>
         <tbody>
-          <tr><td><strong>coaching reprise professionnelle luxe</strong></td><td>—</td><td><span class="pos pos-top3">1</span></td><td>—</td><td>Notion BDD</td><td style="color:var(--patina);font-size:12px;font-weight:600;">🟢 Stable vs juin</td></tr>
+          <tr><td><strong>coaching reprise professionnelle luxe</strong></td><td>-</td><td><span class="pos pos-top3">1</span></td><td>-</td><td>Notion BDD</td><td style="color:var(--patina);font-size:12px;font-weight:600;">🟢 Stable vs juin</td></tr>
           <tr><td><strong>coaching carrière luxe</strong></td><td>0</td><td><span class="pos pos-top3">1</span></td><td>12</td><td>Notion BDD</td><td style="color:var(--patina);font-size:12px;font-weight:600;">🟢 Stable vs juin</td></tr>
-          <tr><td><strong>Capucine Legrand coach</strong></td><td>70</td><td><span class="pos pos-top3">1</span></td><td>—</td><td>Notion BDD</td><td style="color:var(--patina);font-size:12px;font-weight:600;">🟢 Stable vs juin</td></tr>
+          <tr><td><strong>Capucine Legrand coach</strong></td><td>70</td><td><span class="pos pos-top3">1</span></td><td>-</td><td>Notion BDD</td><td style="color:var(--patina);font-size:12px;font-weight:600;">🟢 Stable vs juin</td></tr>
           <tr><td>8 signes personnes toxiques</td><td>320</td><td><span class="pos pos-top10">5</span></td><td>20</td><td>Ubersuggest</td><td style="color:var(--patina);font-size:12px;">Bas page 1 · page pilier</td></tr>
-          <tr><td>coaching prise de poste</td><td>50</td><td><span class="pos pos-p11-20">13</span></td><td>—</td><td>Notion BDD</td><td style="color:var(--coral);font-size:12px;">🟠 Page 2</td></tr>
+          <tr><td>coaching prise de poste</td><td>50</td><td><span class="pos pos-p11-20">13</span></td><td>-</td><td>Notion BDD</td><td style="color:var(--coral);font-size:12px;">🟠 Page 2</td></tr>
           <tr><td><strong>coaching prise de poste manager</strong></td><td>30</td><td><span class="pos pos-p11-20">18</span></td><td style="color:var(--patina);font-weight:700;">6</td><td>Ubersuggest</td><td style="color:var(--patina);font-size:12px;font-weight:600;">✓ Quick win · SD très faible</td></tr>
           <tr><td>quitter un travail toxique</td><td>140</td><td><span class="pos pos-p11-20">18</span></td><td>22</td><td>Ubersuggest</td><td style="color:var(--coral);font-size:12px;">🟠 Page 2 · maillage à renforcer</td></tr>
           <tr><td>coaching en psychologie</td><td>260</td><td><span class="pos pos-p20plus">22</span></td><td>30</td><td>Ubersuggest</td><td style="color:var(--text-light);font-size:12px;">Page 2-3 · enrichir /coach-ou-psy/</td></tr>
-          <tr><td>coaching dirigeant Paris</td><td>170</td><td>—</td><td>5</td><td>Notion BDD</td><td style="color:var(--coral);font-size:12px;font-weight:600;">✗ Non positionné</td></tr>
-          <tr><td>coaching professionnel certifié ICF Paris</td><td>90</td><td>—</td><td>4</td><td>Notion BDD</td><td style="color:var(--text-light);font-size:12px;">⚪ Pilier en rédaction · pub 13 juil</td></tr>
-          <tr><td>négocier salaire cadre luxe</td><td>140</td><td>—</td><td>3</td><td>Notion BDD</td><td style="color:var(--text-light);font-size:12px;">⚪ Prévu août · cluster C2</td></tr>
+          <tr><td>coaching dirigeant Paris</td><td>170</td><td>-</td><td>5</td><td>Notion BDD</td><td style="color:var(--coral);font-size:12px;font-weight:600;">✗ Non positionné</td></tr>
+          <tr><td>coaching professionnel certifié ICF Paris</td><td>90</td><td>-</td><td>4</td><td>Notion BDD</td><td style="color:var(--text-light);font-size:12px;">⚪ Pilier en rédaction · pub 13 juil</td></tr>
+          <tr><td>négocier salaire cadre luxe</td><td>140</td><td>-</td><td>3</td><td>Notion BDD</td><td style="color:var(--text-light);font-size:12px;">⚪ Prévu août · cluster C2</td></tr>
         </tbody>
       </table>
     </div>
@@ -517,7 +518,7 @@ tr:hover td { background:rgba(24,78,90,0.02); }
   <div class="header">
     <div class="header-left">
       <span>mycoachingpartner.fr</span>
-      <h1>Quick Wins - Opportunités page 2</h1>
+      <h1>Quick Wins</h1>
     </div>
     <div class="header-right">
       <div class="header-badge"><span>3 opportunités · positions 13-22</span></div>

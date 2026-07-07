@@ -25,7 +25,7 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--te
 .sidebar { width:220px; min-width:220px; background:var(--teal-dark); position:fixed; top:0; left:0; height:100vh; display:flex; flex-direction:column; z-index:200; box-shadow:4px 0 20px rgba(24,78,90,0.2); }
 .sidebar-brand { padding:28px 20px 24px; border-bottom:1px solid rgba(255,255,255,0.08); }
 .sidebar-brand .brand-label { font-size:9px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--teal-mid); display:block; margin-bottom:6px; }
-.sidebar-brand h2 { font-size:15px; font-weight:700; color:var(--white); line-height:1.2; letter-spacing:1px; text-transform:uppercase; }
+.sidebar-brand h2 { font-size:13.5px; font-weight:700; color:var(--white); line-height:1.2; letter-spacing:0.5px; text-transform:uppercase; white-space:nowrap; }
 .sidebar-nav { flex:1; padding:16px 0; overflow-y:auto; }
 .sidebar-item { display:flex; align-items:center; gap:12px; padding:13px 20px; cursor:pointer; color:rgba(168,197,198,0.7); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase; border-left:3px solid transparent; transition:all .2s; }
 .sidebar-item:hover { background:rgba(255,255,255,0.06); color:var(--teal-light); }
@@ -98,8 +98,8 @@ tr:last-child td { border-bottom:none; }
 .alert-text p { color:var(--text-mid); font-size:12px; }
 
 /* === SYNTHESE === */
-.synthese-hero { background:var(--teal-dark); padding:44px 48px; color:var(--white); }
-.synthese-hero h1 { font-family:'Playfair Display',serif; font-size:30px; margin-bottom:8px; }
+.synthese-hero { background:var(--teal-dark); padding:28px 48px; color:var(--white); }
+.synthese-hero h1 { font-family:'Playfair Display',serif; font-size:26px; margin-bottom:8px; }
 .synthese-hero p { font-size:14px; color:var(--teal-light); opacity:.85; }
 .synthese-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:22px; padding:36px 48px 0; }
 .synthese-card { background:var(--white); border-radius:14px; padding:26px; box-shadow:var(--shadow); }
@@ -179,13 +179,14 @@ tr:last-child td { border-bottom:none; }
   <div class="synthese-hero">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;">
       <div>
-        <div style="font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--teal-mid);margin-bottom:8px;">My Coaching Partner · suivi hebdomadaire</div>
-        <h1>Dashboard commercial · Semaine 27</h1>
-        <p>Généré le 3 juillet 2026 · Sources : Stripe · CrocoClick · Notion / Waalaxy</p>
+        <div style="font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--teal-mid);margin-bottom:8px;">mycoachingpartner.fr · suivi hebdomadaire</div>
+        <h1>Suivi commercial · Semaine 27</h1>
       </div>
       <div style="text-align:right;">
         <div class="header-badge"><span>Objectif annuel : 30 000 €</span></div>
-        <div style="font-size:11px;color:var(--teal-mid);margin-top:8px;">CA cumulé 9 313 € · 31 %</div>
+        <div style="font-size:17px;font-weight:700;color:var(--blush);margin-top:10px;">CA cumulé 9 313 € · 31 %</div>
+        <div style="font-size:11px;color:var(--teal-mid);margin-top:6px;">Analyse le 3 juillet 2026</div>
+        <div style="font-size:10px;color:var(--teal-mid);opacity:.75;">Stripe · CrocoClick · Notion / Waalaxy</div>
       </div>
     </div>
   </div>
