@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Espace de prépa — mycoachingpartner.fr</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal-dark:#184E5A; --teal-mid:#599092; --teal-light:#A8C5C6;
+  --patina:#5E9E9A; --coral:#BF6C5C; --blush:#E9B3A3;
+  --cream:#F7F3EE; --white:#FFFFFF;
+  --text-dark:#1A2E35; --text-mid:#3D5561; --text-light:#8AA4AE;
+  --border:rgba(24,78,90,0.1); --shadow:0 4px 24px rgba(24,78,90,0.08);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--text-dark); line-height:1.5; }
+
+/* HEADER */
+.header { background:var(--teal-dark); padding:30px 40px; display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:16px; }
+.header .kicker { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--teal-mid); margin-bottom:8px; }
+.header h1 { font-family:'Playfair Display',serif; font-size:26px; color:var(--white); font-weight:700; }
+.header .legend { text-align:right; font-size:11px; color:var(--teal-light); opacity:.85; max-width:240px; }
+
+/* NAV ancre */
+.subnav { position:sticky; top:0; z-index:50; background:var(--white); border-bottom:1px solid var(--border); padding:0 40px; display:flex; gap:6px; box-shadow:0 2px 12px rgba(24,78,90,0.05); overflow-x:auto; }
+.subnav a { padding:14px 18px; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-light); text-decoration:none; border-bottom:2px solid transparent; white-space:nowrap; }
+.subnav a:hover { color:var(--teal-dark); }
+
+/* LAYOUT */
+.wrap { max-width:1120px; margin:0 auto; padding:34px 40px 60px; }
+.section { margin-bottom:44px; scroll-margin-top:60px; }
+.section-title { font-family:'Playfair Display',serif; font-size:22px; color:var(--teal-dark); margin-bottom:4px; }
+.section-sub { font-size:12px; color:var(--text-light); margin-bottom:20px; }
+
+/* CARTES */
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(440px,1fr)); gap:18px; }
+.card { background:var(--white); border-radius:14px; padding:24px; box-shadow:var(--shadow); border-top:3px solid var(--teal-mid); }
+.card.coaching { border-top-color:var(--coral); }
+.card-head { display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:6px; }
+.card-name { font-family:'Playfair Display',serif; font-size:18px; color:var(--teal-dark); }
+.card-when { font-size:11px; font-weight:700; color:var(--white); background:var(--teal-mid); padding:4px 10px; border-radius:20px; white-space:nowrap; }
+.card.coaching .card-when { background:var(--coral); }
+.card-formule { display:inline-block; font-size:11px; font-weight:600; color:var(--coral); background:rgba(191,108,92,0.10); padding:3px 10px; border-radius:20px; margin-bottom:12px; }
+.block { margin-top:14px; }
+.block h4 { font-size:10px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--teal-mid); margin-bottom:6px; }
+.block p, .block li { font-size:13px; color:var(--text-mid); }
+.block ul { list-style:none; }
+.block ul li { padding:3px 0 3px 16px; position:relative; }
+.block ul li::before { content:""; position:absolute; left:0; top:11px; width:5px; height:5px; border-radius:50%; background:var(--teal-light); }
+.block ol { padding-left:18px; }
+.block ol li { padding:3px 0; }
+.chips { display:flex; flex-wrap:wrap; gap:6px; }
+.chip { font-size:12px; font-weight:600; color:var(--teal-dark); background:var(--cream); border:1px solid var(--border); border-radius:8px; padding:5px 10px; }
+.chip b { color:var(--coral); }
+.example-flag { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--blush); }
+
+/* OFFRES */
+.offers { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:14px; }
+.offer { background:var(--white); border-radius:12px; padding:18px 20px; box-shadow:var(--shadow); }
+.offer .lvl { font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-light); margin-bottom:6px; }
+.offer h3 { font-family:'Playfair Display',serif; font-size:16px; color:var(--teal-dark); margin-bottom:8px; }
+.offer .price { font-size:14px; color:var(--text-dark); }
+.offer .price b { color:var(--coral); font-size:16px; }
+.offer .meta { font-size:11px; color:var(--text-light); margin-top:6px; }
+.tva { font-size:11px; color:var(--text-light); font-style:italic; margin-top:16px; }
+.footer { text-align:center; font-family:'Playfair Display',serif; font-style:italic; font-size:12px; color:var(--teal-mid); padding:24px; border-top:1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="kicker">mycoachingpartner.fr · préparation de la semaine</div>
+    <h1>Espace de prépa — Semaine du 7 au 13 juillet 2026</h1>
+  </div>
+  <div class="legend">Vos RDV de prospection et séances de coaching de la semaine, avec la trame et les tarifs sous les yeux.</div>
+</div>
+
+<div class="subnav">
+  <a href="#prospection">RDV prospection</a>
+  <a href="#seances">Séances coaching</a>
+  <a href="#offres">Offres &amp; tarifs</a>
+</div>
+
+<div class="wrap">
+
+  <!-- ===== PROSPECTION ===== -->
+  <div class="section" id="prospection">
+    <div class="section-title">RDV de prospection</div>
+    <div class="section-sub">Sessions stratégiques de la semaine (source : Google Agenda). <span class="example-flag">Cartes d'exemple — données fictives</span></div>
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-name">Mme A. L.</div>
+          <div class="card-when">Jeu. 10 juil · 14h00</div>
+        </div>
+        <div class="block">
+          <h4>Contexte de la demande</h4>
+          <p>Demande de session stratégique après un retour d'expatriation, souhaite se repositionner sur un poste de direction en France.</p>
+        </div>
+        <div class="block">
+          <h4>Infos clés</h4>
+          <ul>
+            <li>DAF, secteur luxe, 12 ans d'expérience</li>
+            <li>Retour de Singapour il y a 2 mois</li>
+            <li>A liké 3 posts LinkedIn sur la reprise de poste</li>
+          </ul>
+        </div>
+        <div class="block">
+          <h4>Trame de questions</h4>
+          <ol>
+            <li>Qu'est-ce qui vous amène à chercher un accompagnement maintenant ?</li>
+            <li>Où en êtes-vous exactement dans votre transition ?</li>
+            <li>Qu'avez-vous déjà tenté, et qu'est-ce qui a bloqué ?</li>
+            <li>À quoi ressemblerait un succès dans 3 mois ?</li>
+            <li>Qu'est-ce qui vous ferait dire oui à un accompagnement ?</li>
+          </ol>
+        </div>
+        <div class="block">
+          <h4>Offres à présenter</h4>
+          <div class="chips">
+            <span class="chip">Retour Décisif <b>1 650 € / 3 200 €</b></span>
+            <span class="chip">Coaching Flash <b>390 €</b></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== SEANCES ===== -->
+  <div class="section" id="seances">
+    <div class="section-title">Séances de coaching</div>
+    <div class="section-sub">Séances clients de la semaine (source : Google Agenda + Notion). <span class="example-flag">Carte d'exemple — données fictives</span></div>
+    <div class="grid">
+
+      <div class="card coaching">
+        <div class="card-head">
+          <div class="card-name">M. B.</div>
+          <div class="card-when">Mar. 8 juil · 11h00</div>
+        </div>
+        <span class="card-formule">Prise de poste · Premium · séance 3/10</span>
+        <div class="block">
+          <h4>Où on en est</h4>
+          <p>Séance précédente : a validé sa cartographie des parties prenantes. Blocage identifié sur la relation avec son n+1. A demandé à travailler sa posture en comité.</p>
+        </div>
+        <div class="block">
+          <h4>Tâches du coaché</h4>
+          <ul>
+            <li>Faite : entretiens avec 3 parties prenantes clés</li>
+            <li>En attente : rédiger son plan 30/60/90</li>
+          </ul>
+        </div>
+        <div class="block">
+          <h4>Éléments reçus cette semaine</h4>
+          <p>CV mis à jour envoyé lundi (à relire ensemble en séance).</p>
+        </div>
+        <div class="block">
+          <h4>Focus de la séance + questions clés</h4>
+          <ol>
+            <li>Débriefer les entretiens parties prenantes</li>
+            <li>Qu'avez-vous appris qui vous a surpris ?</li>
+            <li>Comment voulez-vous incarner votre posture en comité ?</li>
+          </ol>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== OFFRES ===== -->
+  <div class="section" id="offres">
+    <div class="section-title">Mémo offres &amp; tarifs</div>
+    <div class="section-sub">Tarifs validés avril 2026. Pour ne plus aller chercher sur le site en RDV.</div>
+    <div class="offers">
+
+      <div class="offer">
+        <div class="lvl">Porte d'entrée</div>
+        <h3>Coaching Flash</h3>
+        <div class="price"><b>390 €</b> / séance (B2C)</div>
+        <div class="price" style="margin-top:4px;">550 € en B2B</div>
+        <div class="meta">1 séance ciblée sur une douleur précise, visio 1h-1h30</div>
+      </div>
+
+      <div class="offer">
+        <div class="lvl">Parcours signature</div>
+        <h3>Coaching Recrutement</h3>
+        <div class="price">Essentielle <b>1 320 €</b> · 4 séances</div>
+        <div class="price" style="margin-top:4px;">Premium <b>2 560 €</b> · 8 séances</div>
+        <div class="meta">Méthode Closing Recrutement · CV + LinkedIn Luxe, simulations, négociation</div>
+      </div>
+
+      <div class="offer">
+        <div class="lvl">Parcours signature</div>
+        <h3>Coaching Prise de poste</h3>
+        <div class="price">Essentielle <b>1 650 €</b> · 5 séances</div>
+        <div class="price" style="margin-top:4px;">Premium <b>3 200 €</b> · 10 séances</div>
+        <div class="meta">Méthode des 90 jours décisifs · plan 30/60/90, parties prenantes</div>
+      </div>
+
+      <div class="offer">
+        <div class="lvl">Parcours signature</div>
+        <h3>Coaching Retour Décisif</h3>
+        <div class="price">Essentielle <b>1 650 €</b> · 5 séances</div>
+        <div class="price" style="margin-top:4px;">Premium <b>3 200 €</b> · 10 séances</div>
+        <div class="meta">Cadre Retour Décisif · retour expat, congé mat, post burn-out, mobilité interne</div>
+      </div>
+
+      <div class="offer">
+        <div class="lvl">Parcours signature</div>
+        <h3>Coaching Nouvelle Impulsion</h3>
+        <div class="price">Essentielle <b>1 650 €</b> · 5 séances</div>
+        <div class="price" style="margin-top:4px;">Premium <b>3 200 €</b> · 10 séances</div>
+        <div class="meta">Aligner sa trajectoire et repartir avec un cap clair</div>
+      </div>
+
+      <div class="offer">
+        <div class="lvl">B2B · entreprises</div>
+        <h3>Accompagnement DRH</h3>
+        <div class="price"><b>2 300 € à 4 500 €</b></div>
+        <div class="meta">Forfaits annuels possibles · prestataire mandaté par l'entreprise</div>
+      </div>
+
+    </div>
+    <div class="tva">TVA non applicable, article 293 B du CGI.</div>
+  </div>
+
+</div>
+
+<div class="footer">Espace de prépa MCP · usage interne · mycoachingpartner.fr</div>
+
+</body>
+</html>
