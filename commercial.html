@@ -5,960 +5,436 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard commercial MCP</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --teal: #184E5A;
-    --teal-light: #235f6d;
-    --terra: #BF6C5C;
-    --terra-light: #d4806f;
-    --cream: #F5F1EA;
-    --cream-dark: #EDE8DF;
-    --white: #FFFFFF;
-    --text-dark: #1a2e35;
-    --text-mid: #4a6570;
-    --text-light: #7a9aa5;
-    --border: #D8D2C8;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Raleway', sans-serif;
-    background: var(--cream);
-    color: var(--text-dark);
-    font-size: 14px;
-    line-height: 1.5;
-  }
-
-  .header {
-    background: var(--teal);
-    color: white;
-    padding: 28px 40px 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-  }
-
-  .header-left h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 26px;
-    font-weight: 600;
-    letter-spacing: 0.3px;
-    margin-bottom: 4px;
-  }
-
-  .header-left .subtitle {
-    font-size: 13px;
-    font-weight: 300;
-    opacity: 0.75;
-    letter-spacing: 0.5px;
-  }
-
-  .header-right {
-    text-align: right;
-    font-size: 12px;
-    opacity: 0.7;
-    font-weight: 300;
-  }
-
-  .header-right .date {
-    font-size: 15px;
-    font-weight: 500;
-    opacity: 0.95;
-    margin-bottom: 4px;
-  }
-
-  .sources-tag {
-    display: inline-block;
-    background: rgba(255,255,255,0.12);
-    border-radius: 20px;
-    padding: 3px 10px;
-    font-size: 11px;
-    margin-top: 6px;
-  }
-
-  .main {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 32px 24px 48px;
-  }
-
-  .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--teal);
-    margin-bottom: 14px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid var(--teal);
-    letter-spacing: 0.2px;
-  }
-
-  .section { margin-bottom: 36px; }
-
-  .kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-  }
-
-  .kpi-tile {
-    background: var(--white);
-    border-radius: 10px;
-    padding: 20px 18px 16px;
-    border: 1px solid var(--border);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .kpi-tile::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: var(--teal);
-  }
-
-  .kpi-tile.accent::before { background: var(--terra); }
-
-  .kpi-label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: var(--text-light);
-    margin-bottom: 10px;
-  }
-
-  .kpi-value {
-    font-family: 'Playfair Display', serif;
-    font-size: 32px;
-    font-weight: 600;
-    color: var(--teal);
-    line-height: 1;
-    margin-bottom: 6px;
-  }
-
-  .kpi-tile.accent .kpi-value { color: var(--terra); }
-
-  .kpi-sub {
-    font-size: 12px;
-    color: var(--text-mid);
-    font-weight: 400;
-  }
-
-  .kpi-sub strong { color: var(--text-dark); font-weight: 600; }
-
-  .ca-block {
-    background: var(--white);
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    padding: 24px 28px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-  }
-
-  .ca-ytd-label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: var(--text-light);
-    margin-bottom: 6px;
-  }
-
-  .ca-ytd-amount {
-    font-family: 'Playfair Display', serif;
-    font-size: 42px;
-    font-weight: 600;
-    color: var(--teal);
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-
-  .ca-ytd-sub {
-    font-size: 13px;
-    color: var(--text-mid);
-    margin-bottom: 16px;
-  }
-
-  .progress-bar-track {
-    background: var(--cream-dark);
-    border-radius: 6px;
-    height: 10px;
-    overflow: hidden;
-    margin-bottom: 6px;
-  }
-
-  .progress-bar-fill {
-    height: 100%;
-    border-radius: 6px;
-    background: var(--teal);
-  }
-
-  .progress-bar-fill.warn { background: var(--terra); }
-
-  .progress-labels {
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    color: var(--text-mid);
-  }
-
-  .progress-labels strong { color: var(--teal); font-weight: 600; }
-
-  .ca-month-label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: var(--text-light);
-    margin-bottom: 6px;
-  }
-
-  .ca-month-amount {
-    font-family: 'Playfair Display', serif;
-    font-size: 28px;
-    font-weight: 600;
-    color: var(--terra);
-    margin-bottom: 14px;
-  }
-
-  .payment-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-  }
-
-  .payment-table th {
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.7px;
-    color: var(--text-light);
-    text-align: left;
-    padding: 0 0 6px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .payment-table td {
-    padding: 7px 0;
-    border-bottom: 1px solid var(--cream-dark);
-    vertical-align: top;
-  }
-
-  .payment-table tr:last-child td { border-bottom: none; }
-
-  .payment-table .amount {
-    text-align: right;
-    font-weight: 600;
-    color: var(--teal);
-    white-space: nowrap;
-  }
-
-  .payment-table .client-name { color: var(--text-dark); font-weight: 500; }
-  .payment-table .payment-desc { color: var(--text-mid); font-size: 12px; }
-
-  .pipeline-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-  }
-
-  .pipeline-card {
-    background: var(--white);
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    overflow: hidden;
-  }
-
-  .pipeline-card-header {
-    background: var(--teal);
-    color: white;
-    padding: 14px 18px 12px;
-  }
-
-  .pipeline-card-header.terra { background: var(--terra); }
-  .pipeline-card-header.teal-light { background: var(--teal-light); }
-
-  .pipeline-card-title {
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    opacity: 0.85;
-    margin-bottom: 4px;
-  }
-
-  .pipeline-card-count {
-    font-family: 'Playfair Display', serif;
-    font-size: 28px;
-    font-weight: 600;
-    line-height: 1;
-  }
-
-  .pipeline-card-amount {
-    font-size: 13px;
-    opacity: 0.85;
-    margin-top: 3px;
-  }
-
-  .pipeline-card-body { padding: 14px 18px; }
-
-  .pipeline-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    padding: 6px 0;
-    border-bottom: 1px solid var(--cream-dark);
-    font-size: 13px;
-  }
-
-  .pipeline-item:last-child { border-bottom: none; }
-  .pipeline-item-name { color: var(--text-dark); font-weight: 500; }
-
-  .pipeline-item-amount {
-    font-weight: 600;
-    color: var(--teal);
-    white-space: nowrap;
-    margin-left: 8px;
-  }
-
-  .pipeline-item-stage {
-    font-size: 11px;
-    color: var(--text-light);
-    display: block;
-  }
-
-  .waalaxy-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-
-  .waalaxy-card {
-    background: var(--white);
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    padding: 14px 16px;
-    font-size: 13px;
-  }
-
-  .waalaxy-card-title {
-    font-weight: 600;
-    color: var(--teal);
-    font-size: 13px;
-    margin-bottom: 4px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .waalaxy-persona {
-    font-size: 11px;
-    color: var(--text-light);
-    margin-bottom: 10px;
-  }
-
-  .waalaxy-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-  }
-
-  .waalaxy-stat-label {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--text-light);
-    font-weight: 600;
-  }
-
-  .waalaxy-stat-value {
-    font-weight: 700;
-    font-size: 17px;
-    color: var(--text-dark);
-  }
-
-  .waalaxy-stat-value.highlight { color: var(--teal); }
-
-  .waalaxy-blocage {
-    margin-top: 8px;
-    font-size: 11px;
-    padding: 3px 8px;
-    border-radius: 4px;
-    display: inline-block;
-  }
-
-  .waalaxy-blocage.running { background: rgba(24,78,90,0.1); color: var(--teal); }
-  .waalaxy-blocage.paused { background: rgba(191,108,92,0.12); color: var(--terra); }
-
-  .waalaxy-action {
-    margin-top: 8px;
-    font-size: 11px;
-    color: var(--text-mid);
-    border-top: 1px solid var(--cream-dark);
-    padding-top: 8px;
-    font-style: italic;
-  }
-
-  .relances-list { display: flex; flex-direction: column; gap: 10px; }
-
-  .relance-item {
-    background: var(--white);
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    padding: 14px 18px;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .relance-item.urgent { border-left: 4px solid var(--terra); }
-  .relance-item.normal { border-left: 4px solid var(--teal); }
-
-  .relance-name { font-weight: 600; color: var(--text-dark); font-size: 14px; }
-
-  .relance-detail {
-    font-size: 12px;
-    color: var(--text-mid);
-    margin-top: 2px;
-  }
-
-  .relance-amount {
-    font-family: 'Playfair Display', serif;
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--terra);
-    text-align: right;
-    white-space: nowrap;
-  }
-
-  .relance-date {
-    font-size: 11px;
-    color: var(--text-light);
-    text-align: right;
-    margin-top: 2px;
-  }
-
-  .tasks-list { display: flex; flex-direction: column; gap: 8px; }
-
-  .task-item {
-    background: var(--white);
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .task-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    background: var(--teal);
-  }
-
-  .task-dot.done { background: #a8d5b5; }
-  .task-name { font-weight: 500; color: var(--text-dark); flex: 1; }
-  .task-name.done { color: var(--text-light); text-decoration: line-through; }
-
-  .task-tag {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding: 2px 8px;
-    border-radius: 4px;
-    background: var(--cream-dark);
-    color: var(--text-mid);
-    white-space: nowrap;
-  }
-
-  .task-date {
-    font-size: 11px;
-    color: var(--text-light);
-    white-space: nowrap;
-  }
-
-  .alertes-list { display: flex; flex-direction: column; gap: 10px; }
-
-  .alerte-item {
-    border-radius: 8px;
-    padding: 14px 18px;
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    font-size: 13px;
-  }
-
-  .alerte-item.warning {
-    background: rgba(191,108,92,0.08);
-    border: 1px solid rgba(191,108,92,0.3);
-    border-left: 4px solid var(--terra);
-  }
-
-  .alerte-item.info {
-    background: rgba(24,78,90,0.06);
-    border: 1px solid rgba(24,78,90,0.2);
-    border-left: 4px solid var(--teal);
-  }
-
-  .alerte-icon { display: none; }
-  .alerte-item.warning .alerte-text strong { color: var(--terra); }
-  .alerte-item.info .alerte-text strong { color: var(--teal); }
-
-  .alerte-text strong {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-
-  .alerte-text span { color: var(--text-mid); }
-
-  .footer {
-    background: var(--teal);
-    color: white;
-    text-align: center;
-    padding: 14px;
-    font-size: 11px;
-    opacity: 0.7;
-    font-weight: 300;
-  }
-
-  .nota {
-    font-size: 12px;
-    color: var(--text-light);
-    font-style: italic;
-    margin-top: 10px;
-  }
+:root {
+  --teal-dark: #184E5A; --teal-mid: #599092; --teal-light: #A8C5C6;
+  --patina: #5E9E9A; --nile: #4A8A8C; --coral: #BF6C5C; --blush: #E9B3A3;
+  --slate: #6F8B9D; --cream: #F7F3EE; --white: #FFFFFF;
+  --text-dark: #1A2E35; --text-mid: #3D5561; --text-light: #8AA4AE;
+  --border: rgba(24,78,90,0.1);
+  --shadow: 0 4px 24px rgba(24,78,90,0.08);
+  --shadow-hover: 0 12px 40px rgba(24,78,90,0.15);
+  --good-bg: rgba(89,144,146,0.12); --good-text: #2d6a4f;
+  --warn-bg: rgba(191,108,92,0.10); --warn-text: var(--coral);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--text-dark); display:flex; min-height:100vh; }
+
+/* === SIDEBAR === */
+.sidebar { width:220px; min-width:220px; background:var(--teal-dark); position:fixed; top:0; left:0; height:100vh; display:flex; flex-direction:column; z-index:200; box-shadow:4px 0 20px rgba(24,78,90,0.2); }
+.sidebar-brand { padding:28px 20px 24px; border-bottom:1px solid rgba(255,255,255,0.08); }
+.sidebar-brand .brand-label { font-size:9px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--teal-mid); display:block; margin-bottom:6px; }
+.sidebar-brand h2 { font-size:15px; font-weight:700; color:var(--white); line-height:1.2; letter-spacing:1px; text-transform:uppercase; }
+.sidebar-nav { flex:1; padding:16px 0; overflow-y:auto; }
+.sidebar-item { display:flex; align-items:center; gap:12px; padding:13px 20px; cursor:pointer; color:rgba(168,197,198,0.7); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase; border-left:3px solid transparent; transition:all .2s; }
+.sidebar-item:hover { background:rgba(255,255,255,0.06); color:var(--teal-light); }
+.sidebar-item.active { background:rgba(255,255,255,0.1); color:var(--white); border-left-color:var(--teal-mid); }
+.sidebar-item .si-icon { font-size:16px; width:22px; text-align:center; flex-shrink:0; }
+.sidebar-footer { padding:16px 20px; border-top:1px solid rgba(255,255,255,0.08); font-family:'Playfair Display',serif; font-style:italic; font-size:11px; color:var(--teal-mid); text-align:center; }
+
+/* === MAIN === */
+.main-area { margin-left:220px; flex:1; display:flex; flex-direction:column; min-height:100vh; }
+.pane { display:none; flex:1; flex-direction:column; }
+.pane.active { display:flex; }
+.header { background:var(--teal-dark); padding:28px 48px; display:flex; align-items:center; justify-content:space-between; }
+.header-left span { font-size:11px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:var(--teal-mid); display:block; margin-bottom:6px; }
+.header-left h1 { font-family:'Playfair Display',serif; font-size:26px; color:var(--white); }
+.header-right { text-align:right; }
+.header-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(233,179,163,0.15); border:1px solid rgba(233,179,163,0.35); border-radius:20px; padding:6px 14px; }
+.header-badge span { font-size:13px; color:var(--blush); font-weight:600; }
+.header-right .date { font-size:11px; color:var(--teal-mid); margin-top:8px; letter-spacing:1px; }
+.main { padding:36px 48px; max-width:1400px; margin:0 auto; width:100%; }
+.section-title { font-family:'Playfair Display',serif; font-size:22px; color:var(--teal-dark); margin-bottom:6px; }
+.section-subtitle { font-size:13px; color:var(--text-light); margin-bottom:28px; }
+
+/* === KPI === */
+.kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:36px; }
+.kpi-card { background:var(--white); border-radius:12px; padding:20px 16px; box-shadow:var(--shadow); border-left:3px solid var(--teal-mid); transition:transform .2s,box-shadow .2s; }
+.kpi-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-hover); }
+.kpi-card.coral { border-left-color:var(--coral); }
+.kpi-card.patina { border-left-color:var(--patina); }
+.kpi-card.slate { border-left-color:var(--slate); }
+.kpi-label { font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-light); margin-bottom:8px; }
+.kpi-value { font-family:'Playfair Display',serif; font-size:28px; color:var(--teal-dark); line-height:1; }
+.kpi-value.coral { color:var(--coral); }
+.kpi-sub { font-size:10px; color:var(--text-light); margin-top:5px; }
+.kpi-sub strong { color:var(--text-mid); }
+
+/* === CARD === */
+.card { background:var(--white); border-radius:12px; padding:26px; box-shadow:var(--shadow); margin-bottom:24px; }
+.card h3 { font-family:'Playfair Display',serif; font-size:16px; color:var(--teal-dark); margin-bottom:4px; }
+.card p.sub { font-size:11px; color:var(--text-light); margin-bottom:18px; }
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-bottom:24px; }
+
+/* === TABLE === */
+table { width:100%; border-collapse:collapse; font-size:13px; }
+th { text-align:left; font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--text-light); padding:10px 12px; border-bottom:1px solid var(--border); }
+td { padding:11px 12px; border-bottom:1px solid rgba(24,78,90,0.05); vertical-align:top; }
+tr:last-child td { border-bottom:none; }
+.amount { text-align:right; font-weight:700; color:var(--teal-dark); white-space:nowrap; }
+
+/* === PROGRESS === */
+.progress-track { background:var(--cream); border-radius:6px; height:12px; overflow:hidden; margin:14px 0 6px; }
+.progress-fill { height:100%; border-radius:6px; background:var(--coral); }
+.progress-lab { display:flex; justify-content:space-between; font-size:12px; color:var(--text-mid); }
+.progress-lab strong { color:var(--teal-dark); }
+
+/* === INSIGHT DARK === */
+.insight-dark { background:var(--teal-dark); border-radius:12px; padding:24px 28px; margin-bottom:28px; }
+.insight-dark h3 { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--teal-mid); margin-bottom:14px; }
+.insight-dark ul { list-style:none; }
+.insight-dark ul li { font-size:13px; color:rgba(255,255,255,0.85); padding:7px 0; border-bottom:1px solid rgba(255,255,255,0.07); line-height:1.55; }
+.insight-dark ul li:last-child { border-bottom:none; }
+.insight-dark ul li::before { content:"→ "; color:var(--teal-mid); font-weight:700; }
+
+/* === ALERTS === */
+.alert { border-radius:10px; padding:14px 18px; margin-bottom:12px; font-size:13px; display:flex; gap:12px; align-items:flex-start; line-height:1.5; }
+.alert-icon { font-size:16px; flex-shrink:0; width:20px; text-align:center; }
+.alert-danger { background:rgba(191,108,92,0.09); border-left:4px solid var(--coral); }
+.alert-warn { background:rgba(191,108,92,0.06); border-left:4px solid var(--blush); }
+.alert-info { background:rgba(24,78,90,0.06); border-left:4px solid var(--teal-mid); }
+.alert-text strong { color:var(--text-dark); display:block; margin-bottom:2px; }
+.alert-text p { color:var(--text-mid); font-size:12px; }
+
+/* === SYNTHESE === */
+.synthese-hero { background:var(--teal-dark); padding:44px 48px; color:var(--white); }
+.synthese-hero h1 { font-family:'Playfair Display',serif; font-size:30px; margin-bottom:8px; }
+.synthese-hero p { font-size:14px; color:var(--teal-light); opacity:.85; }
+.synthese-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:22px; padding:36px 48px 0; }
+.synthese-card { background:var(--white); border-radius:14px; padding:26px; box-shadow:var(--shadow); }
+.synthese-card h3 { font-family:'Playfair Display',serif; font-size:16px; color:var(--teal-dark); margin-bottom:14px; }
+.synthese-metric { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border); }
+.synthese-metric:last-child { border-bottom:none; }
+.sm-label { font-size:12px; color:var(--text-mid); }
+.sm-val { font-size:14px; font-weight:700; color:var(--teal-dark); }
+.sm-val.warn { color:var(--coral); }
+.sm-val.good { color:var(--patina); }
+
+/* === PIPELINE === */
+.pipe-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+.pipe-card { background:var(--white); border-radius:12px; border:1px solid var(--border); overflow:hidden; box-shadow:var(--shadow); }
+.pipe-head { background:var(--teal-dark); color:#fff; padding:16px 18px; }
+.pipe-head.coral { background:var(--coral); }
+.pipe-head.mid { background:var(--teal-mid); }
+.pipe-head .t { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; opacity:.85; margin-bottom:4px; }
+.pipe-head .n { font-family:'Playfair Display',serif; font-size:26px; line-height:1; }
+.pipe-head .a { font-size:12px; opacity:.85; margin-top:3px; }
+.pipe-body { padding:12px 18px; }
+.pipe-item { display:flex; justify-content:space-between; align-items:baseline; padding:9px 0; border-bottom:1px solid var(--border); font-size:13px; }
+.pipe-item:last-child { border-bottom:none; }
+.pipe-item .nm { color:var(--text-dark); font-weight:600; }
+.pipe-item .st { font-size:11px; color:var(--text-light); display:block; }
+.pipe-item .am { font-weight:700; color:var(--teal-dark); white-space:nowrap; margin-left:8px; }
+
+/* === WAALAXY === */
+.wx-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+.wx-card { background:var(--white); border-radius:12px; border:1px solid var(--border); padding:16px; box-shadow:var(--shadow); }
+.wx-title { font-weight:700; color:var(--teal-dark); font-size:13px; margin-bottom:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.wx-persona { font-size:11px; color:var(--text-light); margin-bottom:10px; }
+.wx-stats { display:grid; grid-template-columns:1fr 1fr; gap:8px 6px; }
+.wx-sl { font-size:9px; text-transform:uppercase; letter-spacing:.5px; color:var(--text-light); font-weight:700; }
+.wx-sv { font-weight:700; font-size:16px; color:var(--text-dark); }
+.wx-sv.hl { color:var(--patina); }
+.wx-badge { margin-top:10px; font-size:10px; padding:3px 8px; border-radius:6px; display:inline-block; font-weight:600; }
+.wx-badge.run { background:var(--good-bg); color:var(--good-text); }
+.wx-badge.pause { background:var(--warn-bg); color:var(--coral); }
+.wx-act { margin-top:8px; font-size:11px; color:var(--text-mid); border-top:1px solid var(--border); padding-top:8px; font-style:italic; }
+
+/* === RELANCE === */
+.relance-row { background:var(--white); border-radius:12px; border:1px solid var(--border); border-left:4px solid var(--coral); padding:16px 20px; display:flex; justify-content:space-between; align-items:center; box-shadow:var(--shadow); margin-bottom:12px; }
+.relance-row .nm { font-weight:700; color:var(--text-dark); }
+.relance-row .dt { font-size:12px; color:var(--text-mid); margin-top:3px; }
+.relance-row .am { font-family:'Playfair Display',serif; font-size:18px; color:var(--coral); white-space:nowrap; text-align:right; }
+.task-item { background:var(--white); border-radius:10px; border:1px solid var(--border); padding:13px 16px; display:flex; align-items:center; gap:12px; margin-bottom:8px; font-size:13px; }
+.task-dot { width:8px; height:8px; border-radius:50%; background:var(--teal-mid); flex-shrink:0; }
+
+.footer { background:var(--teal-dark); padding:18px 48px; text-align:center; font-family:'Playfair Display',serif; font-style:italic; color:var(--teal-mid); font-size:13px; margin-top:auto; }
 </style>
 </head>
 <body>
 <nav id="mcp-nav" style="position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:2147483647;background:rgba(24,78,90,.96);display:flex;gap:4px;padding:5px 6px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.30);font-family:Arial,Helvetica,sans-serif"><a href="/" data-p="/" style="color:#f5eeea;text-decoration:none;font-weight:700;font-size:13px;padding:5px 14px;border-radius:999px">Contenus</a><a href="/commercial.html" data-p="/commercial.html" style="color:#f5eeea;text-decoration:none;font-weight:700;font-size:13px;padding:5px 14px;border-radius:999px">Commercial</a><a href="/seo.html" data-p="/seo.html" style="color:#f5eeea;text-decoration:none;font-weight:700;font-size:13px;padding:5px 14px;border-radius:999px">SEO</a></nav><script>(function(){var p=location.pathname;if(p==="/index.html")p="/";document.querySelectorAll("#mcp-nav a").forEach(function(a){var m=a.getAttribute("data-p")===p;a.style.background=m?"#bf6c5c":"transparent";a.style.color=m?"#fff":"#f5eeea";});})();</script>
 
-
-<div class="header">
-  <div class="header-left">
-    <h1>Dashboard commercial</h1>
-    <div class="subtitle">My Coaching Partner, suivi hebdomadaire</div>
-    <div class="sources-tag">Stripe &nbsp;&middot;&nbsp; CrocoClick &nbsp;&middot;&nbsp; Notion / Waalaxy</div>
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <span class="brand-label">My Coaching Partner</span>
+    <h2>Dashboard Commercial</h2>
   </div>
-  <div class="header-right">
-    <div class="date">Semaine 27, 3 juillet 2026</div>
-    <div>Objectif annuel : 30 000 &euro;</div>
-  </div>
-</div>
+  <nav class="sidebar-nav">
+    <div class="sidebar-item active" onclick="showPane('synthese',this)"><span class="si-icon">⊞</span> Synthèse</div>
+    <div class="sidebar-item" onclick="showPane('ca',this)"><span class="si-icon">€</span> Chiffre d'affaires</div>
+    <div class="sidebar-item" onclick="showPane('pipeline',this)"><span class="si-icon">⇄</span> Pipeline</div>
+    <div class="sidebar-item" onclick="showPane('prospection',this)"><span class="si-icon">◎</span> Prospection</div>
+    <div class="sidebar-item" onclick="showPane('relances',this)"><span class="si-icon">↻</span> Relances</div>
+    <div class="sidebar-item" onclick="showPane('vigilance',this)"><span class="si-icon">⚠</span> Vigilance</div>
+  </nav>
+  <div class="sidebar-footer">objectif 2026 : 30 000 €</div>
+</aside>
 
-<div class="main">
+<div class="main-area">
 
-  <div class="section">
-    <div class="section-title">Vue d'ensemble</div>
-    <div class="kpi-grid">
-
-      <div class="kpi-tile">
-        <div class="kpi-label">CA juillet</div>
-        <div class="kpi-value">0 &euro;</div>
-        <div class="kpi-sub">Paiements encaissés ce mois</div>
+<!-- ===== PANE SYNTHESE ===== -->
+<div id="pane-synthese" class="pane active">
+  <div class="synthese-hero">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--teal-mid);margin-bottom:8px;">My Coaching Partner · suivi hebdomadaire</div>
+        <h1>Dashboard commercial · Semaine 27</h1>
+        <p>Généré le 3 juillet 2026 · Sources : Stripe · CrocoClick · Notion / Waalaxy</p>
       </div>
-
-      <div class="kpi-tile accent">
-        <div class="kpi-label">Propositions en cours</div>
-        <div class="kpi-value">2</div>
-        <div class="kpi-sub"><strong>4 520 &euro;</strong> en attente de signature</div>
+      <div style="text-align:right;">
+        <div class="header-badge"><span>Objectif annuel : 30 000 €</span></div>
+        <div style="font-size:11px;color:var(--teal-mid);margin-top:8px;">CA cumulé 9 313 € · 31 %</div>
       </div>
-
-      <div class="kpi-tile">
-        <div class="kpi-label">Clients actifs</div>
-        <div class="kpi-value">4</div>
-        <div class="kpi-sub">Coaching en cours, <strong>5 800 &euro;</strong> pipeline</div>
-      </div>
-
-      <div class="kpi-tile">
-        <div class="kpi-label">Taux de conversion</div>
-        <div class="kpi-value">à mesurer</div>
-        <div class="kpi-sub">0 signés sur 19 sessions stratégiques (2026)</div>
-      </div>
-
     </div>
   </div>
 
-  <div class="section">
-    <div class="section-title">Chiffre d'affaires 2026</div>
-    <div class="ca-block">
+  <div class="synthese-grid">
+    <div class="synthese-card">
+      <h3>Chiffre d'affaires</h3>
+      <div class="synthese-metric"><span class="sm-label">CA annuel cumulé</span><span class="sm-val">9 313 €</span></div>
+      <div class="synthese-metric"><span class="sm-label">Objectif atteint</span><span class="sm-val warn">31 % (sur 30 000 €)</span></div>
+      <div class="synthese-metric"><span class="sm-label">CA encaissé juillet</span><span class="sm-val warn">0 €</span></div>
+      <div class="synthese-metric"><span class="sm-label">Reste à facturer</span><span class="sm-val">20 687 € · ~3 448 €/mois</span></div>
+    </div>
+    <div class="synthese-card">
+      <h3>Pipeline &amp; clients</h3>
+      <div class="synthese-metric"><span class="sm-label">Propositions en cours</span><span class="sm-val">2 · 4 520 € en attente</span></div>
+      <div class="synthese-metric"><span class="sm-label">Clients actifs (coaching)</span><span class="sm-val good">4 · 5 800 € restant</span></div>
+      <div class="synthese-metric"><span class="sm-label">Taux de conversion</span><span class="sm-val">à mesurer (0/19 sessions)</span></div>
+      <div class="synthese-metric"><span class="sm-label">Relance urgente</span><span class="sm-val warn">Carine Elhage · 1 320 €</span></div>
+    </div>
+    <div class="synthese-card">
+      <h3>Prospection Waalaxy</h3>
+      <div class="synthese-metric"><span class="sm-label">Campagnes actives</span><span class="sm-val">7</span></div>
+      <div class="synthese-metric"><span class="sm-label">Invitations envoyées</span><span class="sm-val">1 775</span></div>
+      <div class="synthese-metric"><span class="sm-label">Meilleure accept.</span><span class="sm-val good">68 % (visites profil)</span></div>
+      <div class="synthese-metric"><span class="sm-label">Campagne à corriger</span><span class="sm-val warn">Dirigeants luxe · 10 %</span></div>
+    </div>
+    <div class="synthese-card">
+      <h3>Points de vigilance</h3>
+      <div class="synthese-metric"><span class="sm-label">Retard de CA vs calendrier</span><span class="sm-val warn">écart ~6 287 €</span></div>
+      <div class="synthese-metric"><span class="sm-label">Campagne sous-performante</span><span class="sm-val warn">Dirigeants luxe (A/B à lancer)</span></div>
+      <div class="synthese-metric"><span class="sm-label">Relevé Waalaxy</span><span class="sm-val warn">non actualisé depuis le 20 juin</span></div>
+      <div class="synthese-metric"><span class="sm-label">Seuil TVA (franchise 293 B)</span><span class="sm-val good">large marge sous 37 500 €</span></div>
+    </div>
+  </div>
 
-      <div>
-        <div class="ca-ytd-label">CA annuel cumulé</div>
-        <div class="ca-ytd-amount">9 313 &euro;</div>
-        <div class="ca-ytd-sub">sur objectif de 30 000 &euro;, 31 %</div>
+  <div style="padding:28px 48px 36px;">
+    <div class="insight-dark">
+      <h3>Lecture stratégique · Semaine 27</h3>
+      <ul>
+        <li>CA cumulé à 9 313 € (31 % de l'objectif) alors que 52 % de l'année est écoulée : retard d'environ 6 287 € sur le rythme attendu. Objectif révisé : 3 448 €/mois sur les 6 mois restants.</li>
+        <li>Le pipeline est là : 4 520 € de propositions en attente de signature + 5 800 € de coaching en cours. Priorité absolue : relancer Carine Elhage (1 320 €, proposition envoyée, à relancer).</li>
+        <li>La prospection tourne (1 775 invitations, 7 campagnes) mais la campagne « Dirigeants luxe » sous-performe (10 % d'acceptation vs 15 % seuil) : lancer le test invitation sans note sur 50 profils.</li>
+        <li>Le relevé Waalaxy n'est pas actualisé depuis 13 jours : relever les stats S27 dans Notion pour un pilotage fiable.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer">Dashboard commercial MCP · Stripe · CrocoClick · Notion / Waalaxy · Semaine 27, juillet 2026</div>
+</div>
 
-        <div class="progress-bar-track">
-          <div class="progress-bar-fill warn" style="width: 31%"></div>
-        </div>
-        <div class="progress-labels">
-          <span><strong>9 313 &euro;</strong> encaissés</span>
-          <span>30 000 &euro; objectif</span>
-        </div>
+<!-- ===== PANE CA ===== -->
+<div id="pane-ca" class="pane">
+  <div class="header">
+    <div class="header-left"><span>My Coaching Partner</span><h1>Chiffre d'affaires 2026</h1></div>
+    <div class="header-right"><div class="header-badge"><span>Objectif 30 000 €</span></div><div class="date">Source : Stripe · Semaine 27</div></div>
+  </div>
+  <div class="main">
+    <div class="section-title">Vue d'ensemble</div>
+    <div class="section-subtitle">Encaissements Stripe · année en cours</div>
+    <div class="kpi-grid">
+      <div class="kpi-card coral"><div class="kpi-label">CA juillet</div><div class="kpi-value coral">0 €</div><div class="kpi-sub">Paiements encaissés ce mois</div></div>
+      <div class="kpi-card"><div class="kpi-label">CA annuel cumulé</div><div class="kpi-value">9 313 €</div><div class="kpi-sub">31 % de l'objectif</div></div>
+      <div class="kpi-card patina"><div class="kpi-label">Propositions en cours</div><div class="kpi-value">4 520 €</div><div class="kpi-sub">2 en attente de signature</div></div>
+      <div class="kpi-card slate"><div class="kpi-label">Reste à facturer</div><div class="kpi-value">20 687 €</div><div class="kpi-sub"><strong>~3 448 €/mois</strong> sur 6 mois</div></div>
+    </div>
 
-        <p class="nota">Reste à facturer : <strong>20 687 &euro;</strong> soit environ <strong>3 448 &euro; / mois</strong> sur les 6 mois restants.</p>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Progression vers l'objectif annuel</h3>
+        <p class="sub">9 313 € encaissés sur 30 000 €</p>
+        <div class="progress-track"><div class="progress-fill" style="width:31%"></div></div>
+        <div class="progress-lab"><span><strong>9 313 €</strong> encaissés</span><span>30 000 € objectif</span></div>
+        <p style="font-size:12px;color:var(--text-light);font-style:italic;margin-top:14px;">Reste à facturer : <strong style="color:var(--text-mid);">20 687 €</strong>, soit environ <strong style="color:var(--text-mid);">3 448 € / mois</strong> sur les 6 mois restants.</p>
       </div>
-
-      <div>
-        <div class="ca-month-label">Paiements juillet 2026</div>
-        <div class="ca-month-amount">0 &euro;</div>
-
-        <table class="payment-table">
-          <thead>
-            <tr>
-              <th>Client</th>
-              <th style="text-align:right">Montant</th>
-            </tr>
-          </thead>
+      <div class="card">
+        <h3>Paiements juillet 2026</h3>
+        <p class="sub">Encaissements Stripe du mois</p>
+        <table>
+          <thead><tr><th>Client</th><th class="amount">Montant</th></tr></thead>
           <tbody>
-            <tr>
-  <td>
-    <div class="client-name">Aucun paiement en juillet</div>
-    <div class="payment-desc">Mois débutant, prochain encaissement prévu</div>
-  </td>
-  <td class="amount">0 €</td>
-</tr>
+            <tr><td><strong>Aucun paiement en juillet</strong><br><span style="font-size:11px;color:var(--text-light);">Mois débutant, prochain encaissement prévu</span></td><td class="amount">0 €</td></tr>
           </tbody>
         </table>
       </div>
-
     </div>
   </div>
+  <div class="footer">Dashboard commercial MCP · Stripe · CrocoClick · Notion / Waalaxy · Semaine 27, juillet 2026</div>
+</div>
 
-  <div class="section">
-    <div class="section-title">Pipeline commercial</div>
-    <div class="pipeline-grid">
-
-      <div class="pipeline-card">
-        <div class="pipeline-card-header teal-light">
-          <div class="pipeline-card-title">Prospection</div>
-          <div class="pipeline-card-count">100</div>
-          <div class="pipeline-card-amount">Nouveaux leads</div>
-        </div>
-        <div class="pipeline-card-body">
-          <div class="pipeline-item">
-            <div>
-              <div class="pipeline-item-name">7 campagnes actives</div>
-              <span class="pipeline-item-stage">B2C cadres (&times;3), B2C dirigeants (&times;1), B2B RH (&times;3)</span>
-            </div>
-          </div>
-          <div class="pipeline-item">
-            <div>
-              <div class="pipeline-item-name">1 775 invitations envoyées</div>
-              <span class="pipeline-item-stage">Toutes campagnes confondues</span>
-            </div>
-          </div>
+<!-- ===== PANE PIPELINE ===== -->
+<div id="pane-pipeline" class="pane">
+  <div class="header">
+    <div class="header-left"><span>My Coaching Partner</span><h1>Pipeline commercial</h1></div>
+    <div class="header-right"><div class="header-badge"><span>Prospection → Vente → Coaching</span></div><div class="date">CrocoClick · Notion · Semaine 27</div></div>
+  </div>
+  <div class="main">
+    <div class="section-title">Les 3 étapes du pipeline</div>
+    <div class="section-subtitle">De la prospection au coaching en cours</div>
+    <div class="pipe-grid">
+      <div class="pipe-card">
+        <div class="pipe-head mid"><div class="t">Prospection</div><div class="n">100</div><div class="a">Nouveaux leads</div></div>
+        <div class="pipe-body">
+          <div class="pipe-item"><div><div class="nm">7 campagnes actives</div><span class="st">B2C cadres (×3), B2C dirigeants (×1), B2B RH (×3)</span></div></div>
+          <div class="pipe-item"><div><div class="nm">1 775 invitations envoyées</div><span class="st">Toutes campagnes confondues</span></div></div>
         </div>
       </div>
-
-      <div class="pipeline-card">
-        <div class="pipeline-card-header terra">
-          <div class="pipeline-card-title">Vente, propositions en cours</div>
-          <div class="pipeline-card-count">4 520 &euro;</div>
-          <div class="pipeline-card-amount">2 propositions envoyées</div>
-        </div>
-        <div class="pipeline-card-body">
-          <div class="pipeline-item">
-  <div>
-    <div class="pipeline-item-name">Carine Elhage</div>
-    <span class="pipeline-item-stage">À relancer</span>
-  </div>
-  <div class="pipeline-item-amount">1 320 €</div>
-</div>
-<div class="pipeline-item">
-  <div>
-    <div class="pipeline-item-name">Capucine Legrand (test)</div>
-    <span class="pipeline-item-stage">Proposition en cours</span>
-  </div>
-  <div class="pipeline-item-amount">3 200 €</div>
-</div>
+      <div class="pipe-card">
+        <div class="pipe-head coral"><div class="t">Vente · propositions en cours</div><div class="n">4 520 €</div><div class="a">2 propositions envoyées</div></div>
+        <div class="pipe-body">
+          <div class="pipe-item"><div><div class="nm">Carine Elhage</div><span class="st">À relancer</span></div><div class="am">1 320 €</div></div>
+          <div class="pipe-item"><div><div class="nm">Capucine Legrand (test)</div><span class="st">Proposition en cours</span></div><div class="am">3 200 €</div></div>
         </div>
       </div>
+      <div class="pipe-card">
+        <div class="pipe-head"><div class="t">Coaching en cours</div><div class="n">4</div><div class="a">clients actifs · 5 800 € restant</div></div>
+        <div class="pipe-body">
+          <div class="pipe-item"><div><div class="nm">Margaux Valognes</div><span class="st">Coaching en cours</span></div><div class="am">600 €</div></div>
+          <div class="pipe-item"><div><div class="nm">Meredith Douglas</div><span class="st">Coaching en cours</span></div><div class="am">1 320 €</div></div>
+          <div class="pipe-item"><div><div class="nm">Magalie Richerd</div><span class="st">Coaching en cours</span></div><div class="am">1 320 €</div></div>
+          <div class="pipe-item"><div><div class="nm">Frédéric Yot</div><span class="st">Coaching en cours</span></div><div class="am">2 560 €</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">Dashboard commercial MCP · Stripe · CrocoClick · Notion / Waalaxy · Semaine 27, juillet 2026</div>
+</div>
 
-      <div class="pipeline-card">
-        <div class="pipeline-card-header">
-          <div class="pipeline-card-title">Coaching en cours</div>
-          <div class="pipeline-card-count">4</div>
-          <div class="pipeline-card-amount">clients actifs, 5 800 &euro; restant</div>
-        </div>
-        <div class="pipeline-card-body">
-          <div class="pipeline-item">
-  <div>
-    <div class="pipeline-item-name">Margaux Valognes</div>
-    <span class="pipeline-item-stage">Coaching en cours</span>
+<!-- ===== PANE PROSPECTION ===== -->
+<div id="pane-prospection" class="pane">
+  <div class="header">
+    <div class="header-left"><span>My Coaching Partner</span><h1>Prospection Waalaxy</h1></div>
+    <div class="header-right"><div class="header-badge"><span>7 campagnes · 1 775 invitations</span></div><div class="date">Relevé à actualiser · dernier le 20 juin</div></div>
   </div>
-  <div class="pipeline-item-amount">600 €</div>
-</div>
-<div class="pipeline-item">
-  <div>
-    <div class="pipeline-item-name">Meredith Douglas</div>
-    <span class="pipeline-item-stage">Coaching en cours</span>
-  </div>
-  <div class="pipeline-item-amount">1 320 €</div>
-</div>
-<div class="pipeline-item">
-  <div>
-    <div class="pipeline-item-name">Magalie Richerd</div>
-    <span class="pipeline-item-stage">Coaching en cours</span>
-  </div>
-  <div class="pipeline-item-amount">1 320 €</div>
-</div>
-<div class="pipeline-item">
-  <div>
-    <div class="pipeline-item-name">Frédéric Yot</div>
-    <span class="pipeline-item-stage">Coaching en cours</span>
-  </div>
-  <div class="pipeline-item-amount">2 560 €</div>
-</div>
-        </div>
+  <div class="main">
+    <div class="section-title">Campagnes en cours</div>
+    <div class="section-subtitle">Taux d'acceptation et de réponse par campagne · à relever chaque semaine dans Notion</div>
+    <div class="wx-grid">
+
+      <div class="wx-card">
+        <div class="wx-title">Visites profil · invitation + 2 messages</div>
+        <div class="wx-persona">B2C · Cadre supérieur / Senior Manager</div>
+        <div class="wx-stats"><div><div class="wx-sl">Invitations</div><div class="wx-sv">232</div></div><div><div class="wx-sl">Taux accept.</div><div class="wx-sv hl">68 %</div></div><div><div class="wx-sl">Réponses</div><div class="wx-sv">116</div></div><div><div class="wx-sl">Taux réponse</div><div class="wx-sv">37 %</div></div></div>
+        <div class="wx-badge run">En cours</div>
+        <div class="wx-act">Laisser tourner. Valider cohérence Playbook visites-invitation.</div>
+      </div>
+
+      <div class="wx-card">
+        <div class="wx-title">Cadres supérieurs · invitation + 2 messages</div>
+        <div class="wx-persona">B2C · Cadre supérieur / Senior Manager</div>
+        <div class="wx-stats"><div><div class="wx-sl">Invitations</div><div class="wx-sv">1 223</div></div><div><div class="wx-sl">Taux accept.</div><div class="wx-sv hl">36 %</div></div><div><div class="wx-sl">Réponses</div><div class="wx-sv">116</div></div><div><div class="wx-sl">Taux réponse</div><div class="wx-sv">13 %</div></div></div>
+        <div class="wx-badge run">En cours</div>
+        <div class="wx-act">Laisser tourner. Vérifier messages envoyés et erreurs en fin de journée.</div>
+      </div>
+
+      <div class="wx-card">
+        <div class="wx-title">Demande de connexion entrante</div>
+        <div class="wx-persona">B2B · Prescripteur RH (HRBP/DRH/L&amp;D)</div>
+        <div class="wx-stats"><div><div class="wx-sl">Invitations</div><div class="wx-sv" style="font-size:13px;">entrantes</div></div><div><div class="wx-sl">Taux réponse</div><div class="wx-sv hl">26 %</div></div><div><div class="wx-sl">Réponses</div><div class="wx-sv">28</div></div><div><div class="wx-sl">RDV</div><div class="wx-sv" style="font-size:13px;">à mesurer</div></div></div>
+        <div class="wx-badge run">En cours</div>
+        <div class="wx-act">Vérifier intégration Webhook pour traçage RDV.</div>
+      </div>
+
+      <div class="wx-card">
+        <div class="wx-title">RH luxe · invitation + 2 messages</div>
+        <div class="wx-persona">B2B · Prescripteur RH (HRBP/DRH/L&amp;D)</div>
+        <div class="wx-stats"><div><div class="wx-sl">Invitations</div><div class="wx-sv">152</div></div><div><div class="wx-sl">Taux accept.</div><div class="wx-sv hl">18 %</div></div><div><div class="wx-sl">Réponses</div><div class="wx-sv">4</div></div><div><div class="wx-sl">Taux réponse</div><div class="wx-sv">7 %</div></div></div>
+        <div class="wx-badge run">En cours</div>
+        <div class="wx-act">Préparer liste RH fraîche. Relever stats S27.</div>
+      </div>
+
+      <div class="wx-card">
+        <div class="wx-title">Dirigeants luxe · invitation + 2 messages</div>
+        <div class="wx-persona">B2C · Dirigeant / C-Level</div>
+        <div class="wx-stats"><div><div class="wx-sl">Invitations</div><div class="wx-sv">168</div></div><div><div class="wx-sl">Taux accept.</div><div class="wx-sv" style="color:var(--coral);">10 %</div></div><div><div class="wx-sl">Réponses</div><div class="wx-sv">2</div></div><div><div class="wx-sl">Taux réponse</div><div class="wx-sv">6 %</div></div></div>
+        <div class="wx-badge pause">A/B test à lancer</div>
+        <div class="wx-act">Tester invitation sans note sur 50 profils. Seuil succès : 25 % acceptation.</div>
+      </div>
+
+      <div class="wx-card">
+        <div class="wx-title">RH luxe · message (connectés)</div>
+        <div class="wx-persona">B2B · Prescripteur RH (HRBP/DRH/L&amp;D)</div>
+        <div class="wx-stats"><div><div class="wx-sl">Messages</div><div class="wx-sv" style="font-size:13px;">à relever</div></div><div><div class="wx-sl">Taux réponse</div><div class="wx-sv hl" style="font-size:13px;">à relever</div></div><div><div class="wx-sl">Réponses</div><div class="wx-sv">0</div></div><div><div class="wx-sl">RDV</div><div class="wx-sv">0</div></div></div>
+        <div class="wx-badge run">En cours</div>
+        <div class="wx-act">Vérifier messages envoyés et réponses en fin de journée.</div>
+      </div>
+
+      <div class="wx-card">
+        <div class="wx-title">Performer · prise de poste · juin 26</div>
+        <div class="wx-persona">B2C · Cadre supérieur / Senior Manager</div>
+        <div class="wx-stats"><div><div class="wx-sl">Invitations</div><div class="wx-sv">0</div></div><div><div class="wx-sl">Taux accept.</div><div class="wx-sv">0 %</div></div><div><div class="wx-sl">Réponses</div><div class="wx-sv">0</div></div><div><div class="wx-sl">Objectif</div><div class="wx-sv" style="font-size:13px;">Podcast</div></div></div>
+        <div class="wx-badge pause">File vide</div>
+        <div class="wx-act">Qualifier : vraie campagne Waalaxy ou note ? Si campagne, renseigner stats et liste.</div>
       </div>
 
     </div>
   </div>
+  <div class="footer">Dashboard commercial MCP · Stripe · CrocoClick · Notion / Waalaxy · Semaine 27, juillet 2026</div>
+</div>
 
-  <div class="section">
-    <div class="section-title">Prospection Waalaxy</div>
-    <div class="waalaxy-grid">
-      <div class="waalaxy-card">
-  <div class="waalaxy-card-title">Visites profil - invitation + 2 messages</div>
-  <div class="waalaxy-persona">B2C, Cadre supérieur / Senior Manager</div>
-  <div class="waalaxy-stats">
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">Invitations</div>
-      <div class="waalaxy-stat-value">232</div>
-    </div>
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">Taux accept.</div>
-      <div class="waalaxy-stat-value highlight">68 %</div>
-    </div>
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">Réponses</div>
-      <div class="waalaxy-stat-value">116</div>
-    </div>
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">Taux réponse</div>
-      <div class="waalaxy-stat-value">37 %</div>
-    </div>
+<!-- ===== PANE RELANCES ===== -->
+<div id="pane-relances" class="pane">
+  <div class="header">
+    <div class="header-left"><span>My Coaching Partner</span><h1>Relances &amp; tâches</h1></div>
+    <div class="header-right"><div class="header-badge"><span>Priorités de la semaine</span></div><div class="date">Pipeline Vente &amp; Closing · Notion</div></div>
   </div>
-  <div class="waalaxy-blocage running">En cours d'exécution</div>
-  <div class="waalaxy-action">Laisser tourner. Valider cohérence Playbook visites-invitation.</div>
-</div>
-<div class="waalaxy-card">
-  <div class="waalaxy-card-title">Cadres supérieurs - invitation + 2 messages</div>
-  <div class="waalaxy-persona">B2C, Cadre supérieur / Senior Manager</div>
-  <div class="waalaxy-stats">
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">Invitations</div>
-      <div class="waalaxy-stat-value">1 223</div>
-    </div>
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">Taux accept.</div>
-      <div class="waalaxy-stat-value highlight">36 %</div>
-    </div>
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">Réponses</div>
-      <div class="waalaxy-stat-value">116</div>
-    </div>
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">Taux réponse</div>
-      <div class="waalaxy-stat-value">13 %</div>
-    </div>
-  </div>
-  <div class="waalaxy-blocage running">En cours d'exécution</div>
-  <div class="waalaxy-action">Laisser tourner. Vérifier messages envoyés et erreurs fin de journée.</div>
-</div>
-<div class="waalaxy-card">
-  <div class="waalaxy-card-title">Demande de connexion entrante</div>
-  <div class="waalaxy-persona">B2B, Prescripteur RH (HRBP/DRH/L&amp;D)</div>
-  <div class="waalaxy-stats">
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">Invitations</div>
-      <div class="waalaxy-stat-value">entrantes</div>
-    </div>
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">Taux réponse</div>
-      <div class="waalaxy-stat-value highlight">26 %</div>
-    </div>
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">Réponses</div>
-      <div class="waalaxy-stat-value">28</div>
-    </div>
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">RDV</div>
-      <div class="waalaxy-stat-value">à mesurer</div>
-    </div>
-  </div>
-  <div class="waalaxy-blocage running">En cours d'exécution</div>
-  <div class="waalaxy-action">Vérifier intégration Webhook pour traçage RDV.</div>
-</div>
-<div class="waalaxy-card">
-  <div class="waalaxy-card-title">RH luxe - Invitation + 2 Messages</div>
-  <div class="waalaxy-persona">B2B, Prescripteur RH (HRBP/DRH/L&amp;D)</div>
-  <div class="waalaxy-stats">
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">Invitations</div>
-      <div class="waalaxy-stat-value">152</div>
-    </div>
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">Taux accept.</div>
-      <div class="waalaxy-stat-value highlight">18 %</div>
-    </div>
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">Réponses</div>
-      <div class="waalaxy-stat-value">4</div>
-    </div>
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">Taux réponse</div>
-      <div class="waalaxy-stat-value">7 %</div>
-    </div>
-  </div>
-  <div class="waalaxy-blocage running">En cours d'exécution</div>
-  <div class="waalaxy-action">Préparer liste RH fraîche. Relever stats S27.</div>
-</div>
-<div class="waalaxy-card">
-  <div class="waalaxy-card-title">Dirigeants luxe - invitation + 2 messages</div>
-  <div class="waalaxy-persona">B2C, Dirigeant / C-Level</div>
-  <div class="waalaxy-stats">
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">Invitations</div>
-      <div class="waalaxy-stat-value">168</div>
-    </div>
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">Taux accept.</div>
-      <div class="waalaxy-stat-value highlight">10 %</div>
-    </div>
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">Réponses</div>
-      <div class="waalaxy-stat-value">2</div>
-    </div>
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">Taux réponse</div>
-      <div class="waalaxy-stat-value">6 %</div>
-    </div>
-  </div>
-  <div class="waalaxy-blocage paused">A/B test à lancer</div>
-  <div class="waalaxy-action">Tester invitation sans note sur 50 profils. Seuil succès : 25 % acceptation.</div>
-</div>
-<div class="waalaxy-card">
-  <div class="waalaxy-card-title">RH luxe - message (connectés)</div>
-  <div class="waalaxy-persona">B2B, Prescripteur RH (HRBP/DRH/L&amp;D)</div>
-  <div class="waalaxy-stats">
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">Messages</div>
-      <div class="waalaxy-stat-value">à relever</div>
-    </div>
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">Taux réponse</div>
-      <div class="waalaxy-stat-value highlight">à relever</div>
-    </div>
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">Réponses</div>
-      <div class="waalaxy-stat-value">0</div>
-    </div>
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">RDV</div>
-      <div class="waalaxy-stat-value">0</div>
-    </div>
-  </div>
-  <div class="waalaxy-blocage running">En cours d'exécution</div>
-  <div class="waalaxy-action">Vérifier messages envoyés et réponses en fin de journée.</div>
-</div>
-<div class="waalaxy-card">
-  <div class="waalaxy-card-title">Performer - prise de poste - juin 26</div>
-  <div class="waalaxy-persona">B2C, Cadre supérieur / Senior Manager</div>
-  <div class="waalaxy-stats">
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">Invitations</div>
-      <div class="waalaxy-stat-value">0</div>
-    </div>
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">Taux accept.</div>
-      <div class="waalaxy-stat-value highlight">0 %</div>
-    </div>
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">Réponses</div>
-      <div class="waalaxy-stat-value">0</div>
-    </div>
-    <div class="waalaxy-stat-item">
-      <div class="waalaxy-stat-label">Objectif</div>
-      <div class="waalaxy-stat-value">Podcast</div>
-    </div>
-  </div>
-  <div class="waalaxy-blocage paused">File vide</div>
-  <div class="waalaxy-action">Qualifier : vraie campagne Waalaxy ou note ? Si campagne, renseigner stats et liste.</div>
-</div>
-    </div>
-  </div>
-
-  <div class="section">
+  <div class="main">
     <div class="section-title">Relances prioritaires</div>
-    <div class="relances-list">
-      <div class="relance-item urgent">
-  <div>
-    <div class="relance-name">Carine Elhage</div>
-    <div class="relance-detail">Proposition envoyée, stage "À relancer" pipeline Vente et Closing</div>
-  </div>
-  <div>
-    <div class="relance-amount">1 320 €</div>
-    <div class="relance-date">Pipeline Vente &amp; Closing</div>
-  </div>
-</div>
+    <div class="section-subtitle">Propositions envoyées en attente de signature</div>
+    <div class="relance-row">
+      <div><div class="nm">Carine Elhage</div><div class="dt">Proposition envoyée · stage « À relancer » · pipeline Vente &amp; Closing</div></div>
+      <div class="am">1 320 €</div>
     </div>
-  </div>
 
-  <div class="section">
-    <div class="section-title">Tâches de la semaine</div>
-    <div class="tasks-list">
-      <div class="task-item">
-  <div class="task-dot" style="background: var(--text-light)"></div>
-  <div class="task-name" style="color: var(--text-light); font-style: italic;">Aucune tâche prospection enregistrée dans Notion pour cette semaine</div>
-</div>
-    </div>
+    <div class="section-title" style="margin-top:36px;">Tâches de la semaine</div>
+    <div class="section-subtitle">Source : Notion</div>
+    <div class="task-item"><div class="task-dot" style="background:var(--text-light);"></div><span style="color:var(--text-light);font-style:italic;">Aucune tâche prospection enregistrée dans Notion pour cette semaine</span></div>
   </div>
-
-  <div class="section">
-    <div class="section-title">Points de vigilance</div>
-    <div class="alertes-list">
-      <div class="alerte-item warning">
-  <div class="alerte-icon"></div>
-  <div class="alerte-text">
-    <strong>Retard de chiffre d'affaires</strong>
-    <span>9 313 € encaissés (31 %) à la S27, alors que 52 % de l'année est écoulée. Rythme attendu : ~15 600 €. Écart : 6 287 €. Objectif mensuel révisé : 3 448 € / mois sur les 6 mois restants.</span>
-  </div>
-</div>
-<div class="alerte-item warning">
-  <div class="alerte-icon"></div>
-  <div class="alerte-text">
-    <strong>Campagne "Dirigeants luxe" sous-performante</strong>
-    <span>10 % de taux d'acceptation sur 168 invitations (seuil alerte : 15 %). A/B test à lancer cette semaine : version sans note d'invitation sur 50 profils. Seuil succès : 25 % acceptation.</span>
-  </div>
-</div>
-<div class="alerte-item info">
-  <div class="alerte-icon"></div>
-  <div class="alerte-text">
-    <strong>Relevé Waalaxy non actualisé depuis le 20 juin</strong>
-    <span>Dernier relevé il y a 13 jours sur toutes les campagnes actives. Relever les stats S27 cette semaine dans Notion (invitations envoyées, acceptées, réponses, RDV).</span>
-  </div>
-</div>
-    </div>
-  </div>
-
+  <div class="footer">Dashboard commercial MCP · Stripe · CrocoClick · Notion / Waalaxy · Semaine 27, juillet 2026</div>
 </div>
 
-<div class="footer">
-  Dashboard commercial MCP, généré le 3 juillet 2026, données Stripe, CrocoClick, Notion / Waalaxy
+<!-- ===== PANE VIGILANCE ===== -->
+<div id="pane-vigilance" class="pane">
+  <div class="header">
+    <div class="header-left"><span>My Coaching Partner</span><h1>Points de vigilance</h1></div>
+    <div class="header-right"><div class="header-badge"><span>Alertes de la semaine</span></div><div class="date">Semaine 27, 3 juillet 2026</div></div>
+  </div>
+  <div class="main">
+    <div class="section-title">Ce qui demande une action</div>
+    <div class="section-subtitle">Classé par priorité</div>
+
+    <div class="alert alert-danger"><span class="alert-icon">⚠</span><div class="alert-text"><strong>Retard de chiffre d'affaires</strong><p>9 313 € encaissés (31 %) à la S27, alors que 52 % de l'année est écoulée. Rythme attendu : ~15 600 €. Écart : 6 287 €. Objectif mensuel révisé : 3 448 € / mois sur les 6 mois restants.</p></div></div>
+
+    <div class="alert alert-danger"><span class="alert-icon">⚠</span><div class="alert-text"><strong>Campagne « Dirigeants luxe » sous-performante</strong><p>10 % de taux d'acceptation sur 168 invitations (seuil alerte : 15 %). A/B test à lancer cette semaine : version sans note d'invitation sur 50 profils. Seuil succès : 25 % acceptation.</p></div></div>
+
+    <div class="alert alert-info"><span class="alert-icon">ℹ</span><div class="alert-text"><strong>Relevé Waalaxy non actualisé depuis le 20 juin</strong><p>Dernier relevé il y a 13 jours sur toutes les campagnes actives. Relever les stats S27 cette semaine dans Notion (invitations envoyées, acceptées, réponses, RDV).</p></div></div>
+
+    <div class="alert alert-warn"><span class="alert-icon">✓</span><div class="alert-text"><strong>Seuil de franchise TVA (art. 293 B du CGI)</strong><p>CA cumulé 9 313 € : marge confortable sous le seuil de 37 500 €. Pas de risque de bascule à la TVA cette année au rythme actuel.</p></div></div>
+  </div>
+  <div class="footer">Dashboard commercial MCP · Stripe · CrocoClick · Notion / Waalaxy · Semaine 27, juillet 2026</div>
 </div>
 
+</div><!-- /main-area -->
+
+<script>
+function showPane(id, el) {
+  document.querySelectorAll('.pane').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.sidebar-item').forEach(function(i){ i.classList.remove('active'); });
+  document.getElementById('pane-' + id).classList.add('active');
+  el.classList.add('active');
+}
+</script>
 </body>
 </html>
