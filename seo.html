@@ -60,8 +60,16 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--te
 .header-badge span { font-size:13px; color:var(--blush); font-weight:600; }
 .header-right .date { font-size:11px; color:var(--teal-mid); margin-top:8px; letter-spacing:1px; }
 
+/* === NAV TABS === */
+.nav { background:var(--white); border-bottom:1px solid var(--border); padding:0 48px; display:flex; position:sticky; top:0; z-index:100; box-shadow:0 2px 12px rgba(24,78,90,0.05); overflow-x:auto; }
+.nav-tab { padding:15px 22px; font-size:11px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-light); cursor:pointer; border-bottom:2px solid transparent; transition:all .2s; white-space:nowrap; }
+.nav-tab:hover { color:var(--teal-dark); }
+.nav-tab.active { color:var(--teal-dark); border-bottom-color:var(--teal-mid); }
+
 /* === MAIN CONTENT === */
 .main { padding:36px 48px; max-width:1400px; margin:0 auto; width:100%; }
+.section { display:none; }
+.section.active { display:block; }
 .section-title { font-family:'Playfair Display',serif; font-size:22px; color:var(--teal-dark); margin-bottom:6px; }
 .section-subtitle { font-size:13px; color:var(--text-light); margin-bottom:28px; }
 
@@ -169,7 +177,8 @@ tr:hover td { background:rgba(24,78,90,0.02); }
 .sm-val.good { color:var(--patina); }
 
 /* === PAGE URL === */
-.page-url a { color:var(--teal-mid); text-decoration:none; font-weight:600; font-size:12px; }
+.page-url { font-size:12px; color:var(--text-mid); }
+.page-url a { color:var(--teal-mid); text-decoration:none; font-weight:600; }
 .page-url a:hover { color:var(--patina); }
 
 /* === FOOTER === */
@@ -188,22 +197,34 @@ tr:hover td { background:rgba(24,78,90,0.02); }
   </div>
   <nav class="sidebar-nav">
     <div class="sidebar-item active" onclick="showPane('synthese',this)">
-      <span class="si-icon">⊞</span> Synthèse
+      <span class="si-icon">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      </span> Synthèse
     </div>
     <div class="sidebar-item" onclick="showPane('performance',this)">
-      <span class="si-icon">↗</span> Performance
+      <span class="si-icon">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </span> Performance
     </div>
     <div class="sidebar-item" onclick="showPane('pages',this)">
-      <span class="si-icon">⊡</span> Pages
+      <span class="si-icon">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </span> Pages
     </div>
     <div class="sidebar-item" onclick="showPane('keywords',this)">
-      <span class="si-icon">⊙</span> Mots-clés
+      <span class="si-icon">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span> Mots-clés
     </div>
     <div class="sidebar-item" onclick="showPane('quickwins',this)">
-      <span class="si-icon">✦</span> Quick Wins
+      <span class="si-icon">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      </span> Quick Wins
     </div>
     <div class="sidebar-item" onclick="showPane('actions',this)">
-      <span class="si-icon">✓</span> Plan d'action
+      <span class="si-icon">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      </span> Plan d'action
     </div>
   </nav>
   <div class="sidebar-footer">mycoachingpartner.fr</div>
@@ -218,47 +239,45 @@ tr:hover td { background:rgba(24,78,90,0.02); }
   <div class="synthese-hero">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;">
       <div>
-        <div style="font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--teal-mid);margin-bottom:8px;">mycoachingpartner.fr · suivi mensuel</div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--teal-mid);margin-bottom:8px;">mycoachingpartner.fr · suivi hebdomadaire</div>
         <h1>Analyse SEO · Juillet 2026</h1>
+        <p>Données au 7 juillet 2026 · Sources : Notion (BDD mots-clés), Ubersuggest (rank tracking), dernière donnée GSC connue du 11/06 (Search Console non connectée)</p>
       </div>
       <div style="text-align:right;">
-        <div class="header-badge"><span>Ubersuggest · données Google</span></div>
-        <div style="font-size:11px;color:var(--teal-mid);margin-top:8px;">GSC non accessible en direct · baseline juin : 4 230 impr / 90 clics</div>
-        <div style="font-size:11px;color:var(--teal-mid);margin-top:6px;">Données juin 2026 (dernier mois complet)</div>
-        <div style="font-size:10px;color:var(--teal-mid);opacity:.75;">Ubersuggest (Google data) + Notion BDD mots-clés</div>
+        <div class="header-badge"><span>Ubersuggest + Notion · GSC non connectée</span></div>
+        <div style="font-size:11px;color:var(--teal-mid);margin-top:8px;">Généré le 7 juillet 2026</div>
       </div>
     </div>
   </div>
 
   <div class="synthese-grid">
     <div class="synthese-card">
-      <h3>Top 3 à protéger</h3>
-      <div class="synthese-metric"><span class="sm-label">coaching reprise professionnelle luxe</span><span class="sm-val good">Pos 1</span></div>
-      <div class="synthese-metric"><span class="sm-label">coaching carrière luxe</span><span class="sm-val good">Pos 1</span></div>
-      <div class="synthese-metric"><span class="sm-label">Capucine Legrand coach</span><span class="sm-val good">Pos 1</span></div>
-      <div class="synthese-metric"><span class="sm-label">vs juin 2026</span><span class="sm-val good">Stables · aucune perte</span></div>
+      <h3>Vue d'ensemble GSC · dernière donnée connue (11/06)</h3>
+      <div class="synthese-metric"><span class="sm-label">Clics (28j)</span><span class="sm-val">90</span></div>
+      <div class="synthese-metric"><span class="sm-label">Impressions (28j)</span><span class="sm-val">4 230</span></div>
+      <div class="synthese-metric"><span class="sm-label">CTR moyen</span><span class="sm-val">2,1%</span></div>
+      <div class="synthese-metric"><span class="sm-label">Position moyenne</span><span class="sm-val">10,2</span></div>
     </div>
     <div class="synthese-card">
-      <h3>Vue d'ensemble Ubersuggest (juin 2026)</h3>
-      <div class="synthese-metric"><span class="sm-label">Trafic organique</span><span class="sm-val good">54 (+32 % vs mai 41)</span></div>
-      <div class="synthese-metric"><span class="sm-label">Domain Authority</span><span class="sm-val warn">3 (faible · croissance attendue)</span></div>
-      <div class="synthese-metric"><span class="sm-label">Backlinks / Domaines ref.</span><span class="sm-val">36 / 9</span></div>
-      <div class="synthese-metric"><span class="sm-label">Mots-clés trackés Ubersuggest</span><span class="sm-val">7</span></div>
+      <h3>3 mots-clés prioritaires à protéger</h3>
+      <div class="synthese-metric"><span class="sm-label">coaching reprise professionnelle luxe</span><span class="sm-val good">Pos 1 🟢</span></div>
+      <div class="synthese-metric"><span class="sm-label">coaching carrière luxe</span><span class="sm-val good">Pos 1 🟢</span></div>
+      <div class="synthese-metric"><span class="sm-label">Capucine Legrand coach</span><span class="sm-val good">Pos 1 🟢</span></div>
+      <div class="synthese-metric"><span class="sm-label">Statut global</span><span class="sm-val good">3/3 tiennent, inchangé vs juin</span></div>
     </div>
     <div class="synthese-card">
-      <h3>Opportunité prioritaire</h3>
-      <div class="synthese-metric"><span class="sm-label">Quick win #1</span><span class="sm-val good" style="font-size:12px;">"prise de poste manager" pos 18, SD 6</span></div>
-      <div class="synthese-metric"><span class="sm-label">Page cible</span><span class="sm-val" style="font-size:12px;">/coaching-prise-de-poste/</span></div>
-      <div class="synthese-metric"><span class="sm-label">Trou de contenu majeur</span><span class="sm-val danger" style="font-size:12px;">Cluster C1 entier (ICF Paris, vol 90)</span></div>
-      <div class="synthese-metric"><span class="sm-label">Pilier C1 en rédaction</span><span class="sm-val" style="font-size:12px;">Publication cible : 13 juillet</span></div>
+      <h3>Alertes prioritaires</h3>
+      <div class="synthese-metric"><span class="sm-label">Pilier C1 (ICF Paris)</span><span class="sm-val danger">Toujours non publié</span></div>
+      <div class="synthese-metric"><span class="sm-label">coach ou psy</span><span class="sm-val warn">pos 5 → 8</span></div>
+      <div class="synthese-metric"><span class="sm-label">coaching prise de poste</span><span class="sm-val warn">pos 18 → 20</span></div>
+      <div class="synthese-metric"><span class="sm-label">Roadmap C1</span><span class="sm-val" style="font-size:12px;">Rédaction 6/07, publication 13/07</span></div>
     </div>
     <div class="synthese-card">
-      <h3>Alertes &amp; points positifs</h3>
-      <div class="synthese-metric"><span class="sm-label">Score SEO on-page</span><span class="sm-val good">84 / 100</span></div>
-      <div class="synthese-metric"><span class="sm-label">4 pages bloquées (noindex)</span><span class="sm-val danger">À identifier · impact élevé</span></div>
-      <div class="synthese-metric"><span class="sm-label">coaching dirigeant Paris</span><span class="sm-val danger">Non positionné</span></div>
-      <div class="synthese-metric"><span class="sm-label">Trafic juin vs mai</span><span class="sm-val good">+32 % (41 → 54)</span></div>
-      <div class="synthese-metric"><span class="sm-label">Déclencheur cluster C2</span><span class="sm-val" style="font-size:12px;">Brief à lancer le 27 juillet</span></div>
+      <h3>Points positifs</h3>
+      <div class="synthese-metric"><span class="sm-label">capucine legrand (générique)</span><span class="sm-val good">pos 3 → 2</span></div>
+      <div class="synthese-metric"><span class="sm-label">coaching luxe</span><span class="sm-val good">stable pos 3</span></div>
+      <div class="synthese-metric"><span class="sm-label">my coaching partner</span><span class="sm-val good">stable pos 1</span></div>
+      <div class="synthese-metric"><span class="sm-label">Position moyenne domaine (Ubersuggest)</span><span class="sm-val">6,8, stable depuis juin</span></div>
     </div>
   </div>
 
@@ -266,15 +285,15 @@ tr:hover td { background:rgba(24,78,90,0.02); }
     <div class="insight-dark">
       <h3>Lecture stratégique · Juillet 2026</h3>
       <ul>
-        <li>Les 3 mots-clés prioritaires tiennent tous à position 1 (stable vs juin). Aucune perte à signaler sur les requêtes de marque et niche luxe.</li>
-        <li>Le trafic organique Ubersuggest progresse : 54 visites en juin vs 41 en mai (+32 %). La tendance est positive mais le volume reste faible. Le cluster C1 non publié est le principal levier de croissance.</li>
-        <li>Le quick win le plus accessible : "coaching prise de poste manager" en position 18 avec une difficulté SEO de seulement 6 sur /coaching-prise-de-poste/ déjà existante. Aucun nouveau contenu nécessaire, seule une optimisation H1/H2.</li>
-        <li>Trou de contenu majeur : le cluster C1 (coaching professionnel certifié ICF Paris, vol 90, SD 4) est en rédaction cette semaine. Publication cible le 13 juillet. C'est la priorité absolue du mois.</li>
-        <li>Déclencheur cluster C2 le 27 juillet : briefer "négocier salaire cadre luxe" (vol 140, SD 3) pour un démarrage en août et diversifier les requêtes transactionnelles.</li>
+        <li>Les 3 mots-clés prioritaires (coaching reprise professionnelle luxe, coaching carrière luxe, Capucine Legrand coach) tiennent tous en position 1, inchangé depuis juin. Aucune alerte sur le socle de marque.</li>
+        <li>Position moyenne du domaine suivi par Ubersuggest : 6,0 (5 juin), puis 5,4, 8,6, 6,4 et 6,8 (3 juillet). Volatilité mi-juin mais pas de tendance claire, ni progression ni dégradation, depuis un mois.</li>
+        <li>Le pilier du cluster C1 "coaching professionnel certifié ICF Paris" (volume 90, le cluster le plus transactionnel) n'est toujours pas publié. La roadmap prévoyait la rédaction le 6 juillet et la publication le 13 juillet, nous sommes le 7, la rédaction devrait être en cours ou terminée.</li>
+        <li>Deux pages perdent du terrain : coach ou psy (position 5 à 8) et coaching prise de poste (position 18 à 20, avec un changement d'URL entre /coaching-prise-de-poste-entreprises/ et /coaching-prise-de-poste/ à vérifier).</li>
+        <li>Search Console n'est pas connectée cette semaine : les métriques d'impressions, clics et CTR restent celles du relevé du 11 juin (dernière donnée connue), aucune donnée de juillet n'est disponible pour l'instant.</li>
       </ul>
     </div>
   </div>
-  <div class="footer">Dashboard SEO MCP · Source : Ubersuggest (Google data) + Notion BDD · mycoachingpartner.fr · Juillet 2026</div>
+  <div class="footer">Dashboard SEO MCP · Sources : Notion + Ubersuggest, dernière donnée GSC connue 11/06 · mycoachingpartner.fr · Juillet 2026</div>
 </div>
 
 
@@ -283,98 +302,90 @@ tr:hover td { background:rgba(24,78,90,0.02); }
   <div class="header">
     <div class="header-left">
       <span>mycoachingpartner.fr</span>
-      <h1>Performance - Vue d'ensemble</h1>
+      <h1>Performance - Suivi hebdomadaire Ubersuggest</h1>
     </div>
     <div class="header-right">
-      <div class="header-badge"><span>Juin 2026 vs mai 2026</span></div>
-      <div class="date">Source : Ubersuggest · GSC non accessible en direct</div>
+      <div class="header-badge"><span>1 juin → 7 juillet 2026</span></div>
+      <div class="date">Rank tracking hebdomadaire</div>
     </div>
   </div>
 
   <div class="main">
-    <div class="section-title">Métriques clés</div>
-    <div class="section-subtitle">Source : Ubersuggest (données Google) · juin 2026 vs mai 2026 · GSC baseline : 4 230 impr / 90 clics / CTR 2,1 % / pos moy 10,2 (relevé 11 juin)</div>
+    <div class="section active">
+      <div class="section-title">Métriques clés</div>
+      <div class="section-subtitle">Source : Ubersuggest (rank tracking) + dernière donnée GSC connue du 11 juin 2026 (Search Console non connectée)</div>
 
-    <div class="kpi-grid">
-      <div class="kpi-card">
-        <div class="kpi-label">Trafic organique (juin)</div>
-        <div class="kpi-value">54</div>
-        <div class="kpi-sub">Source Ubersuggest</div>
-        <div class="kpi-trend up">+32 % vs mai (41)</div>
-      </div>
-      <div class="kpi-card patina">
-        <div class="kpi-label">Domain Authority</div>
-        <div class="kpi-value">3</div>
-        <div class="kpi-sub">Faible · croissance attendue</div>
-        <div class="kpi-trend flat">Stable · piliers à publier</div>
-      </div>
-      <div class="kpi-card coral">
-        <div class="kpi-label">Backlinks</div>
-        <div class="kpi-value">36</div>
-        <div class="kpi-sub">9 domaines référents · 25 follow</div>
-        <div class="kpi-trend flat">11 nofollow</div>
-      </div>
-      <div class="kpi-card slate">
-        <div class="kpi-label">Baseline GSC (11 juin)</div>
-        <div class="kpi-value">10,2</div>
-        <div class="kpi-sub">Position moyenne GSC</div>
-        <div class="kpi-trend flat">4 230 impr · 90 clics · CTR 2,1 %</div>
-      </div>
-      <div class="kpi-card patina" style="grid-column:1/3;">
-        <div class="kpi-label">Score SEO on-page (audit Ubersuggest · 6 juillet)</div>
-        <div class="kpi-value">84<span style="font-size:16px;color:var(--text-light);font-family:'Raleway',sans-serif;font-weight:400;"> / 100</span></div>
-        <div class="kpi-sub">115 pages crawlées · 21 problèmes détectés</div>
-        <div class="kpi-trend up">Bon niveau · problèmes critiques à traiter</div>
-      </div>
-      <div class="kpi-card coral" style="grid-column:3/5;">
-        <div class="kpi-label">Pages bloquées noindex (impact élevé)</div>
-        <div class="kpi-value">4</div>
-        <div class="kpi-sub">Pages non indexables par Google</div>
-        <div class="kpi-trend down">À identifier dans Ubersuggest · action immédiate</div>
-      </div>
-    </div>
-
-    <div class="grid-2">
-      <div class="card">
-        <h3>Évolution trafic Ubersuggest</h3>
-        <p class="sub">Derniers mois disponibles</p>
-        <div class="bar-wrap"><div class="bar-label">Juin 2026</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--teal-dark)"></div></div><div class="bar-val">54</div></div>
-        <div class="bar-wrap"><div class="bar-label">Mai 2026</div><div class="bar-track"><div class="bar-fill" style="width:76%;background:var(--teal-mid)"></div></div><div class="bar-val">41</div></div>
-        <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">
-          <div class="alert alert-info" style="margin-bottom:0;">
-            <span class="alert-icon">ℹ</span>
-            <div class="alert-text"><strong>+32 % en un mois</strong><p>Tendance positive. Le volume reste faible : la publication du cluster C1 est le principal levier de croissance pour passer durablement au-dessus de 100 visites/mois.</p></div>
-          </div>
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Position moyenne domaine</div>
+          <div class="kpi-value">6,8</div>
+          <div class="kpi-sub">3 juillet 2026 · échantillon mots-clés trackés (Ubersuggest)</div>
+          <div class="kpi-trend flat">Stable depuis juin (entre 5,4 et 8,6)</div>
+        </div>
+        <div class="kpi-card patina">
+          <div class="kpi-label">Mots-clés prioritaires en top 3</div>
+          <div class="kpi-value">3/3</div>
+          <div class="kpi-sub">coaching reprise pro luxe, coaching carrière luxe, Capucine Legrand coach</div>
+          <div class="kpi-trend up">Inchangé vs juin</div>
+        </div>
+        <div class="kpi-card coral">
+          <div class="kpi-label">Clics (28j), dernière donnée GSC</div>
+          <div class="kpi-value">90</div>
+          <div class="kpi-sub">Relevé du 11 juin 2026</div>
+          <div class="kpi-trend flat">Juillet : à mesurer, GSC non connectée</div>
+        </div>
+        <div class="kpi-card slate">
+          <div class="kpi-label">Position moyenne GSC, dernière donnée</div>
+          <div class="kpi-value">10,2</div>
+          <div class="kpi-sub">Relevé du 11 juin 2026</div>
+          <div class="kpi-trend flat">Juillet : à mesurer</div>
         </div>
       </div>
 
-      <div class="card">
-        <h3>Top requêtes (Ubersuggest · juin 2026)</h3>
-        <p class="sub">Source : Ubersuggest domain keywords · mycoachingpartner.fr</p>
-        <table>
-          <thead><tr><th>Requête</th><th>Vol.</th><th>Pos.</th><th>SD</th></tr></thead>
-          <tbody>
-            <tr><td>8 signes personnes toxiques</td><td>320</td><td><span class="pos pos-top10">5</span></td><td>20</td></tr>
-            <tr><td>coaching prise de poste</td><td>50</td><td><span class="pos pos-p11-20">13</span></td><td>-</td></tr>
-            <tr><td>coaching prise de poste manager</td><td>30</td><td><span class="pos pos-p11-20">18</span></td><td style="color:var(--patina);font-weight:700;">6 ✓</td></tr>
-            <tr><td>quitter un travail toxique</td><td>140</td><td><span class="pos pos-p11-20">18</span></td><td>22</td></tr>
-            <tr><td>coaching en psychologie</td><td>260</td><td><span class="pos pos-p20plus">22</span></td><td>30</td></tr>
-            <tr><td>Capucine Legrand coach</td><td>70</td><td><span class="pos pos-top3">1</span></td><td>-</td></tr>
-            <tr><td>coaching carrière luxe</td><td>0</td><td><span class="pos pos-top3">1</span></td><td>12</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Évolution position moyenne du domaine (Ubersuggest, hebdo)</h3>
+          <p class="sub">Moyenne mobile hebdomadaire, échantillon mots-clés trackés · 1 juin - 7 juillet 2026</p>
+          <div class="bar-wrap"><div class="bar-label">5 juin</div><div class="bar-track"><div class="bar-fill" style="width:60%;background:var(--teal-dark)"></div></div><div class="bar-val">6,0</div></div>
+          <div class="bar-wrap"><div class="bar-label">12 juin</div><div class="bar-track"><div class="bar-fill" style="width:54%;background:var(--teal-mid)"></div></div><div class="bar-val">5,4</div></div>
+          <div class="bar-wrap"><div class="bar-label">19 juin</div><div class="bar-track"><div class="bar-fill" style="width:86%;background:var(--coral)"></div></div><div class="bar-val">8,6</div></div>
+          <div class="bar-wrap"><div class="bar-label">26 juin</div><div class="bar-track"><div class="bar-fill" style="width:64%;background:var(--patina)"></div></div><div class="bar-val">6,4</div></div>
+          <div class="bar-wrap"><div class="bar-label">3 juillet</div><div class="bar-track"><div class="bar-fill" style="width:68%;background:var(--slate)"></div></div><div class="bar-val">6,8</div></div>
+          <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">
+            <div class="alert alert-warn" style="margin-bottom:0;">
+              <div class="alert-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+              <div class="alert-text"><strong>Stabilité sans tendance claire</strong><p>Légère volatilité mi-juin (pic à 8,6 le 19 juin) puis retour autour de 6-7. Pas de dégradation structurelle ni de progression nette depuis un mois.</p></div>
+            </div>
+          </div>
+        </div>
 
-    <div class="insight">
-      <span class="insight-icon">ℹ</span>
-      <div class="insight-text">
-        <strong>GSC non accessible en direct ce mois</strong>
-        <p>Ubersuggest est connecté à Google (isConnectedToGSC: true, isUsingGoogleData: true) et sert de substitut pour les positions et le trafic. Les impressions et CTR exacts resteront à mesurer en GSC. Baseline de référence : 11 juin 2026 (4 230 impr, 90 clics, CTR 2,1 %, pos moy 10,2).</p>
+        <div class="card">
+          <h3>Mouvements individuels notables</h3>
+          <p class="sub">Source Ubersuggest · 5 juin vs 3 juillet 2026</p>
+          <table>
+            <thead><tr><th>Mot-clé</th><th>Pos. 5 juin</th><th>Pos. 3 juillet</th><th>Évolution</th></tr></thead>
+            <tbody>
+              <tr><td><strong>capucine legrand</strong></td><td><span class="pos pos-top3">3</span></td><td><span class="pos pos-top3">2</span></td><td style="color:var(--patina);font-weight:700;">+1</td></tr>
+              <tr><td>coaching luxe</td><td><span class="pos pos-top3">3</span></td><td><span class="pos pos-top3">3</span></td><td style="color:var(--text-light);">=</td></tr>
+              <tr><td>my coaching partner</td><td><span class="pos pos-top3">1</span></td><td><span class="pos pos-top3">1</span></td><td style="color:var(--text-light);">=</td></tr>
+              <tr><td>coach ou psy</td><td><span class="pos pos-top10">5</span></td><td><span class="pos pos-top10">8</span></td><td style="color:var(--coral);font-weight:700;">-3</td></tr>
+              <tr><td>coaching prise de poste</td><td><span class="pos pos-p11-20">18</span></td><td><span class="pos pos-p20plus">20</span></td><td style="color:var(--coral);font-weight:700;">-2</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:11px;color:var(--text-light);margin-top:12px;line-height:1.5;">La majorité des ~30 autres mots-clés trackés (coaching dirigeant, coach professionnel paris, négocier salaire, etc.) sont non positionnés ou marqués donnée instable cette semaine par Ubersuggest, non affichés ici.</p>
+        </div>
+      </div>
+
+      <div class="insight">
+        <div class="insight-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+        <div class="insight-text">
+          <strong>capucine legrand progresse, deux pages reculent</strong>
+          <p>La requête générique "capucine legrand" gagne une position (3 → 2). À l'inverse, coach ou psy (5 → 8) et coaching prise de poste (18 → 20) perdent du terrain, à vérifier en priorité sur /coach-ou-psy/ et /coaching-prise-de-poste/.</p>
+        </div>
       </div>
     </div>
   </div>
-  <div class="footer">Dashboard SEO MCP · Source : Ubersuggest (Google data) + Notion BDD · mycoachingpartner.fr · Juillet 2026</div>
+  <div class="footer">Dashboard SEO MCP · Sources : Notion + Ubersuggest, dernière donnée GSC connue 11/06 · mycoachingpartner.fr · Juillet 2026</div>
 </div>
 
 
@@ -383,75 +394,96 @@ tr:hover td { background:rgba(24,78,90,0.02); }
   <div class="header">
     <div class="header-left">
       <span>mycoachingpartner.fr</span>
-      <h1>Pages - Trafic Ubersuggest</h1>
+      <h1>Pages - Suivi du cluster C1 et pages en mouvement</h1>
     </div>
     <div class="header-right">
-      <div class="header-badge"><span>Top pages · juin 2026</span></div>
-      <div class="date">Source : Ubersuggest domain top pages</div>
+      <div class="header-badge"><span>GSC non connectée cette semaine</span></div>
+      <div class="date">Clics et impressions par page non rafraîchis</div>
     </div>
   </div>
 
   <div class="main">
-    <div class="section-title">Pages par trafic organique estimé</div>
-    <div class="section-subtitle">Source : Ubersuggest domain top pages · juin 2026 · GSC non accessible en direct ce mois</div>
+    <div class="section active">
+      <div class="section-title">Pages clés à surveiller</div>
+      <div class="section-subtitle">Search Console n'étant pas connectée cette semaine, les clics et impressions par page ne sont pas rafraîchis. Positions issues d'Ubersuggest (rank tracking) et de la BDD Notion.</div>
 
-    <div class="card" style="padding:0;overflow:hidden;">
-      <table>
-        <thead>
-          <tr>
-            <th>Page</th>
-            <th>Trafic (Ubersuggest)</th>
-            <th>Diagnostic</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><div class="page-url"><a href="https://mycoachingpartner.fr/personne-toxique-travail/" target="_blank">/personne-toxique-travail/</a></div></td>
-            <td><strong>7</strong></td>
-            <td style="color:var(--patina);font-size:12px;">Page pilier toxicité · pos 5 sur "8 signes personnes toxiques"</td>
-          </tr>
-          <tr>
-            <td><div class="page-url"><a href="https://mycoachingpartner.fr/coach-ou-psy/" target="_blank">/coach-ou-psy/</a></div></td>
-            <td><strong>2</strong></td>
-            <td style="color:var(--coral);font-size:12px;">Pos 22 sur "coaching en psychologie" (SD 30) · enrichir FAQ, E-E-A-T</td>
-          </tr>
-          <tr>
-            <td><div class="page-url"><a href="https://mycoachingpartner.fr/quitter-travail-toxique/" target="_blank">/quitter-travail-toxique/</a></div></td>
-            <td><strong>1</strong></td>
-            <td style="color:var(--coral);font-size:12px;">Pos 18 sur "quitter un travail toxique" (SD 22) · maillage depuis /personne-toxique-travail/</td>
-          </tr>
-          <tr>
-            <td><div class="page-url"><a href="https://mycoachingpartner.fr/coaching-prise-de-poste/" target="_blank">/coaching-prise-de-poste/</a></div></td>
-            <td><strong>1</strong></td>
-            <td style="color:var(--patina);font-size:12px;">✓ Quick win #1 · pos 18 "manager" SD 6 · optimiser H1/H2 sans réécrire</td>
-          </tr>
-          <tr>
-            <td><div class="page-url"><a href="https://mycoachingpartner.fr/coaching-recrutement/" target="_blank">/coaching-recrutement/</a></div></td>
-            <td>0</td>
-            <td style="color:var(--text-mid);font-size:12px;">À surveiller · pas de positionnement fort détecté</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="grid-2">
-      <div class="insight">
-        <span class="insight-icon">↘</span>
-        <div class="insight-text">
-          <strong>Pages commerciales luxe toujours absentes</strong>
-          <p>/coaching-carriere-luxe/ et /coaching-dirigeants-luxe/ ne génèrent pas de trafic détectable. L'ICP luxe ne trouve pas le site sur ses requêtes commerciales. Le cluster C1 (ICF Paris, transactionnel) est la réponse directe à ce trou.</p>
-        </div>
+      <div class="card" style="padding:0;overflow:hidden;">
+        <table>
+          <thead>
+            <tr>
+              <th>Page</th>
+              <th>Mot-clé associé</th>
+              <th>Pos. 5 juin</th>
+              <th>Pos. 3 juillet</th>
+              <th>Diagnostic</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="page-url"><a href="https://mycoachingpartner.fr/coach-ou-psy/" target="_blank">/coach-ou-psy/</a></div></td>
+              <td>coach ou psy (volume 320)</td>
+              <td><span class="pos pos-top10">5</span></td>
+              <td><span class="pos pos-top10">8</span></td>
+              <td style="color:var(--coral);font-size:12px;">! Recul de 3 positions, à vérifier (contenu, maillage, concurrence)</td>
+            </tr>
+            <tr>
+              <td><div class="page-url"><a href="https://mycoachingpartner.fr/coaching-prise-de-poste/" target="_blank">/coaching-prise-de-poste/</a></div></td>
+              <td>coaching prise de poste (volume 50)</td>
+              <td><span class="pos pos-p11-20">18</span> <span style="font-size:10px;color:var(--text-light);">(ancienne URL)</span></td>
+              <td><span class="pos pos-p20plus">20</span></td>
+              <td style="color:var(--coral);font-size:12px;">! Recul, changement d'URL à vérifier</td>
+            </tr>
+            <tr>
+              <td><div class="page-url">coaching professionnel certifié ICF Paris <span style="font-size:10px;color:var(--text-light);">(pilier C1, non publié)</span></div></td>
+              <td>coaching professionnel certifié ICF Paris (volume 90)</td>
+              <td><span class="pos pos-p20plus">non ranké</span></td>
+              <td><span class="pos pos-p20plus">non ranké</span></td>
+              <td style="color:var(--coral);font-size:12px;font-weight:700;">✗ Priorité 1 : rédaction 6/07, publication 13/07</td>
+            </tr>
+            <tr>
+              <td><div class="page-url"><a href="https://mycoachingpartner.fr/coaching-dirigeant-paris/" target="_blank">/coaching-dirigeant-paris/</a></div></td>
+              <td>coaching dirigeant Paris (volume 170)</td>
+              <td><span class="pos pos-p20plus">non positionné (juin)</span></td>
+              <td><span class="pos pos-p20plus">donnée instable</span></td>
+              <td style="color:var(--text-mid);font-size:12px;">→ Maillage interne prévu une fois le pilier C1 publié</td>
+            </tr>
+            <tr>
+              <td><div class="page-url"><a href="https://mycoachingpartner.fr/capucine-legrand/" target="_blank">/capucine-legrand/</a></div></td>
+              <td>capucine legrand (générique)</td>
+              <td><span class="pos pos-top3">3</span></td>
+              <td><span class="pos pos-top3">2</span></td>
+              <td style="color:var(--patina);font-size:12px;">+ Amélioration, page qui progresse</td>
+            </tr>
+            <tr>
+              <td><div class="page-url"><a href="https://mycoachingpartner.fr/" target="_blank">/ (accueil)</a></div></td>
+              <td>my coaching partner</td>
+              <td><span class="pos pos-top3">1</span></td>
+              <td><span class="pos pos-top3">1</span></td>
+              <td style="color:var(--patina);font-size:12px;">+ Stable, tient la home</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <div class="insight">
-        <span class="insight-icon">ℹ</span>
-        <div class="insight-text">
-          <strong>/coaching-prise-de-poste/ : levier immédiat</strong>
-          <p>La page est déjà indexée et en position 18 sur "coaching prise de poste manager" (SD 6). C'est le seul keyword avec une difficulté aussi faible en page 2. Aucun nouveau contenu : juste ajouter "manager" dans H1/H2 + maillage depuis C3.</p>
+
+      <div class="grid-2">
+        <div class="insight">
+          <div class="insight-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><polyline points="8 18 6 18 6 16"/></svg></div>
+          <div class="insight-text">
+            <strong>Le trou de contenu majeur reste le pilier C1</strong>
+            <p>Le pilier du cluster le plus transactionnel, "coaching professionnel certifié ICF Paris" (volume 90, priorité 🥇1), n'est toujours pas publié. La roadmap prévoyait la rédaction le 6 juillet et la publication le 13 juillet.</p>
+          </div>
+        </div>
+        <div class="insight">
+          <div class="insight-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+          <div class="insight-text">
+            <strong>Maillage interne à préparer</strong>
+            <p>Une fois le pilier C1 publié, le maillage vers /coaching-dirigeant-paris/, /coaching-dirigeant-rendezvous/ et /capucine-legrand/ doit être ajouté, suivi d'une indexation manuelle Google.</p>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="footer">Dashboard SEO MCP · Source : Ubersuggest (Google data) + Notion BDD · mycoachingpartner.fr · Juillet 2026</div>
+  <div class="footer">Dashboard SEO MCP · Sources : Notion + Ubersuggest, dernière donnée GSC connue 11/06 · mycoachingpartner.fr · Juillet 2026</div>
 </div>
 
 
@@ -460,56 +492,57 @@ tr:hover td { background:rgba(24,78,90,0.02); }
   <div class="header">
     <div class="header-left">
       <span>mycoachingpartner.fr</span>
-      <h1>Mots-clés - Positions juillet 2026</h1>
+      <h1>Mots-clés - Positions Notion &amp; Ubersuggest</h1>
     </div>
     <div class="header-right">
       <div class="header-badge"><span>Focus ICP luxe &amp; carrière</span></div>
-      <div class="date">Ubersuggest + Notion BDD · 6 juillet 2026</div>
+      <div class="date">Données réelles Notion + Ubersuggest · juillet 2026</div>
     </div>
   </div>
 
   <div class="main">
-    <div class="section-title">Mots-clés stratégiques</div>
-    <div class="section-subtitle">Sources : Ubersuggest (positions mesurées) + Notion BDD mots-clés (positions déclarées) · Ubersuggest ne détecte pas les mots-clés ultra-niche &lt; 10 recherches/mois</div>
+    <div class="section active">
+      <div class="section-title">Mots-clés stratégiques</div>
+      <div class="section-subtitle">Focus ICP : coaching luxe &amp; coaching carrière, Search Console non connectée ce mois-ci, données Notion et Ubersuggest uniquement</div>
 
-    <div class="card" style="padding:0;overflow:hidden;margin-bottom:24px;">
-      <table>
-        <thead>
-          <tr><th>Mot-clé</th><th>Volume</th><th>Position</th><th>SD</th><th>Source</th><th>Statut</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><strong>coaching reprise professionnelle luxe</strong></td><td>-</td><td><span class="pos pos-top3">1</span></td><td>-</td><td>Notion BDD</td><td style="color:var(--patina);font-size:12px;font-weight:600;">Stable vs juin</td></tr>
-          <tr><td><strong>coaching carrière luxe</strong></td><td>0</td><td><span class="pos pos-top3">1</span></td><td>12</td><td>Notion BDD</td><td style="color:var(--patina);font-size:12px;font-weight:600;">Stable vs juin</td></tr>
-          <tr><td><strong>Capucine Legrand coach</strong></td><td>70</td><td><span class="pos pos-top3">1</span></td><td>-</td><td>Notion BDD</td><td style="color:var(--patina);font-size:12px;font-weight:600;">Stable vs juin</td></tr>
-          <tr><td>8 signes personnes toxiques</td><td>320</td><td><span class="pos pos-top10">5</span></td><td>20</td><td>Ubersuggest</td><td style="color:var(--patina);font-size:12px;">Bas page 1 · page pilier</td></tr>
-          <tr><td>coaching prise de poste</td><td>50</td><td><span class="pos pos-p11-20">13</span></td><td>-</td><td>Notion BDD</td><td style="color:var(--coral);font-size:12px;">Page 2</td></tr>
-          <tr><td><strong>coaching prise de poste manager</strong></td><td>30</td><td><span class="pos pos-p11-20">18</span></td><td style="color:var(--patina);font-weight:700;">6</td><td>Ubersuggest</td><td style="color:var(--patina);font-size:12px;font-weight:600;">✓ Quick win · SD très faible</td></tr>
-          <tr><td>quitter un travail toxique</td><td>140</td><td><span class="pos pos-p11-20">18</span></td><td>22</td><td>Ubersuggest</td><td style="color:var(--coral);font-size:12px;">Page 2 · maillage à renforcer</td></tr>
-          <tr><td>coaching en psychologie</td><td>260</td><td><span class="pos pos-p20plus">22</span></td><td>30</td><td>Ubersuggest</td><td style="color:var(--text-light);font-size:12px;">Page 2-3 · enrichir /coach-ou-psy/</td></tr>
-          <tr><td>coaching dirigeant Paris</td><td>170</td><td>-</td><td>5</td><td>Notion BDD</td><td style="color:var(--coral);font-size:12px;font-weight:600;">✗ Non positionné</td></tr>
-          <tr><td>coaching professionnel certifié ICF Paris</td><td>90</td><td>-</td><td>4</td><td>Notion BDD</td><td style="color:var(--text-light);font-size:12px;">Pilier en rédaction · pub 13 juil</td></tr>
-          <tr><td>négocier salaire cadre luxe</td><td>140</td><td>-</td><td>3</td><td>Notion BDD</td><td style="color:var(--text-light);font-size:12px;"> Prévu août · cluster C2</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="insight">
-      <span class="insight-icon">⚠</span>
-      <div class="insight-text">
-        <strong>Cluster C1 : le trou le plus impactant</strong>
-        <p>"coaching professionnel certifié ICF Paris" (vol 90, SD 4) et "coaching dirigeant Paris" (vol 170, SD 5) sont des requêtes transactionnelles à très faible difficulté. Le site n'y est pas positionné. La publication du pilier C1 avant le 13 juillet est la priorité absolue du mois.</p>
+      <div class="card" style="padding:0;overflow:hidden;margin-bottom:24px;">
+        <table>
+          <thead>
+            <tr><th>Mot-clé</th><th>Volume</th><th>Position actuelle</th><th>Statut</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>coaching reprise professionnelle luxe</strong></td><td>à mesurer</td><td><span class="pos pos-top3">1</span></td><td style="color:var(--patina);font-size:12px;font-weight:600;">🟢 Top 3, inchangé vs juin</td></tr>
+            <tr><td><strong>coaching carrière luxe</strong></td><td>0</td><td><span class="pos pos-top3">1</span></td><td style="color:var(--patina);font-size:12px;font-weight:600;">🟢 Top 3, inchangé vs juin</td></tr>
+            <tr><td><strong>Capucine Legrand coach</strong></td><td>70</td><td><span class="pos pos-top3">1</span></td><td style="color:var(--patina);font-size:12px;font-weight:600;">🟢 Top 3, inchangé vs juin</td></tr>
+            <tr><td>capucine legrand (générique)</td><td>-</td><td><span class="pos pos-top3">2</span></td><td style="color:var(--patina);font-size:12px;font-weight:600;">+ Amélioration : pos 3 → 2</td></tr>
+            <tr><td>coaching luxe</td><td>-</td><td><span class="pos pos-top3">3</span></td><td style="color:var(--patina);font-size:12px;">→ Stable</td></tr>
+            <tr><td>my coaching partner</td><td>-</td><td><span class="pos pos-top3">1</span></td><td style="color:var(--patina);font-size:12px;">→ Stable</td></tr>
+            <tr><td>coach ou psy</td><td>320</td><td><span class="pos pos-top10">8</span></td><td style="color:var(--coral);font-size:12px;font-weight:600;">! Recul : pos 5 → 8</td></tr>
+            <tr><td>coaching prise de poste</td><td>50</td><td><span class="pos pos-p20plus">20</span></td><td style="color:var(--coral);font-size:12px;font-weight:600;">! Recul : pos 18 → 20 (BDD Notion non mise à jour, référence Ubersuggest 20)</td></tr>
+            <tr><td><strong>coaching professionnel certifié ICF Paris</strong></td><td>90</td><td><span class="pos pos-p20plus">non ranké</span></td><td style="color:var(--coral);font-size:12px;font-weight:700;">⚪ Pilier C1 à publier, priorité 🥇1</td></tr>
+            <tr><td>coaching dirigeant Paris</td><td>170</td><td><span class="pos pos-p20plus">non positionné / donnée instable</span></td><td style="color:var(--text-light);font-size:12px;">✗ En attente du maillage post-pilier C1</td></tr>
+          </tbody>
+        </table>
       </div>
-    </div>
 
-    <div class="insight">
-      <span class="insight-icon">⊙</span>
-      <div class="insight-text">
-        <strong>"coaching prise de poste manager" : le quick win le plus accessible</strong>
-        <p>Difficulté SEO 6 (très faible), position 18, page existante. C'est le seul keyword en page 2 avec une difficulté inférieure à 10. Ajouter "manager" dans H1/H2 de /coaching-prise-de-poste/ et un maillage depuis l'article C3. Potentiel : page 1 en quelques semaines.</p>
+      <div class="insight">
+        <div class="insight-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+        <div class="insight-text">
+          <strong>Trou de contenu majeur : pilier C1 non publié</strong>
+          <p>"coaching professionnel certifié ICF Paris" (volume 90, concurrence 4, priorité 🥇1) est le pilier du cluster le plus transactionnel, celui qui convertit en RDV. Il n'est toujours pas publié alors que la rédaction était prévue le 6 juillet et la publication le 13 juillet.</p>
+        </div>
+      </div>
+
+      <div class="insight">
+        <div class="insight-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+        <div class="insight-text">
+          <strong>Deux pages à contrôler avant que le recul ne s'accentue</strong>
+          <p>coach ou psy (pos 5 → 8) et coaching prise de poste (pos 18 → 20) perdent du terrain depuis début juin. À auditer : contenu, maillage interne et concurrence directe sur /coach-ou-psy/ et /coaching-prise-de-poste/.</p>
+        </div>
       </div>
     </div>
   </div>
-  <div class="footer">Dashboard SEO MCP · Source : Ubersuggest (Google data) + Notion BDD · mycoachingpartner.fr · Juillet 2026</div>
+  <div class="footer">Dashboard SEO MCP · Sources : Notion + Ubersuggest, dernière donnée GSC connue 11/06 · mycoachingpartner.fr · Juillet 2026</div>
 </div>
 
 
@@ -521,65 +554,53 @@ tr:hover td { background:rgba(24,78,90,0.02); }
       <h1>Quick Wins</h1>
     </div>
     <div class="header-right">
-      <div class="header-badge"><span>3 opportunités · positions 13-22</span></div>
-      <div class="date">SD faible à moyen · pages existantes</div>
+      <div class="header-badge"><span>3 opportunités prioritaires</span></div>
+      <div class="date">Semaine du 7 juillet 2026</div>
     </div>
   </div>
 
   <div class="main">
-    <div class="section-title">Opportunités à fort impact, effort faible ou moyen</div>
-    <div class="section-subtitle">Pages en position 11-20 identifiées via Ubersuggest · SD = score de difficulté SEO (plus bas = plus facile)</div>
+    <div class="section active">
+      <div class="section-title">Opportunités à traiter cette semaine</div>
+      <div class="section-subtitle">Sources : roadmap SEO 4 mois, Notion BDD mots-clés, Ubersuggest</div>
 
-    <div class="qw-grid">
-      <div class="qw-card">
-        <div class="qw-rank">1</div>
-        <div class="qw-title">"coaching prise de poste manager"</div>
-        <div class="qw-meta">Vol 30 · position 18 · SD 6 (très faible)<br>Page cible : /coaching-prise-de-poste/<br>La plus faible difficulté de tous les keywords page 2. Aucun nouveau contenu requis.</div>
-        <div class="qw-action">Ajouter "manager" dans H1 et un sous-titre H2 dédié. Maillage depuis l'article C3. Potentiel : page 1 en 4-6 semaines.</div>
+      <div class="qw-grid">
+        <div class="qw-card">
+          <div class="qw-rank">1</div>
+          <div class="qw-title">Publier le pilier C1 - coaching professionnel certifié ICF Paris</div>
+          <div class="qw-meta">Volume 90/mois, concurrence 4, priorité 🥇1, rôle de pilier du cluster. Rédaction prévue le 6 juillet, publication prévue le 13 juillet selon la roadmap. Nous sommes le 7 juillet, la rédaction devrait être en cours ou terminée.</div>
+          <div class="qw-action">Finaliser la rédaction cette semaine et publier au plus tard le 13 juillet. C'est le cluster le plus transactionnel, celui qui convertit en RDV.</div>
+        </div>
+
+        <div class="qw-card coral">
+          <div class="qw-rank">2</div>
+          <div class="qw-title">/coach-ou-psy/ - recul de position</div>
+          <div class="qw-meta">Position 5 (5 juin) → position 8 (3 juillet), volume 320/mois. Recul de 3 positions en un mois.</div>
+          <div class="qw-action">Vérifier le contenu, le maillage interne et la concurrence directe sur cette page avant que la perte ne s'accentue.</div>
+        </div>
+
+        <div class="qw-card slate">
+          <div class="qw-rank">3</div>
+          <div class="qw-title">/coaching-prise-de-poste/ - recul de position</div>
+          <div class="qw-meta">Position 18 (5 juin, ancienne URL /coaching-prise-de-poste-entreprises/) → position 20 (3 juillet, nouvelle URL /coaching-prise-de-poste/), volume 50/mois.</div>
+          <div class="qw-action">Contrôler que le changement d'URL n'a pas cassé le maillage interne ni fait perdre de l'autorité (redirection, liens internes).</div>
+        </div>
       </div>
 
-      <div class="qw-card coral">
-        <div class="qw-rank">2</div>
-        <div class="qw-title">"quitter un travail toxique"</div>
-        <div class="qw-meta">Vol 140 · position 18 · SD 22<br>Page cible : /quitter-travail-toxique/<br>Volume intéressant, difficulté modérée. Page déjà existante.</div>
-        <div class="qw-action">Maillage interne depuis /personne-toxique-travail/ (pos 5). Rafraîchir l'intro, ajouter schéma HowTo. Potentiel : 1-2 mois.</div>
-      </div>
-
-      <div class="qw-card slate">
-        <div class="qw-rank">3</div>
-        <div class="qw-title">"coaching en psychologie"</div>
-        <div class="qw-meta">Vol 260 · position 22 · SD 30<br>Page cible : /coach-ou-psy/<br>Volume fort, difficulté plus élevée.</div>
-        <div class="qw-action">Enrichir la FAQ, ajouter des témoignages (E-E-A-T), structurer un schéma FAQPage. Moyen terme : 2-3 mois.</div>
-      </div>
-    </div>
-
-    <div class="card" style="margin-top:8px;">
-      <h3>Comparaison effort / impact</h3>
-      <p class="sub">Classement par difficulté SEO croissante</p>
-      <div class="bar-wrap" style="margin-top:8px;">
-        <div class="bar-label">QW #1 - prise de poste manager</div>
-        <div class="bar-track"><div class="bar-fill" style="width:20%;background:var(--patina)"></div></div>
-        <div class="bar-val">SD 6 · très faible</div>
-      </div>
-      <div class="bar-wrap">
-        <div class="bar-label">QW #2 - quitter travail toxique</div>
-        <div class="bar-track"><div class="bar-fill" style="width:73%;background:var(--teal-mid)"></div></div>
-        <div class="bar-val">SD 22 · moyen</div>
-      </div>
-      <div class="bar-wrap">
-        <div class="bar-label">QW #3 - coaching en psychologie</div>
-        <div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--coral)"></div></div>
-        <div class="bar-val">SD 30 · élevé</div>
-      </div>
-      <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
-        <div class="alert alert-info" style="margin-bottom:0;">
-          <span class="alert-icon">ℹ</span>
-          <div class="alert-text"><strong>Focus juillet : QW #1 uniquement</strong><p>SD 6 = aucune résistance concurrentielle. Traiter ce keyword avant les autres. QW #2 et #3 peuvent attendre août une fois C1 publié.</p></div>
+      <div class="card">
+        <h3>Prochaine étape une fois le pilier C1 publié</h3>
+        <p class="sub">Action 3 du plan de juillet</p>
+        <div class="insight" style="margin-bottom:0;">
+          <div class="insight-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+          <div class="insight-text">
+            <strong>Maillage interne et indexation</strong>
+            <p>Ajouter le maillage interne vers /coaching-dirigeant-paris/, /coaching-dirigeant-rendezvous/ et /capucine-legrand/, puis lancer l'indexation manuelle Google.</p>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="footer">Dashboard SEO MCP · Source : Ubersuggest (Google data) + Notion BDD · mycoachingpartner.fr · Juillet 2026</div>
+  <div class="footer">Dashboard SEO MCP · Sources : Notion + Ubersuggest, dernière donnée GSC connue 11/06 · mycoachingpartner.fr · Juillet 2026</div>
 </div>
 
 
@@ -591,93 +612,87 @@ tr:hover td { background:rgba(24,78,90,0.02); }
       <h1>Plan d'action - Juillet 2026</h1>
     </div>
     <div class="header-right">
-      <div class="header-badge"><span>3 actions + 1 déclencheur cluster</span></div>
-      <div class="date">Roadmap S2-S4 juillet 2026</div>
+      <div class="header-badge"><span>3 actions prioritaires</span></div>
+      <div class="date">Semaine du 7 juillet 2026</div>
     </div>
   </div>
 
   <div class="main">
-    <div class="section-title">3 actions prioritaires</div>
-    <div class="section-subtitle">Classées par impact / effort · sources : Ubersuggest + Notion BDD + Roadmap SEO</div>
+    <div class="section active">
+      <div class="section-title">3 actions prioritaires</div>
+      <div class="section-subtitle">Sources : roadmap SEO 4 mois, Notion BDD mots-clés, Ubersuggest</div>
 
-    <div class="card">
-      <div class="action-row">
-        <div class="action-num">1</div>
-        <div class="action-content">
-          <strong>Publier le pilier C1 "coaching professionnel certifié ICF Paris" avant le 13 juillet</strong>
-          <p>Cluster transactionnel, vol 90, SD 4. Aucune page positionnée sur les requêtes ICF Paris et coaching dirigeant Paris (170 recherches, SD 5). C'est le trou de contenu le plus impactant sur les conversions. Schema Service + Person via Rank Math. Maillage vers /coaching-dirigeant-paris/ et /capucine-legrand/.</p>
-          <div class="action-meta">
-            <span class="tag tag-impact">Cluster C1 · conversions directes</span>
-            <span class="tag tag-mid">S2-S3 juillet · 1 journée</span>
+      <div class="card">
+        <div class="action-row">
+          <div class="action-num">1</div>
+          <div class="action-content">
+            <strong>Finaliser et publier le pilier C1 - coaching professionnel certifié ICF Paris</strong>
+            <p>Rédaction prévue au 6 juillet, publication au 13 juillet selon la roadmap. C'est le cluster le plus transactionnel, celui qui convertit en RDV : la priorité absolue de la semaine.</p>
+            <div class="action-meta">
+              <span class="tag tag-impact">Cluster le plus transactionnel</span>
+              <span class="tag tag-mid">Effort élevé, rédaction + publication</span>
+            </div>
+          </div>
+        </div>
+        <div class="action-row">
+          <div class="action-num">2</div>
+          <div class="action-content">
+            <strong>Vérifier le recul de coach ou psy et coaching prise de poste</strong>
+            <p>coach ou psy passe de la position 5 à la position 8, coaching prise de poste de la position 18 à la position 20. Contrôler le contenu, le maillage interne et la concurrence directe sur ces deux pages.</p>
+            <div class="action-meta">
+              <span class="tag tag-impact">Stopper la perte de position</span>
+              <span class="tag tag-low">Effort faible, audit de contenu</span>
+            </div>
+          </div>
+        </div>
+        <div class="action-row">
+          <div class="action-num">3</div>
+          <div class="action-content">
+            <strong>Maillage interne et indexation après publication du pilier C1</strong>
+            <p>Une fois le pilier publié, ajouter le maillage interne vers /coaching-dirigeant-paris/, /coaching-dirigeant-rendezvous/ et /capucine-legrand/, puis lancer l'indexation manuelle Google.</p>
+            <div class="action-meta">
+              <span class="tag tag-impact">Accélère l'indexation</span>
+              <span class="tag tag-low">Effort faible</span>
+            </div>
           </div>
         </div>
       </div>
-      <div class="action-row">
-        <div class="action-num">2</div>
-        <div class="action-content">
-          <strong>Optimiser /coaching-prise-de-poste/ pour "coaching prise de poste manager" (SD 6)</strong>
-          <p>Position 18, difficulté 6. Page existante, aucun nouveau contenu à créer. Ajouter "manager" dans le H1 ou un H2 dédié. Maillage entrant depuis l'article C3 déjà publié. Potentiel : page 1 dans 4-6 semaines sans effort majeur.</p>
-          <div class="action-meta">
-            <span class="tag tag-impact">Quick win · page 1 accessible</span>
-            <span class="tag tag-low">Effort faible · 1h</span>
+
+      <div class="grid-2">
+        <div class="alert alert-danger">
+          <div class="alert-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+          <div class="alert-text">
+            <strong>Pilier C1 toujours non publié</strong>
+            <p>Le cluster le plus transactionnel du site n'est pas encore en ligne alors que la publication est prévue le 13 juillet. Risque de retard sur l'objectif SEO Health 85/100 fin septembre.</p>
+          </div>
+        </div>
+        <div class="alert alert-warn">
+          <div class="alert-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+          <div class="alert-text">
+            <strong>Deux pages en recul de position</strong>
+            <p>coach ou psy (-3) et coaching prise de poste (-2) perdent du terrain depuis début juin, à surveiller avant que le recul ne s'accentue.</p>
           </div>
         </div>
       </div>
-      <div class="action-row">
-        <div class="action-num">3</div>
-        <div class="action-content">
-          <strong>Publier satellite C3 "réussir sa prise de poste directeur luxe" (vol 90, SD 2)</strong>
-          <p>Le pilier C3 est publié depuis juin. Le satellite le plus accessible a vol 90 et SD 2, soit la difficulté la plus basse du portefeuille. Renforce le cluster C3 et apporte une requête luxe non couverte. Cible : semaine du 20 juillet.</p>
-          <div class="action-meta">
-            <span class="tag tag-impact">Cluster C3 · requête luxe</span>
-            <span class="tag tag-low">Effort faible · SD 2</span>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <div class="alert alert-danger" style="margin-bottom:12px;">
-      <span class="alert-icon">⚠</span>
-      <div class="alert-text">
-        <strong>4 pages bloquées (noindex) · impact élevé · action immédiate</strong>
-        <p>L'audit Ubersuggest du 6 juillet détecte 4 pages bloquées pour les moteurs de recherche. Si des pages de contenu stratégique (piliers, services) sont concernées, elles ne s'indexeront jamais. Ouvrir Ubersuggest > Site Audit > Erreurs critiques > "Bloquées" pour identifier les URLs exactes, puis vérifier les réglages noindex dans Rank Math ou le code.</p>
-      </div>
-    </div>
-
-    <div class="grid-2">
       <div class="alert alert-info">
-        <span class="alert-icon">ℹ</span>
+        <div class="alert-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
         <div class="alert-text">
-          <strong>Déclencheur cluster C2 : lundi 27 juillet</strong>
-          <p>Briefer le pilier C2 "négocier salaire cadre luxe" (vol 140, SD 3) pour démarrage août. Cluster transactionnel C2 = prochaine priorité après C1.</p>
+          <strong>Search Console non connectée</strong>
+          <p>Aucune donnée d'impressions, clics ou CTR de juillet n'a pu être récupérée cette semaine. Les chiffres affichés (90 clics, 4 230 impressions, CTR 2,1%, position moyenne 10,2) restent ceux du relevé du 11 juin, à considérer comme dernière donnée connue et non comme performance de juillet.</p>
         </div>
-      </div>
-      <div class="alert alert-warn">
-        <span class="alert-icon">⚠</span>
-        <div class="alert-text">
-          <strong>coaching dirigeant Paris toujours non positionné</strong>
-          <p>Vol 170, SD 5. Le pilier C1 en publication ce mois devrait attaquer cette requête indirectement. Vérifier en août.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="alert alert-info">
-      <span class="alert-icon">ℹ</span>
-      <div class="alert-text">
-        <strong>Roadmap semaine par semaine</strong>
-        <p>S2 (6 juil) : rédiger pilier C1 ICF Paris. S3 (13 juil) : publier + schema. S4 (20 juil) : bilan C1 + satellite C3 "réussir sa prise de poste directeur luxe". S1 août (27 juil) : brief cluster C2 "négocier salaire cadre luxe".</p>
       </div>
     </div>
   </div>
-  <div class="footer">Dashboard SEO MCP · Source : Ubersuggest (Google data) + Notion BDD · mycoachingpartner.fr · Juillet 2026</div>
+  <div class="footer">Dashboard SEO MCP · Sources : Notion + Ubersuggest, dernière donnée GSC connue 11/06 · mycoachingpartner.fr · Juillet 2026</div>
 </div>
 
 </div><!-- /main-area -->
 
 <script>
 function showPane(id, el) {
-  document.querySelectorAll('.pane').forEach(function(p){ p.classList.remove('active'); });
-  document.querySelectorAll('.sidebar-item').forEach(function(i){ i.classList.remove('active'); });
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
   document.getElementById('pane-' + id).classList.add('active');
   el.classList.add('active');
 }
