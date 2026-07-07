@@ -288,8 +288,8 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--te
 .series-avg { font-size:11px; color:var(--patina); font-weight:600; }
 
 /* === SYNTHESE PANE === */
-.synthese-hero { background:var(--teal-dark); padding:48px; color:var(--white); }
-.synthese-hero h1 { font-family:'Playfair Display',serif; font-size:32px; margin-bottom:8px; }
+.synthese-hero { background:var(--teal-dark); padding:28px 48px; color:var(--white); }
+.synthese-hero h1 { font-family:'Playfair Display',serif; font-size:26px; margin-bottom:8px; }
 .synthese-hero p { font-size:14px; color:var(--teal-light); opacity:.85; }
 .synthese-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:24px; padding:36px 48px; }
 .synthese-card { background:var(--white); border-radius:14px; padding:28px; box-shadow:var(--shadow); }
@@ -385,17 +385,20 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--te
 
 <!-- ===== PANE SYNTHESE ===== -->
 <div id="pane-synthese" class="pane active" style="flex-direction:column;">
-  <div class="header">
-    <div class="header-left">
-      <span>mycoachingpartner.fr · suivi hebdomadaire</span>
-      <h1>Suivi création de contenu · Semaine 27</h1>
-    </div>
-    <div class="header-right">
-      <div class="ig-badge">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="#A8C5C6"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-        <span>Vue consolidée tous canaux</span>
+  <div class="synthese-hero">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--teal-mid);margin-bottom:8px;">mycoachingpartner.fr · suivi hebdomadaire</div>
+        <h1>Suivi contenus · Semaine 27</h1>
       </div>
-      <div class="date">Analyse 2 juillet 2026</div>
+      <div style="text-align:right;">
+        <div class="ig-badge" style="justify-content:flex-end;">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="#A8C5C6"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          <span>Vue consolidée tous canaux</span>
+        </div>
+        <div style="font-size:11px;color:var(--teal-mid);margin-top:8px;">Analyse le 2 juillet 2026</div>
+        <div style="font-size:10px;color:var(--teal-mid);opacity:.75;">Instagram · LinkedIn · Newsletter · Podcast</div>
+      </div>
     </div>
   </div>
   <div class="synthese-grid">
