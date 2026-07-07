@@ -211,6 +211,11 @@ tr:hover td { background:rgba(24,78,90,0.02); }
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
       </span> Pages
     </div>
+    <div class="sidebar-item" onclick="showPane('technique',this)">
+      <span class="si-icon">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      </span> Technique &amp; Trafic
+    </div>
     <div class="sidebar-item" onclick="showPane('keywords',this)">
       <span class="si-icon">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -501,6 +506,97 @@ tr:hover td { background:rgba(24,78,90,0.02); }
     </div>
   </div>
   <div class="footer">Dashboard SEO MCP · Source : Google Search Console (données réelles) + Notion · mycoachingpartner.fr · Juillet 2026</div>
+</div>
+
+
+<!-- ===== PANE TECHNIQUE & TRAFIC (GA4 + PageSpeed) ===== -->
+<div id="pane-technique" class="pane" style="flex-direction:column;">
+  <div class="header">
+    <div class="header-left">
+      <span>mycoachingpartner.fr</span>
+      <h1>Technique &amp; Trafic - GA4 et vitesse mobile</h1>
+    </div>
+    <div class="header-right">
+      <div class="header-badge"><span>GA4 + PageSpeed Insights</span></div>
+      <div class="date">GA4 : 7 juin → 6 juillet 2026 · PageSpeed : testé le 7 juillet 2026</div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="section active">
+      <div class="section-title">Trafic organique (GA4) et vitesse mobile des pages clés</div>
+      <div class="section-subtitle">Première intégration de ces deux sources dans le dashboard mensuel, données réelles Google Analytics 4 et PageSpeed Insights.</div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Sessions organiques (30j)</div>
+          <div class="kpi-value">74</div>
+          <div class="kpi-sub">GA4, 7 juin → 6 juillet</div>
+          <div class="kpi-trend flat">Première mesure GA4</div>
+        </div>
+        <div class="kpi-card patina">
+          <div class="kpi-label">Utilisateurs</div>
+          <div class="kpi-value">65</div>
+          <div class="kpi-sub">3,0 sessions/jour en moyenne</div>
+          <div class="kpi-trend flat">Baseline établie</div>
+        </div>
+        <div class="kpi-card slate">
+          <div class="kpi-label">Pages vues</div>
+          <div class="kpi-value">117</div>
+          <div class="kpi-sub">1,6 page/session</div>
+          <div class="kpi-trend flat">Baseline établie</div>
+        </div>
+        <div class="kpi-card coral">
+          <div class="kpi-label">Pages ICP en LCP lent (mobile)</div>
+          <div class="kpi-value">2 / 4</div>
+          <div class="kpi-sub">Seuil "bon" Google : &lt; 2,5s</div>
+          <div class="kpi-trend down">Corrèle avec le décrochage P1</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Top pages par sessions organiques (GA4)</h3>
+          <p class="sub">Source GA4 · 7 juin - 6 juillet 2026</p>
+          <div class="bar-wrap"><div class="bar-label">/personne-toxique-travail</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--teal-dark)"></div></div><div class="bar-val">28</div></div>
+          <div class="bar-wrap"><div class="bar-label">/quitter-travail-toxique</div><div class="bar-track"><div class="bar-fill" style="width:36%;background:var(--teal-mid)"></div></div><div class="bar-val">10</div></div>
+          <div class="bar-wrap"><div class="bar-label">/ (accueil)</div><div class="bar-track"><div class="bar-fill" style="width:32%;background:var(--patina)"></div></div><div class="bar-val">9</div></div>
+          <div class="bar-wrap"><div class="bar-label">/a-propos</div><div class="bar-track"><div class="bar-fill" style="width:18%;background:var(--slate)"></div></div><div class="bar-val">5</div></div>
+          <div class="bar-wrap"><div class="bar-label">/coaching-recrutement</div><div class="bar-track"><div class="bar-fill" style="width:11%;background:var(--coral)"></div></div><div class="bar-val">3</div></div>
+          <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">
+            <div class="alert alert-info" style="margin-bottom:0;">
+              <div class="alert-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+              <div class="alert-text"><strong>Cohérent avec Search Console</strong><p>GA4 confirme le même classement que GSC : le cluster "travail toxique" concentre le trafic organique, les pages ICP luxe (dirigeants, carrière, prise de poste) sont quasi absentes du top 5.</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Vitesse mobile des pages clés (PageSpeed Insights)</h3>
+          <p class="sub">Score performance mobile et LCP · testé le 7 juillet 2026</p>
+          <table>
+            <thead><tr><th>Page</th><th>Score perf.</th><th>LCP mobile</th><th>Diagnostic</th></tr></thead>
+            <tbody>
+              <tr><td>/ (accueil)</td><td><strong>98</strong></td><td style="color:var(--patina);font-weight:700;">2,0 s</td><td style="color:var(--patina);font-size:12px;">Bon</td></tr>
+              <tr><td>/coaching-carriere-luxe/</td><td><strong>98</strong></td><td style="color:var(--patina);font-weight:700;">2,1 s</td><td style="color:var(--patina);font-size:12px;">Bon</td></tr>
+              <tr><td>/coaching-dirigeants-luxe/</td><td><strong>75</strong></td><td style="color:var(--coral);font-weight:700;">4,4 s</td><td style="color:var(--coral);font-size:12px;font-weight:700;">Lent, à corriger</td></tr>
+              <tr><td>/coaching-prise-de-poste/</td><td><strong>75</strong></td><td style="color:var(--coral);font-weight:700;">4,4 s</td><td style="color:var(--coral);font-size:12px;font-weight:700;">Lent, à corriger</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:11px;color:var(--text-light);margin-top:12px;line-height:1.5;">Stratégie mobile, Lighthouse en conditions réelles (PageSpeed Insights API). Seuil Google "bon" pour le LCP : sous 2,5 secondes.</p>
+        </div>
+      </div>
+
+      <div class="insight">
+        <div class="insight-icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+        <div class="insight-text">
+          <strong>Nouveau facteur pour le décrochage des pages ICP (P1)</strong>
+          <p>/coaching-dirigeants-luxe/ et /coaching-prise-de-poste/ chargent deux fois plus lentement sur mobile (LCP 4,4s) que /coaching-carriere-luxe/ et l'accueil (LCP ~2,0s), qui elles restent en bonne position. Un LCP lent est un signal de classement Google et dégrade l'expérience mobile. À ajouter au diagnostic technique des pages qui décrochent, en plus du contenu et du maillage.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">Dashboard SEO MCP · Source : Google Search Console + GA4 + PageSpeed Insights (données réelles) + Notion · mycoachingpartner.fr · Juillet 2026</div>
 </div>
 
 
