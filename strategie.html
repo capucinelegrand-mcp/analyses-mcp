@@ -49,11 +49,26 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--te
 .obj-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(320px,1fr)); gap:18px; }
 .obj-card { background:var(--white); border-radius:14px; box-shadow:var(--shadow); padding:22px 24px 24px; display:flex; flex-direction:column; gap:16px; transition:transform .2s,box-shadow .2s; }
 .obj-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-hover); }
+.obj-card-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
 .obj-card h3 { font-family:'Playfair Display',serif; font-weight:700; font-size:1.05rem; color:var(--teal-dark); }
+.obj-score { flex-shrink:0; font-variant-numeric:tabular-nums; font-size:12px; font-weight:700; padding:4px 10px; border-radius:999px; white-space:nowrap; }
+.obj-score.retard { background:var(--warn-bg); color:var(--warn-text); }
+.obj-score.aligne { background:rgba(89,144,146,0.14); color:var(--teal-dark); }
+.obj-score.avance { background:var(--good-bg); color:var(--good-text); }
+.obj-score.na { background:var(--cream); color:var(--text-light); font-weight:600; }
+.obj-link { font-size:11px; color:var(--text-light); text-decoration:none; border-bottom:1px dotted var(--text-light); align-self:flex-start; }
+.obj-link:hover { color:var(--teal-dark); border-bottom-color:var(--teal-dark); }
+.obj-link.abandonne { color:var(--coral); border-bottom-color:var(--coral); }
 .kr { display:flex; flex-direction:column; gap:6px; }
-.kr-head { display:flex; justify-content:space-between; align-items:baseline; gap:12px; }
+.kr-head { display:flex; justify-content:space-between; align-items:baseline; gap:10px; }
+.kr-name-wrap { display:flex; align-items:baseline; gap:8px; min-width:0; }
 .kr-name { font-size:11px; color:var(--text-mid); text-transform:uppercase; letter-spacing:0.5px; }
-.kr-value { font-family:'Raleway',sans-serif; font-variant-numeric:tabular-nums; font-size:13px; font-weight:700; color:var(--teal-dark); white-space:nowrap; }
+.kr-value { font-family:'Raleway',sans-serif; font-variant-numeric:tabular-nums; font-size:13px; font-weight:700; color:var(--teal-dark); white-space:nowrap; display:flex; align-items:center; gap:6px; }
+.trend { font-size:10px; font-weight:700; padding:1px 6px; border-radius:999px; white-space:nowrap; }
+.trend.up { background:var(--good-bg); color:var(--good-text); }
+.trend.down { background:var(--warn-bg); color:var(--warn-text); }
+.trend.stable { background:var(--cream); color:var(--text-light); }
+.trend.new { background:var(--cream); color:var(--text-light); font-style:italic; font-weight:600; }
 .bar-track { height:6px; border-radius:3px; background:var(--cream); overflow:hidden; }
 .bar-fill { height:100%; border-radius:3px; background:var(--patina); }
 .bar-fill.hot { background:var(--coral); }
@@ -115,24 +130,26 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--te
       <div class="section-subtitle">Ce qui se mesure sur les 12 mois, indépendamment du trimestre. 231 jours écoulés sur 365, soit 63,3 % de l'année.</div>
       <div class="obj-grid">
         <div class="obj-card">
-          <h3>Atteindre 30 000&nbsp;€ de CA</h3>
+          <div class="obj-card-head"><h3>Atteindre 30 000&nbsp;€ de CA</h3><span class="obj-score retard">35,8&nbsp;% moy.</span></div>
+          <a class="obj-link" href="https://app.notion.com/p/1c787804e5fa80e8ab18c28f92cc786f" target="_blank" rel="noopener">Projet lié : Prospection</a>
           <div class="kr">
-            <div class="kr-head"><span class="kr-name">Chiffre d'affaires MCP</span><span class="kr-value">13 967&nbsp;€ / 30 000&nbsp;€</span></div>
+            <div class="kr-head"><div class="kr-name-wrap"><span class="kr-name">Chiffre d'affaires MCP</span><span class="trend new">Premier relevé</span></div><span class="kr-value">13 967&nbsp;€ / 30 000&nbsp;€</span></div>
             <div class="bar-track"><div class="bar-fill" style="width:46.6%"></div></div>
           </div>
           <div class="kr">
-            <div class="kr-head"><span class="kr-name">Accompagnements vendus</span><span class="kr-value">5 / 20</span></div>
+            <div class="kr-head"><div class="kr-name-wrap"><span class="kr-name">Accompagnements vendus</span><span class="trend new">Premier relevé</span></div><span class="kr-value">5 / 20</span></div>
             <div class="bar-track"><div class="bar-fill" style="width:25%"></div></div>
           </div>
         </div>
         <div class="obj-card">
-          <h3>Augmenter ma visibilité</h3>
+          <div class="obj-card-head"><h3>Augmenter ma visibilité</h3><span class="obj-score retard">17,5&nbsp;% moy.</span></div>
+          <a class="obj-link" href="https://app.notion.com/p/2a887804e5fa8025b93dcb6646794b60" target="_blank" rel="noopener">Projet lié : Optimisation du SEO</a>
           <div class="kr">
-            <div class="kr-head"><span class="kr-name">Contenus par mois</span><span class="kr-value">7 / 20</span></div>
+            <div class="kr-head"><div class="kr-name-wrap"><span class="kr-name">Contenus par mois</span><span class="trend new">Premier relevé</span></div><span class="kr-value">7 / 20</span></div>
             <div class="bar-track"><div class="bar-fill" style="width:35%"></div></div>
           </div>
           <div class="kr">
-            <div class="kr-head"><span class="kr-name">Régularité hebdomadaire</span><span class="kr-value">0 / 85&nbsp;%</span></div>
+            <div class="kr-head"><div class="kr-name-wrap"><span class="kr-name">Régularité hebdomadaire</span><span class="trend new">Premier relevé</span></div><span class="kr-value">0 / 85&nbsp;%</span></div>
             <div class="bar-track"><div class="bar-fill hot" style="width:0%"></div></div>
           </div>
         </div>
@@ -205,17 +222,18 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--te
       <div class="section-subtitle">Juillet à septembre 2026. 50 jours écoulés sur 92, soit 54,3 % du trimestre.</div>
       <div class="obj-grid">
         <div class="obj-card">
-          <h3>Déployer la stratégie B2B</h3>
+          <div class="obj-card-head"><h3>Déployer la stratégie B2B</h3><span class="obj-score retard">33,3&nbsp;% moy.</span></div>
+          <a class="obj-link" href="https://app.notion.com/p/28887804e5fa809684e3cf96b646ffaf" target="_blank" rel="noopener">Projet lié : Mise en place d'une stratégie B2B</a>
           <div class="kr">
-            <div class="kr-head"><span class="kr-name">Offre B2B finalisée et formalisée</span><span class="kr-value">1 / 1</span></div>
+            <div class="kr-head"><div class="kr-name-wrap"><span class="kr-name">Offre B2B finalisée et formalisée</span><span class="trend new">Premier relevé</span></div><span class="kr-value">1 / 1</span></div>
             <div class="bar-track"><div class="bar-fill done" style="width:100%"></div></div>
           </div>
           <div class="kr">
-            <div class="kr-head"><span class="kr-name">RDV de prospection B2B réalisés</span><span class="kr-value">0 / 10</span></div>
+            <div class="kr-head"><div class="kr-name-wrap"><span class="kr-name">RDV de prospection B2B réalisés</span><span class="trend new">Premier relevé</span></div><span class="kr-value">0 / 10</span></div>
             <div class="bar-track"><div class="bar-fill hot" style="width:0%"></div></div>
           </div>
           <div class="kr">
-            <div class="kr-head"><span class="kr-name">Propositions commerciales B2B envoyées</span><span class="kr-value">0 / 5</span></div>
+            <div class="kr-head"><div class="kr-name-wrap"><span class="kr-name">Propositions commerciales B2B envoyées</span><span class="trend new">Premier relevé</span></div><span class="kr-value">0 / 5</span></div>
             <div class="bar-track"><div class="bar-fill hot" style="width:0%"></div></div>
           </div>
         </div>
@@ -247,18 +265,19 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--te
       <div class="section-subtitle">Octobre à décembre 2026. Trimestre non commencé.</div>
       <div class="obj-grid">
         <div class="obj-card">
-          <h3>Vendre mon atelier digital</h3>
+          <div class="obj-card-head"><h3>Vendre mon atelier digital</h3><span class="obj-score retard">0&nbsp;% moy.</span></div>
+          <a class="obj-link abandonne" href="https://app.notion.com/p/2a887804e5fa80899ff1d3afa59caacd" target="_blank" rel="noopener">Projet lié dans Notion : Création d'un programme IA (statut Abandonné, intitulé à vérifier)</a>
           <div class="kr">
-            <div class="kr-head"><span class="kr-name">Lancement avant fin septembre</span><span class="kr-value">0 / 1</span></div>
+            <div class="kr-head"><div class="kr-name-wrap"><span class="kr-name">Lancement avant fin septembre</span><span class="trend new">Premier relevé</span></div><span class="kr-value">0 / 1</span></div>
             <div class="bar-track"><div class="bar-fill hot" style="width:0%"></div></div>
           </div>
           <div class="kr">
-            <div class="kr-head"><span class="kr-name">Ventes du produit digital</span><span class="kr-value">0 / 20</span></div>
+            <div class="kr-head"><div class="kr-name-wrap"><span class="kr-name">Ventes du produit digital</span><span class="trend new">Premier relevé</span></div><span class="kr-value">0 / 20</span></div>
             <div class="bar-track"><div class="bar-fill hot" style="width:0%"></div></div>
           </div>
         </div>
         <div class="obj-card">
-          <h3>Prouver le moteur commercial et économique MCP</h3>
+          <div class="obj-card-head"><h3>Prouver le moteur commercial et économique MCP</h3><span class="obj-score na">Non chiffrable</span></div>
           <span class="pill-status">En cours</span>
           <div class="kr-qualitative"><span class="dot"></span> Source, conversion et prix connus pour 100&nbsp;% des leads qualifiés</div>
           <div class="kr-qualitative"><span class="dot"></span> Pipeline B2B qualifié sur 5 à 10 comptes prioritaires</div>
