@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vue de l'année MCP</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal-dark: #184E5A; --teal-mid: #599092; --teal-light: #A8C5C6;
+  --patina: #5E9E9A; --nile: #4A8A8C; --coral: #BF6C5C; --blush: #E9B3A3;
+  --slate: #6F8B9D; --cream: #F7F3EE; --white: #FFFFFF;
+  --text-dark: #1A2E35; --text-mid: #3D5561; --text-light: #8AA4AE;
+  --border: rgba(24,78,90,0.1);
+  --shadow: 0 4px 24px rgba(24,78,90,0.08);
+  --shadow-hover: 0 12px 40px rgba(24,78,90,0.15);
+  --good-bg: rgba(89,144,146,0.12); --good-text: #2d6a4f;
+  --warn-bg: rgba(191,108,92,0.10); --warn-text: var(--coral);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--text-dark); display:flex; min-height:100vh; }
+
+.sidebar { width:220px; min-width:220px; background:var(--teal-dark); position:fixed; top:0; left:0; height:100vh; display:flex; flex-direction:column; z-index:200; box-shadow:4px 0 20px rgba(24,78,90,0.2); }
+.sidebar-brand { padding:28px 20px 24px; border-bottom:1px solid rgba(255,255,255,0.08); }
+.sidebar-brand .brand-label { font-size:9px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--teal-mid); display:block; margin-bottom:6px; }
+.sidebar-brand h2 { font-size:13.5px; font-weight:700; color:var(--white); line-height:1.2; letter-spacing:0.5px; text-transform:uppercase; white-space:nowrap; }
+.sidebar-nav { flex:1; padding:16px 0; overflow-y:auto; }
+.sidebar-item { display:flex; align-items:center; gap:12px; padding:13px 20px; cursor:pointer; color:rgba(168,197,198,0.7); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase; border-left:3px solid transparent; transition:all .2s; }
+.sidebar-item:hover { background:rgba(255,255,255,0.06); color:var(--teal-light); }
+.sidebar-item.active { background:rgba(255,255,255,0.1); color:var(--white); border-left-color:var(--teal-mid); }
+.sidebar-item .si-icon { font-size:16px; width:22px; text-align:center; flex-shrink:0; }
+.sidebar-footer { padding:16px 20px; border-top:1px solid rgba(255,255,255,0.08); font-family:'Playfair Display',serif; font-style:italic; font-size:11px; color:var(--teal-mid); text-align:center; }
+
+.main-area { margin-left:220px; flex:1; display:flex; flex-direction:column; min-height:100vh; }
+.pane { display:none; flex:1; flex-direction:column; }
+.pane.active { display:flex; }
+.header { background:var(--teal-dark); padding:28px 48px; display:flex; align-items:center; justify-content:space-between; }
+.header-left span { font-size:11px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:var(--teal-mid); display:block; margin-bottom:6px; }
+.header-left h1 { font-family:'Playfair Display',serif; font-size:26px; color:var(--white); }
+.header-right { text-align:right; }
+.header-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(233,179,163,0.15); border:1px solid rgba(233,179,163,0.35); border-radius:20px; padding:6px 14px; }
+.header-badge span { font-size:13px; color:var(--blush); font-weight:600; }
+.header-right .date { font-size:11px; color:var(--teal-mid); margin-top:8px; letter-spacing:1px; }
+.main { padding:36px 48px; max-width:1400px; margin:0 auto; width:100%; }
+.section-title { font-family:'Playfair Display',serif; font-size:22px; color:var(--teal-dark); margin-bottom:6px; }
+.section-subtitle { font-size:13px; color:var(--text-light); margin-bottom:28px; }
+
+.obj-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(320px,1fr)); gap:18px; }
+.obj-card { background:var(--white); border-radius:14px; box-shadow:var(--shadow); padding:22px 24px 24px; display:flex; flex-direction:column; gap:16px; transition:transform .2s,box-shadow .2s; }
+.obj-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-hover); }
+.obj-card h3 { font-family:'Playfair Display',serif; font-weight:700; font-size:1.05rem; color:var(--teal-dark); }
+.kr { display:flex; flex-direction:column; gap:6px; }
+.kr-head { display:flex; justify-content:space-between; align-items:baseline; gap:12px; }
+.kr-name { font-size:11px; color:var(--text-mid); text-transform:uppercase; letter-spacing:0.5px; }
+.kr-value { font-family:'Raleway',sans-serif; font-variant-numeric:tabular-nums; font-size:13px; font-weight:700; color:var(--teal-dark); white-space:nowrap; }
+.bar-track { height:6px; border-radius:3px; background:var(--cream); overflow:hidden; }
+.bar-fill { height:100%; border-radius:3px; background:var(--patina); }
+.bar-fill.hot { background:var(--coral); }
+.bar-fill.done { background:#4C8B6B; }
+.kr-qualitative { display:flex; align-items:flex-start; gap:9px; font-size:13px; color:var(--text-dark); }
+.kr-qualitative .dot { width:7px; height:7px; border-radius:50%; background:var(--coral); margin-top:6px; flex-shrink:0; }
+.pill-status { align-self:flex-start; font-weight:700; font-size:10px; letter-spacing:0.5px; text-transform:uppercase; color:var(--patina); background:var(--cream); padding:4px 11px; border-radius:999px; }
+.note { margin-top:32px; padding-top:18px; border-top:1px solid var(--border); font-size:12px; color:var(--text-light); max-width:72ch; }
+</style>
+</head>
+<body>
+
+<nav id="mcp-nav" style="position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:2147483647;background:rgba(24,78,90,.96);display:flex;gap:4px;padding:5px 6px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.30);font-family:Arial,Helvetica,sans-serif"><a href="/" data-p="/" style="color:#f5eeea;text-decoration:none;font-weight:700;font-size:13px;padding:5px 14px;border-radius:999px">Contenus</a><a href="/commercial.html" data-p="/commercial.html" style="color:#f5eeea;text-decoration:none;font-weight:700;font-size:13px;padding:5px 14px;border-radius:999px">Commercial</a><a href="/seo.html" data-p="/seo.html" style="color:#f5eeea;text-decoration:none;font-weight:700;font-size:13px;padding:5px 14px;border-radius:999px">SEO</a><a href="/strategie.html" data-p="/strategie.html" style="color:#f5eeea;text-decoration:none;font-weight:700;font-size:13px;padding:5px 14px;border-radius:999px">Stratégie</a></nav><script>(function(){var p=location.pathname;if(p==="/index.html")p="/";document.querySelectorAll("#mcp-nav a").forEach(function(a){var m=a.getAttribute("data-p")===p;a.style.background=m?"#bf6c5c":"transparent";a.style.color=m?"#fff":"#f5eeea";});})();</script>
+
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <span class="brand-label">My Coaching Partner</span>
+    <h2>Vue de l'année</h2>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="sidebar-item active" onclick="showPane('annuel',this)"><span class="si-icon">⊞</span> Annuel</div>
+    <div class="sidebar-item" onclick="showPane('q3',this)"><span class="si-icon">◐</span> Q3 26</div>
+    <div class="sidebar-item" onclick="showPane('q4',this)"><span class="si-icon">○</span> Q4 26</div>
+  </nav>
+  <div class="sidebar-footer">Clarté. Posture. Impact.</div>
+</aside>
+
+<div class="main-area">
+
+  <div id="pane-annuel" class="pane active">
+    <div class="header">
+      <div class="header-left">
+        <span>Stratégie 2026</span>
+        <h1>Ce qui tient toute l'année</h1>
+      </div>
+      <div class="header-right">
+        <div class="header-badge"><span>OKR en cours</span></div>
+        <div class="date">Lecture Notion au 19 août 2026</div>
+      </div>
+    </div>
+    <div class="main">
+      <div class="section-title">Objectifs annuels</div>
+      <div class="section-subtitle">Ce qui se mesure sur les 12 mois, indépendamment du trimestre.</div>
+      <div class="obj-grid">
+        <div class="obj-card">
+          <h3>Atteindre 30 000&nbsp;€ de CA</h3>
+          <div class="kr">
+            <div class="kr-head"><span class="kr-name">Chiffre d'affaires MCP</span><span class="kr-value">13 967&nbsp;€ / 30 000&nbsp;€</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:46.6%"></div></div>
+          </div>
+          <div class="kr">
+            <div class="kr-head"><span class="kr-name">Accompagnements vendus</span><span class="kr-value">5 / 20</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:25%"></div></div>
+          </div>
+        </div>
+        <div class="obj-card">
+          <h3>Augmenter ma visibilité</h3>
+          <div class="kr">
+            <div class="kr-head"><span class="kr-name">Contenus par mois</span><span class="kr-value">7 / 20</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:35%"></div></div>
+          </div>
+          <div class="kr">
+            <div class="kr-head"><span class="kr-name">Régularité hebdomadaire</span><span class="kr-value">0 / 85&nbsp;%</span></div>
+            <div class="bar-track"><div class="bar-fill hot" style="width:0%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="pane-q3" class="pane">
+    <div class="header">
+      <div class="header-left">
+        <span>Trimestre en cours</span>
+        <h1>Q3 26</h1>
+      </div>
+      <div class="header-right">
+        <div class="header-badge"><span>En cours</span></div>
+        <div class="date">Lecture Notion au 19 août 2026</div>
+      </div>
+    </div>
+    <div class="main">
+      <div class="section-title">Objectifs du trimestre</div>
+      <div class="section-subtitle">Juillet à septembre 2026.</div>
+      <div class="obj-grid">
+        <div class="obj-card">
+          <h3>Déployer la stratégie B2B</h3>
+          <div class="kr">
+            <div class="kr-head"><span class="kr-name">Offre B2B finalisée et formalisée</span><span class="kr-value">1 / 1</span></div>
+            <div class="bar-track"><div class="bar-fill done" style="width:100%"></div></div>
+          </div>
+          <div class="kr">
+            <div class="kr-head"><span class="kr-name">RDV de prospection B2B réalisés</span><span class="kr-value">0 / 10</span></div>
+            <div class="bar-track"><div class="bar-fill hot" style="width:0%"></div></div>
+          </div>
+          <div class="kr">
+            <div class="kr-head"><span class="kr-name">Propositions commerciales B2B envoyées</span><span class="kr-value">0 / 5</span></div>
+            <div class="bar-track"><div class="bar-fill hot" style="width:0%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="pane-q4" class="pane">
+    <div class="header">
+      <div class="header-left">
+        <span>Ce qui se prépare</span>
+        <h1>Q4 26</h1>
+      </div>
+      <div class="header-right">
+        <div class="header-badge"><span>À venir</span></div>
+        <div class="date">Lecture Notion au 19 août 2026</div>
+      </div>
+    </div>
+    <div class="main">
+      <div class="section-title">Objectifs du trimestre</div>
+      <div class="section-subtitle">Octobre à décembre 2026.</div>
+      <div class="obj-grid">
+        <div class="obj-card">
+          <h3>Vendre mon atelier digital</h3>
+          <div class="kr">
+            <div class="kr-head"><span class="kr-name">Lancement avant fin septembre</span><span class="kr-value">0 / 1</span></div>
+            <div class="bar-track"><div class="bar-fill hot" style="width:0%"></div></div>
+          </div>
+          <div class="kr">
+            <div class="kr-head"><span class="kr-name">Ventes du produit digital</span><span class="kr-value">0 / 20</span></div>
+            <div class="bar-track"><div class="bar-fill hot" style="width:0%"></div></div>
+          </div>
+        </div>
+        <div class="obj-card">
+          <h3>Prouver le moteur commercial et économique MCP</h3>
+          <span class="pill-status">En cours</span>
+          <div class="kr-qualitative"><span class="dot"></span> Source, conversion et prix connus pour 100&nbsp;% des leads qualifiés</div>
+          <div class="kr-qualitative"><span class="dot"></span> Pipeline B2B qualifié sur 5 à 10 comptes prioritaires</div>
+          <div class="kr-qualitative"><span class="dot"></span> Au moins 2 cas clients structurés et un cadre de preuve documenté</div>
+          <div class="kr-qualitative"><span class="dot"></span> Temps complet et contribution économique par heure mesurés sur chaque nouvelle mission</div>
+        </div>
+      </div>
+      <div class="note">Trois résultats clés (ventes produit digital, lancement avant fin septembre, RDV et propositions B2B) portent encore un trimestre « Q2 26 » côté Notion alors que leurs objectifs ont été reclassés en Q3/Q4 le 18 août 2026. Base à corriger pour que cette page reste fiable telle quelle.</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showPane(id, el) {
+  document.querySelectorAll('.pane').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.sidebar-item').forEach(function(i){ i.classList.remove('active'); });
+  document.getElementById('pane-' + id).classList.add('active');
+  el.classList.add('active');
+}
+</script>
+</body>
+</html>
