@@ -26,7 +26,7 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--te
 .sidebar-brand .brand-label { font-size:9px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--teal-mid); display:block; margin-bottom:6px; }
 .sidebar-brand h2 { font-size:13.5px; font-weight:700; color:var(--white); line-height:1.2; letter-spacing:0.5px; text-transform:uppercase; white-space:nowrap; }
 .sidebar-nav { flex:1; padding:16px 0; overflow-y:auto; }
-.sidebar-item { display:flex; align-items:center; gap:12px; padding:13px 20px; cursor:pointer; color:rgba(168,197,198,0.7); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase; border-left:3px solid transparent; transition:all .2s; }
+.sidebar-item { display:flex; align-items:center; gap:12px; padding:13px 20px; cursor:pointer; color:rgba(168,197,198,0.7); font-size:11.5px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase; border-left:3px solid transparent; transition:all .2s; }
 .sidebar-item:hover { background:rgba(255,255,255,0.06); color:var(--teal-light); }
 .sidebar-item.active { background:rgba(255,255,255,0.1); color:var(--white); border-left-color:var(--teal-mid); }
 .sidebar-item .si-icon { font-size:16px; width:22px; text-align:center; flex-shrink:0; }
@@ -57,11 +57,25 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--te
 .bar-track { height:6px; border-radius:3px; background:var(--cream); overflow:hidden; }
 .bar-fill { height:100%; border-radius:3px; background:var(--patina); }
 .bar-fill.hot { background:var(--coral); }
-.bar-fill.done { background:#4C8B6B; }
+.bar-fill.done { background:var(--teal-dark); }
 .kr-qualitative { display:flex; align-items:flex-start; gap:9px; font-size:13px; color:var(--text-dark); }
 .kr-qualitative .dot { width:7px; height:7px; border-radius:50%; background:var(--coral); margin-top:6px; flex-shrink:0; }
 .pill-status { align-self:flex-start; font-weight:700; font-size:10px; letter-spacing:0.5px; text-transform:uppercase; color:var(--patina); background:var(--cream); padding:4px 11px; border-radius:999px; }
 .note { margin-top:32px; padding-top:18px; border-top:1px solid var(--border); font-size:12px; color:var(--text-light); max-width:72ch; }
+
+.reco-block { margin-top:32px; background:var(--white); border-radius:14px; box-shadow:var(--shadow); padding:24px 26px; max-width:900px; }
+.reco-title { font-family:'Playfair Display',serif; font-size:16px; color:var(--teal-dark); margin-bottom:14px; }
+.reco-item { display:flex; align-items:flex-start; gap:10px; font-size:13px; line-height:1.5; padding:9px 0; border-top:1px solid var(--border); }
+.reco-item:first-of-type { border-top:none; padding-top:0; }
+.reco-tag { flex-shrink:0; font-size:9.5px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; padding:3px 9px; border-radius:999px; white-space:nowrap; margin-top:1px; }
+.reco-tag.retard { background:var(--warn-bg); color:var(--warn-text); }
+.reco-tag.avance { background:var(--good-bg); color:var(--good-text); }
+.reco-tag.aligne { background:rgba(89,144,146,0.14); color:var(--teal-dark); }
+.reco-text b { color:var(--text-dark); }
+
+.empty-state { background:var(--white); border-radius:14px; box-shadow:var(--shadow); padding:40px 32px; max-width:640px; text-align:center; }
+.empty-state p { font-size:13.5px; color:var(--text-mid); line-height:1.6; }
+.empty-state p + p { margin-top:10px; }
 </style>
 </head>
 <body>
@@ -74,9 +88,11 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--te
     <h2>Vue de l'année</h2>
   </div>
   <nav class="sidebar-nav">
-    <div class="sidebar-item active" onclick="showPane('annuel',this)"><span class="si-icon">⊞</span> Annuel</div>
-    <div class="sidebar-item" onclick="showPane('q3',this)"><span class="si-icon">◐</span> Q3 26</div>
-    <div class="sidebar-item" onclick="showPane('q4',this)"><span class="si-icon">○</span> Q4 26</div>
+    <div class="sidebar-item active" onclick="showPane('annuel',this)"><span class="si-icon">⊞</span> Année 2026</div>
+    <div class="sidebar-item" onclick="showPane('q1',this)"><span class="si-icon">○</span> Trimestre 1, 2026</div>
+    <div class="sidebar-item" onclick="showPane('q2',this)"><span class="si-icon">○</span> Trimestre 2, 2026</div>
+    <div class="sidebar-item" onclick="showPane('q3',this)"><span class="si-icon">◐</span> Trimestre 3, 2026</div>
+    <div class="sidebar-item" onclick="showPane('q4',this)"><span class="si-icon">○</span> Trimestre 4, 2026</div>
   </nav>
   <div class="sidebar-footer">Clarté. Posture. Impact.</div>
 </aside>
@@ -87,7 +103,7 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--te
     <div class="header">
       <div class="header-left">
         <span>Stratégie 2026</span>
-        <h1>Ce qui tient toute l'année</h1>
+        <h1>Objectifs de l'année 2026</h1>
       </div>
       <div class="header-right">
         <div class="header-badge"><span>OKR en cours</span></div>
@@ -96,7 +112,7 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--te
     </div>
     <div class="main">
       <div class="section-title">Objectifs annuels</div>
-      <div class="section-subtitle">Ce qui se mesure sur les 12 mois, indépendamment du trimestre.</div>
+      <div class="section-subtitle">Ce qui se mesure sur les 12 mois, indépendamment du trimestre. 231 jours écoulés sur 365, soit 63,3 % de l'année.</div>
       <div class="obj-grid">
         <div class="obj-card">
           <h3>Atteindre 30 000&nbsp;€ de CA</h3>
@@ -121,6 +137,55 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--te
           </div>
         </div>
       </div>
+
+      <div class="reco-block">
+        <div class="reco-title">Recommandations</div>
+        <div class="reco-item"><span class="reco-tag retard">En retard</span><span class="reco-text">Chiffre d'affaires à 46,6&nbsp;% pour une année écoulée à 63,3&nbsp;%. Écart de <b>16,7 points</b>. Sans accélération sur les accompagnements vendus (25&nbsp;% de la cible), l'objectif de 30 000&nbsp;€ n'est pas tenable au rythme actuel.</span></div>
+        <div class="reco-item"><span class="reco-tag retard">En retard</span><span class="reco-text">Contenus par mois à 35&nbsp;% pour 63,3&nbsp;% de l'année écoulée. Écart de <b>28,3 points</b>, le plus large des quatre indicateurs.</span></div>
+        <div class="reco-item"><span class="reco-tag retard">Critique</span><span class="reco-text">Régularité hebdomadaire à 0&nbsp;% sur une cible de 85&nbsp;%. Aucune donnée de progression enregistrée à ce jour dans Notion : à vérifier que le KR est bien alimenté, sinon l'écart réel est invérifiable.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="pane-q1" class="pane">
+    <div class="header">
+      <div class="header-left">
+        <span>Trimestre écoulé</span>
+        <h1>Trimestre 1, 2026</h1>
+      </div>
+      <div class="header-right">
+        <div class="header-badge"><span>Terminé</span></div>
+        <div class="date">Lecture Notion au 19 août 2026</div>
+      </div>
+    </div>
+    <div class="main">
+      <div class="section-title">Objectifs du trimestre</div>
+      <div class="section-subtitle">Janvier à mars 2026.</div>
+      <div class="empty-state">
+        <p>Aucun Objectif OKR n'est rattaché au trimestre 1, 2026 dans la base Notion Objectifs.</p>
+        <p>Si des objectifs existaient sur cette période, ils n'y sont pas tracés comme tels, aucun chiffre n'est inventé ici.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="pane-q2" class="pane">
+    <div class="header">
+      <div class="header-left">
+        <span>Trimestre écoulé</span>
+        <h1>Trimestre 2, 2026</h1>
+      </div>
+      <div class="header-right">
+        <div class="header-badge"><span>Terminé</span></div>
+        <div class="date">Lecture Notion au 19 août 2026</div>
+      </div>
+    </div>
+    <div class="main">
+      <div class="section-title">Objectifs du trimestre</div>
+      <div class="section-subtitle">Avril à juin 2026.</div>
+      <div class="empty-state">
+        <p>Aucun Objectif OKR n'est rattaché au trimestre 2, 2026 dans la base Notion Objectifs.</p>
+        <p>Six Key Results portent encore un champ Trimestre à « Q2 26 » (RDV B2B, propositions B2B, offre B2B, ventes produit digital, lancement produit digital, contenus/CA/régularité en Annuel). Ce sont des étiquettes obsolètes sur des KR dont l'Objectif parent est en réalité classé Annuel, Trimestre 3 ou Trimestre 4, pas des objectifs réellement travaillés ce trimestre-là. Détail dans la note du trimestre 4.</p>
+      </div>
     </div>
   </div>
 
@@ -128,7 +193,7 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--te
     <div class="header">
       <div class="header-left">
         <span>Trimestre en cours</span>
-        <h1>Q3 26</h1>
+        <h1>Trimestre 3, 2026</h1>
       </div>
       <div class="header-right">
         <div class="header-badge"><span>En cours</span></div>
@@ -137,7 +202,7 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--te
     </div>
     <div class="main">
       <div class="section-title">Objectifs du trimestre</div>
-      <div class="section-subtitle">Juillet à septembre 2026.</div>
+      <div class="section-subtitle">Juillet à septembre 2026. 50 jours écoulés sur 92, soit 54,3 % du trimestre.</div>
       <div class="obj-grid">
         <div class="obj-card">
           <h3>Déployer la stratégie B2B</h3>
@@ -155,6 +220,14 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--te
           </div>
         </div>
       </div>
+
+      <div class="reco-block">
+        <div class="reco-title">Recommandations</div>
+        <div class="reco-item"><span class="reco-tag avance">Fait</span><span class="reco-text">Offre B2B finalisée et formalisée, atteinte avant la mi-trimestre.</span></div>
+        <div class="reco-item"><span class="reco-tag retard">Critique</span><span class="reco-text">RDV de prospection B2B et propositions commerciales B2B toujours à 0 alors que le trimestre est déjà écoulé à 54,3&nbsp;%. L'offre est prête, mais rien n'indique qu'elle a été activée commercialement. Priorité pour les 42 jours restants.</span></div>
+      </div>
+
+      <div class="note">Le champ Trimestre de Notion sur les Key Results de ce chantier (RDV B2B, propositions B2B) affiche encore « Q2 26 », alors que leur Objectif parent « Déployer la stratégie B2B » est classé Trimestre 3, 2026 depuis le 18 août 2026. Cette page se base sur le trimestre de l'Objectif, pas celui du KR. Écart à corriger côté Notion.</div>
     </div>
   </div>
 
@@ -162,7 +235,7 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--te
     <div class="header">
       <div class="header-left">
         <span>Ce qui se prépare</span>
-        <h1>Q4 26</h1>
+        <h1>Trimestre 4, 2026</h1>
       </div>
       <div class="header-right">
         <div class="header-badge"><span>À venir</span></div>
@@ -171,7 +244,7 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--te
     </div>
     <div class="main">
       <div class="section-title">Objectifs du trimestre</div>
-      <div class="section-subtitle">Octobre à décembre 2026.</div>
+      <div class="section-subtitle">Octobre à décembre 2026. Trimestre non commencé.</div>
       <div class="obj-grid">
         <div class="obj-card">
           <h3>Vendre mon atelier digital</h3>
@@ -193,7 +266,14 @@ body { font-family:'Raleway',sans-serif; background:var(--cream); color:var(--te
           <div class="kr-qualitative"><span class="dot"></span> Temps complet et contribution économique par heure mesurés sur chaque nouvelle mission</div>
         </div>
       </div>
-      <div class="note">Trois résultats clés (ventes produit digital, lancement avant fin septembre, RDV et propositions B2B) portent encore un trimestre « Q2 26 » côté Notion alors que leurs objectifs ont été reclassés en Q3/Q4 le 18 août 2026. Base à corriger pour que cette page reste fiable telle quelle.</div>
+
+      <div class="reco-block">
+        <div class="reco-title">Recommandations</div>
+        <div class="reco-item"><span class="reco-tag aligne">À surveiller</span><span class="reco-text">Trimestre non commencé, aucun retard mesurable pour l'instant. Le KR « lancement avant fin septembre » vise en réalité une échéance en trimestre 3, à sécuriser avant le basculement.</span></div>
+        <div class="reco-item"><span class="reco-tag aligne">À surveiller</span><span class="reco-text">L'objectif « Prouver le moteur commercial et économique MCP » n'a que des Key Results qualitatifs, sans cible chiffrée. Impossible de calculer une progression avant qu'un critère mesurable soit défini sur chacun.</span></div>
+      </div>
+
+      <div class="note">Le Key Result « ventes du produit digital » porte le trimestre Notion « Q2 26 » alors que son Objectif « Vendre mon atelier digital » est classé Trimestre 4, 2026. Le KR « lancement avant fin septembre » vise une échéance de trimestre 3 sous un Objectif classé trimestre 4 : ces deux écarts n'ont pas été corrigés côté Notion au 19 août 2026, cette page garde la note tant qu'ils persistent.</div>
     </div>
   </div>
 
